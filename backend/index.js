@@ -15,6 +15,8 @@ import nurseRoutes from './routes/nurseRoutes.js';
 import cleanerRoutes from './routes/cleanerRoutes.js';
 import receptionistRoutes from './routes/receptionistRoutes.js';
 
+
+/// alooooooooooooooooooooooooooooo
 const app = express();
 dotenv.config();
 
