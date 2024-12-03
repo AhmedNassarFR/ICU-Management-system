@@ -63,4 +63,4 @@ userSchema.methods.generateJsonWebToken = function () {
 };
 
 User = mongoose.model('User', userSchema);
-export default User
+export default User;
