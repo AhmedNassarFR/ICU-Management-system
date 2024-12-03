@@ -37,27 +37,36 @@ export const createUser = async (req, res) => {
 
 
 
-export const loginUser= async (req, res, next) => {
-    async (req, res, next) => {
-        const { email, password, role } = req.body;
-        if (!email || !password || !role) {
-          return next(new ErrorHandler("Please fill full form", 400));
+export const loginUser = async (req, res, next) => {
+    try {
+        const { userName, password, role } = req.body;
+
+        // Validate input
+        if (!userName || !password || !role) {
+            return next(new ErrorHandler("Please fill out the full form", 400));
         }
-        
-        const user = await User.findOne({ email }).select("+password");
+
+        // Find the user by username, include password in the query
+        const user = await User.findOne({ userName }).select("+userPass");
         if (!user) {
-          return next(new ErrorHandler("Invalid Email or Password", 404));
+            return next(new ErrorHandler("Invalid Email or Password", 404));
         }
+
+        // Compare passwords
         const passwordMatch = await user.comparePassword(password);
         if (!passwordMatch) {
-          return next(new ErrorHandler("Invalid Email or Password", 404));
+            return next(new ErrorHandler("Invalid Email or Password", 404));
         }
+
+        // Ensure the role matches
         if (role !== user.role) {
-          return next(
-            new ErrorHandler("This Email Role and User Role is not match", 404)
-          );
+            return next(new ErrorHandler("Email role does not match the provided role", 404));
         }
-    
+
+        // Generate JWT and set it in the cookie with role-based cookie name
         jsontoken(user, "User Login Successfully", 200, res);
-      }
+    } catch (error) {
+        console.error(error);
+        next(new ErrorHandler("Server error", 500)); // Handle server errors
+    }
 };
