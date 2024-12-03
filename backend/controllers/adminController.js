@@ -1,8 +1,8 @@
 import Hospital from '../models/hospitalModel.js';
 export const addHospital = async (req, res) => {
     try {
-        const { name, address, phone, email } = req.body;
-        const newHospital = new Hospital({ name, address, phone, email });
+        const { name, address, phone, username } = req.body;
+        const newHospital = new Hospital({ name, address, phone, username });
         await newHospital.save();
         res.status(201).send({ message: "Hospital added successfully.", hospital: newHospital });
     } catch (error) {
