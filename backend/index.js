@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 
 import adminRoutes from './routes/adminRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import patientRoutes from './routes/patientRoutes.js';
 import doctorRoutes from './routes/doctorRoutes.js';
 import managerRoutes from './routes/managerRoutes.js';
@@ -25,9 +26,7 @@ const url = process.env.MONGO_URL ;
 
 
 // app listen
-app.listen(port,(req, res,next) =>{
-
-
+app.listen(port,(req, res,) =>{
 
     console.log(`Server is running on port ${port}`);
 })
@@ -71,3 +70,4 @@ app.use('/manager', managerRoutes);
 app.use('/nurse', nurseRoutes);
 app.use('/cleaner', cleanerRoutes);
 app.use('/receptionist', receptionistRoutes);
+app.use('/user', userRoutes);

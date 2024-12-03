@@ -1,18 +1,41 @@
 import mongoose from 'mongoose';
+import mongooseSequence from 'mongoose-sequence';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'; 
 
+const AutoIncrement = mongooseSequence(mongoose); // Initialize the plugin
+
 const userSchema = new mongoose.Schema({
     userId: {
         type: Number,
-        required: true,
-        unique: true,
+        unique: true, // Ensure the userId is unique
+        required: false,
     },
     userName: {
         type: String,
         required: true,
         minlength: [2, "Username is required"],
+    },
+    firstName: {
+        type: String,
+        required: true,
+        minlength: [2, "First Name is required"],
+    },
+    lastName: {
+        type: String,
+        required: true,
+        minlength: [2, "Last Name is required"],
+    },
+    gender: {
+        type: String,
+        required: true,
+        enum: ["Male", "Female"],
+    },
+    phone: {
+        type: String,
+        required: true,
+        minlength: [2, "Phone number is required"],
     },
     userPass: {
         type: String,
@@ -25,10 +48,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ["Patient", "Doctor", "Admin", "Manager", "Nurse", "Cleaner", "Receptionist"],
     },
-
-    currentCondition: {
-        type: String
-    }, // for patients
+    currentCondition: { type: String }, // for patients
     admissionDate: { type: Date }, // for patients
     assignedEmployee: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // employee reference
     medicalHistory: { type: String }, // for patients
@@ -41,7 +61,10 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// hashing the pass
+// Apply the auto-increment plugin to the userId field
+userSchema.plugin(AutoIncrement, { inc_field: 'userId' }); // Auto-increment userId
+
+// Hashing the password before saving
 userSchema.pre("save", async function (next) {
     if (!this.isModified("userPass")) {
         return next();
@@ -62,5 +85,5 @@ userSchema.methods.generateJsonWebToken = function () {
     });
 };
 
-User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 export default User;
