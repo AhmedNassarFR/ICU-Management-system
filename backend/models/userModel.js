@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'; // Note: Corrected 'jwt' to 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
     userId: {
@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema({
         enum: ["Patient", "Doctor", "Admin", "Manager", "Nurse", "Cleaner", "Receptionist"],
     },
 
-    currentCondition: { type: String }, // for patients
+    currentCondition: {
+        type: String
+    }, // for patients
     admissionDate: { type: Date }, // for patients
     assignedEmployee: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // employee reference
     medicalHistory: { type: String }, // for patients
@@ -60,4 +62,5 @@ userSchema.methods.generateJsonWebToken = function () {
     });
 };
 
-export default mongoose.model('User', userSchema);
+User = mongoose.model('User', userSchema);
+export default User

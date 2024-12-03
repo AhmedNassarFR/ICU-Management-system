@@ -6,6 +6,14 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 
+import adminRoutes from './routes/adminRoutes.js';
+import patientRoutes from './routes/patientRoutes.js';
+import doctorRoutes from './routes/doctorRoutes.js';
+import managerRoutes from './routes/managerRoutes.js';
+import nurseRoutes from './routes/nurseRoutes.js';
+import cleanerRoutes from './routes/cleanerRoutes.js';
+import receptionistRoutes from './routes/receptionistRoutes.js';
+
 
 const app = express();
 dotenv.config();
@@ -18,6 +26,9 @@ const url = process.env.MONGO_URL ;
 
 // app listen
 app.listen(port,(req, res,next) =>{
+
+
+
     console.log(`Server is running on port ${port}`);
 })
 
@@ -53,4 +64,10 @@ app.use(cors({
 
 //all routes are here
 
-
+app.use('/admin', adminRoutes);
+app.use('/patient', patientRoutes);
+app.use('/doctor', doctorRoutes);
+app.use('/manager', managerRoutes);
+app.use('/nurse', nurseRoutes);
+app.use('/cleaner', cleanerRoutes);
+app.use('/receptionist', receptionistRoutes);
