@@ -1,8 +1,15 @@
-export const addHospital = (req, res) => {
-    // Logic for adding a hospital
-    res.status(201).send({ message: "Hospital added successfully." });
+import Hospital from '../models/hospitalModel.js';
+export const addHospital = async (req, res) => {
+    try {
+        const { name, address, phone, email } = req.body;
+        const newHospital = new Hospital({ name, address, phone, email });
+        await newHospital.save();
+        res.status(201).send({ message: "Hospital added successfully.", hospital: newHospital });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ message: error.message });
+    }
 };
-
 export const blockHospital = (req, res) => {
     // Logic for blocking a hospital
     res.status(200).send({ message: "Hospital blocked successfully." });
