@@ -4,7 +4,7 @@ export const registerICURooms = (req, res) => {
 };
 
 export const assignTask = (req, res) => {
-    // Logic to assign a task
+    // Logic to assign a taskk
     res.status(200).send({ message: "Task assigned successfully." });
 };
 

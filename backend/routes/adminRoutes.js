@@ -2,7 +2,8 @@ import express from 'express';
 import { 
     addHospital, 
     blockHospital, 
-    viewHospitals, 
+    viewHospitals,
+    deleteHospital, 
     assignManager 
 } from '../controllers/adminController.js';
 
@@ -19,4 +20,5 @@ router.get('/view-hospitals', viewHospitals);
 // Assign a manager to a hospital
 router.put('/assign-manager/:id', assignManager);
 
+router.delete('/delete-hospital/:id', deleteHospital);
 export default router;

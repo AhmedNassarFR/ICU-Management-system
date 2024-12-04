@@ -124,3 +124,12 @@ export const assignManager = async (req, res, next) => {
         next(new ErrorHandler(error.message, 500));
     }
 };
+export const deleteHospital = async (req, res, next) => {
+    try {
+        const { id } = req.params;  
+        const hospital = await Hospital.findByIdAndDelete(id);
+        res.status(200).json({ message: "Hospital deleted successfully.", hospital });
+    } catch (error) {
+        next(new ErrorHandler(error.message, 500));
+    }
+};
