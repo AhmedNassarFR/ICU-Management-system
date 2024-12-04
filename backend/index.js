@@ -14,7 +14,7 @@ import managerRoutes from './routes/managerRoutes.js';
 import nurseRoutes from './routes/nurseRoutes.js';
 import cleanerRoutes from './routes/cleanerRoutes.js';
 import receptionistRoutes from './routes/receptionistRoutes.js';
-
+import { errorHandler } from './utils/errorHandler.js';
 
 
 const app = express();
@@ -49,6 +49,7 @@ app.use(fileUpload({
     tempFileDir: './temp/',
 }));
 
+
 // Register routes
 app.use('/admin', adminRoutes);
 app.use('/patient', patientRoutes);
@@ -59,3 +60,5 @@ app.use('/cleaner', cleanerRoutes);
 app.use('/receptionist', receptionistRoutes);
 app.use('/user', userRoutes);
 app.use('/hospital', hospitalRoutes);
+
+app.use(errorHandler);
