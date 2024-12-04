@@ -2,14 +2,14 @@ import mongoose from 'mongoose';
 import mongooseSequence from 'mongoose-sequence';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'; 
+import jwt from 'jsonwebtoken';
 
 const AutoIncrement = mongooseSequence(mongoose); // Initialize the plugin
 
 const userSchema = new mongoose.Schema({
     userId: {
         type: Number,
-        unique: true, // Ensure the userId is unique
+        unique: true, 
         required: false,
     },
     userName: {
@@ -48,6 +48,17 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ["Patient", "Doctor", "Admin", "Manager", "Nurse", "Cleaner", "Receptionist"],
     },
+    location: {
+        type: {
+            type: String, // Must be "Point" for GeoJSON
+            enum: ['Point'], // Only "Point" type is supported for geospatial queries
+            required: true,
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            required: true,
+        },
+    },
     currentCondition: { type: String }, // for patients
     admissionDate: { type: Date }, // for patients
     assignedEmployee: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // employee reference
@@ -63,6 +74,9 @@ const userSchema = new mongoose.Schema({
 
 // Apply the auto-increment plugin to the userId field
 userSchema.plugin(AutoIncrement, { inc_field: 'userId' }); // Auto-increment userId
+
+// Create a 2dsphere index for geospatial queries
+userSchema.index({ location: '2dsphere' });
 
 // Hashing the password before saving
 userSchema.pre("save", async function (next) {

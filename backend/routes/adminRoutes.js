@@ -9,8 +9,14 @@ import {
 const router = express.Router();
 
 router.post('/add-hospital', addHospital);
-router.post('/block-hospital', blockHospital);
+
+
+router.put('/block-hospital/:id', blockHospital);
+
+// View all hospitals
 router.get('/view-hospitals', viewHospitals);
-router.post('/assign-manager', assignManager);
+
+// Assign a manager to a hospital
+router.put('/assign-manager/:id', assignManager);
 
 export default router;
