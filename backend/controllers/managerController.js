@@ -307,6 +307,8 @@ export const registerVisitorRoom = async (req, res, next) => {
     }
 };
 
+
+//this is for the employees
 export const handleVacationRequest = async (req, res, next) => {
     try {
         const { employeeId, startDate, endDate } = req.body;
@@ -326,6 +328,29 @@ export const handleVacationRequest = async (req, res, next) => {
         });
     } catch (error) {
         next(new ErrorHandler(`Error while handling vacation request: ${error.message}`, 500));
+    }
+};
+export const updateVacationRequest = async (req, res, next) => {
+    try {
+        const { requestId } = req.params;
+        const { status } = req.body; // Assuming the manager updates the status of the request
+
+        const vacationRequest = await VacationRequest.findById(requestId);
+
+        if (!vacationRequest) {
+            return next(new ErrorHandler("Vacation request not found", 404));
+        }
+
+        vacationRequest.status = status; // Update the status
+        await vacationRequest.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Vacation request updated successfully",
+            data: vacationRequest,
+        });
+    } catch (error) {
+        next(new ErrorHandler(`Error while updating vacation request: ${error.message}`, 500));
     }
 };
 

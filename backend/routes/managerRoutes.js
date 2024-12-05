@@ -11,6 +11,7 @@ import {
     createAndAssignTask,
     registerVisitorRoom,
     handleVacationRequest,
+    updateVacationRequest,
     viewVacationRequests,
     calculateFees
 } from '../controllers/managerController.js';
@@ -49,6 +50,9 @@ router.post('/register-visitor-room', registerVisitorRoom);
 
 // Route to handle a vacation request
 router.post('/handle-vacation-request', handleVacationRequest);
+
+// Route to update a vacation request
+router.put('/update-vacation-request/:requestId', updateVacationRequest);
 
 // Route to view vacation requests
 router.get('/view-vacation-requests', viewVacationRequests);
