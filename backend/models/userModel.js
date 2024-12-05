@@ -6,77 +6,111 @@ import jwt from 'jsonwebtoken';
 
 const AutoIncrement = mongooseSequence(mongoose); // Initialize the plugin
 
-const userSchema = new mongoose.Schema({
-    userId: {
-        type: Number,
-        unique: true, 
-        required: false,
-    },
-    userName: {
-        type: String,
-        required: true,
-        minlength: [2, "Username is required"],
-    },
-    firstName: {
-        type: String,
-        required: true,
-        minlength: [2, "First Name is required"],
-    },
-    lastName: {
-        type: String,
-        required: true,
-        minlength: [2, "Last Name is required"],
-    },
-    gender: {
-        type: String,
-        required: true,
-        enum: ["Male", "Female"],
-    },
-    phone: {
-        type: String,
-        required: true,
-        minlength: [2, "Phone number is required"],
-    },
-    userPass: {
-        type: String,
-        required: true,
-        minlength: [6, "Password must be at least 6 characters"],
-        select: false,
-    },
-    role: {
-        type: String,
-        required: true,
-        enum: ["Patient", "Doctor", "Admin", "Manager", "Nurse", "Cleaner", "Receptionist"],
-    },
-    location: {
-        type: {
-            type: String, // Must be "Point" for GeoJSON
-            enum: ['Point'], // Only "Point" type is supported for geospatial queries
-            required: true,
+const userSchema = new mongoose.Schema(
+    {
+        userId: {
+            type: Number,
+            unique: true,
         },
-        coordinates: {
-            type: [Number], // [longitude, latitude]
+        userName: {
+            type: String,
             required: true,
+            minlength: [2, "Username is required"],
         },
+        firstName: {
+            type: String,
+            required: true,
+            minlength: [2, "First Name is required"],
+        },
+        lastName: {
+            type: String,
+            required: true,
+            minlength: [2, "Last Name is required"],
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            validate: [validator.isEmail, "Invalid email address"],
+        },
+        gender: {
+            type: String,
+            required: true,
+            enum: ["Male", "Female"],
+        },
+        phone: {
+            type: String,
+            required: true,
+            minlength: [2, "Phone number is required"],
+        },
+        userPass: {
+            type: String,
+            required: true,
+            minlength: [6, "Password must be at least 6 characters"],
+            select: false,
+        },
+        role: {
+            type: String,
+            required: true,
+            enum: [
+                "Patient",
+                "Doctor",
+                "Admin",
+                "Manager",
+                "Nurse",
+                "Cleaner",
+                "Receptionist",
+            ],
+        },
+        location: {
+            type: {
+                type: String, // Must be "Point" for GeoJSON
+                enum: ['Point'],
+                required: true,
+            },
+            coordinates: {
+                type: [Number], // [longitude, latitude]
+                required: true,
+            },
+        },
+        // Specific fields for Patients
+        currentCondition: { type: String }, // e.g., allergies, symptoms
+        admissionDate: { type: Date },
+        medicalHistory: { type: String },
+        assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+
+        // Specific fields for Managers
+        assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],
+        assignedEmployees: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Employees under their management
+
+        // Specific fields for Doctors
+        doctorDepartment: { type: String }, // Department specialization
+        patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // List of assigned patients
+
+        // Specific fields for Admins
+        managedHospitals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
+
+        // Fields for Receptionists
+        assignedHospital: { type: mongoose.Schema.Types.ObjectId, ref: "Hospital" },
+
+        // Fields for Nurses
+        shifts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Shift" }],
+
+        // Fields for Cleaners
+        roomsToClean: [{ type: String }], // List of room identifiers to clean
+
+        // Common timestamps for all roles
     },
-    currentCondition: { type: String }, // for patients
-    admissionDate: { type: Date }, // for patients
-    assignedEmployee: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // employee reference
-    medicalHistory: { type: String }, // for patients
-    assignedHospital: [{ type: String }], // for admin
-    assignedManagers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // For admin
-    assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Department' }], // For managers
-    doctorDepartment: { type: String }, // For doctors
-    shifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }], // For employees
-}, {
-    timestamps: true,
-});
+    {
+        timestamps: true,
+    }
+);
 
 // Apply the auto-increment plugin to the userId field
-userSchema.plugin(AutoIncrement, { inc_field: 'userId' }); // Auto-increment userId
+userSchema.plugin(AutoIncrement, { inc_field: "userId" });
 
 // Create a 2dsphere index for geospatial queries
-userSchema.index({ location: '2dsphere' });
+userSchema.index({ location: "2dsphere" });
 
 // Hashing the password before saving
 userSchema.pre("save", async function (next) {
@@ -94,10 +128,14 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 
 // Generate JWT
 userSchema.methods.generateJsonWebToken = function () {
-    return jwt.sign({ id: this._id, role: this.role }, process.env.JWT_SECRET_KEY, {
-        expiresIn: process.env.JWT_EXPIRES,
-    });
+    return jwt.sign(
+        { id: this._id, role: this.role },
+        process.env.JWT_SECRET_KEY,
+        {
+            expiresIn: process.env.JWT_EXPIRES,
+        }
+    );
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;

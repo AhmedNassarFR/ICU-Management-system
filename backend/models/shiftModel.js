@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
 const shiftSchema = new mongoose.Schema({
-    shiftID: {
-        type: Number,
+    employee: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
-        unique: true,
     },
     startTime: {
         type: Date,
@@ -15,17 +15,12 @@ const shiftSchema = new mongoose.Schema({
         required: true,
     },
     breakTime: {
-        type: Number, // Break time in minutes
-        required: true,
+        type: String, // e.g., "30 mins"
+        default: '30 mins',
     },
-    date: {
-        type: Date,
-        required: true,
-    },
-    assignedTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to Employee
-    },
+}, {
+    timestamps: true,
 });
 
-export default mongoose.model('Shift', shiftSchema);
+const Shift = mongoose.model('Shift', shiftSchema);
+export default Shift;

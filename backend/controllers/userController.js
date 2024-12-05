@@ -1,4 +1,5 @@
 import User from '../models/userModel.js'; 
+import ErrorHandler from '../utils/errorHandler.js';
 import {jsontoken} from '../utils/token.js'; 
 
 export const createUser = async (req, res, next) => {

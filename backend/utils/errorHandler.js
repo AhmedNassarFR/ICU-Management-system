@@ -17,3 +17,5 @@ const errorHandler = (err, req, res, next) => {
 };
 
 export { ErrorHandler, errorHandler };
+
+export default ErrorHandler;

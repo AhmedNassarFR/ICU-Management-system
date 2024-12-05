@@ -1,16 +1,27 @@
 import mongoose from 'mongoose';
 
-const visitorsRoomSchema = new mongoose.Schema({
-    assignedVisitors: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User', // Reference to Patient
-        },
-    ],
-    visitingHours: {
-        startTime: { type: Date, required: true },
-        endTime: { type: Date, required: true },
+const visitorRoomSchema = new mongoose.Schema({
+    hospital: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hospital',
+        required: true,
     },
+    roomNumber: {
+        type: String,
+        required: true,
+    },
+    capacity: {
+        type: Number,
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: ['Available', 'Reserved'],
+        default: 'Available',
+    },
+}, {
+    timestamps: true,
 });
 
-export default mongoose.model('VisitorsRoom', visitorsRoomSchema);
+const VisitorRoom = mongoose.model('VisitorRoom', visitorRoomSchema);
+export default VisitorRoom;
