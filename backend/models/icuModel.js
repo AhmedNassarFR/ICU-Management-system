@@ -26,13 +26,11 @@ const ICURoomSchema = new mongoose.Schema({
             "Post-Anesthesia Care Unit",
             "Obstetric ICU",
             "Infectious Disease ICU",
-        ]
+        ],
+        status: { type: String, enum: ['Occupied', 'Available'], default: 'Available' },
     },
     
-    rooms: [{
-        roomNumber: { type: String, required: true },
-        status: { type: String, enum: ['Occupied', 'Available'], default: 'Available' },
-    }],
+    
 }, {
     timestamps: true,
 });

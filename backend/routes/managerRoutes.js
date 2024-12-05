@@ -1,55 +1,59 @@
-import express from "express";
+import express from 'express';
 import {
     assignBackupManager,
     registerICU,
+    deleteICU,
+    updateICU,
+    viewICUs,
     addEmployee,
     removeEmployee,
-    // registerVisitorRoom,
-    // calculateFees,
-    // handleVacationRequest,
-    // updateICU,
-    // deleteICU,
-    // trackEmployeeTasks,
-    // monitorTasks,
+    trackEmployeeTasks,
     createAndAssignTask,
-} from "../controllers/managerController.js";
+    registerVisitorRoom,
+    handleVacationRequest,
+    viewVacationRequests,
+    calculateFees
+} from '../controllers/managerController.js';
 
 const router = express.Router();
 
-// Backup manager
-router.post("/assign-backup-manager", assignBackupManager);
+// Route to assign a backup manager to a hospital
+router.post('/assign-backup-manager', assignBackupManager);
 
-// Register ICUs
-router.post("/register-icus", registerICU);
+// Route to register a new ICU
+router.post('/register-icu', registerICU);
 
-// Add employee
-router.post("/add-employee", addEmployee);
+// Route to delete an ICU
+router.delete('/delete-icu/:icuId', deleteICU);
 
-// Remove employee
-router.delete("/remove-employee/:employeeId", removeEmployee);
+// Route to update an ICU
+router.put('/update-icu/:icuId', updateICU);
 
-// Assign tasks
-router.post("/assign-task", createAndAssignTask);
+// Route to view ICUs
+router.get('/view-icus', viewICUs);
 
-// Register visitor room
-// router.post("/register-visitor-room", registerVisitorRoom);
+// Route to add a new employee
+router.post('/add-employee', addEmployee);
 
-// // Calculate fees
-// router.get("/calculate-fees/:serviceId", calculateFees);
+// Route to remove an employee
+router.delete('/delete-employee/:userName', removeEmployee);
 
-// // Handle vacation request
-// router.post("/handle-vacation-request", handleVacationRequest);
+// Route to track employee tasks
+router.get('/track-employee-tasks', trackEmployeeTasks);
 
-// // Update ICU
-// router.patch("/update-icu", updateICU);
+// Route to create and assign a task
+router.post('/create-assign-task', createAndAssignTask);
 
-// // Delete ICU
-// router.delete("/delete-icu/:icuId", deleteICU);
+// Route to register a visitor room
+router.post('/register-visitor-room', registerVisitorRoom);
 
-// // Track employee tasks
-// router.get("/track-tasks/:employeeId", trackEmployeeTasks);
+// Route to handle a vacation request
+router.post('/handle-vacation-request', handleVacationRequest);
 
-// // Monitor tasks
-// router.get("/monitor-task/:taskId", monitorTasks);
+// Route to view vacation requests
+router.get('/view-vacation-requests', viewVacationRequests);
+
+// Route to calculate fees for a service
+router.get('/calculate-fees/:serviceId', calculateFees);
 
 export default router;
