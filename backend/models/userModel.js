@@ -66,11 +66,11 @@ const userSchema = new mongoose.Schema(
             type: {
                 type: String, // Must be "Point" for GeoJSON
                 enum: ['Point'],
-                required: true,
+                required: false,
             },
             coordinates: {
                 type: [Number], // [longitude, latitude]
-                required: true,
+                required: false,
             },
         },
         // Specific fields for Patients
@@ -78,6 +78,7 @@ const userSchema = new mongoose.Schema(
         admissionDate: { type: Date },
         medicalHistory: { type: String },
         assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        medicineSchedule:{ type: String},
 
         // Specific fields for Managers
         assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],

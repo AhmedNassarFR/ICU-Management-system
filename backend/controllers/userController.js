@@ -12,7 +12,7 @@ export const createUser = async (req, res, next) => {
             gender,
             phone,
             role,
-            location,
+            email,
             currentCondition,
             admissionDate,
             medicalHistory,
@@ -24,14 +24,14 @@ export const createUser = async (req, res, next) => {
         } = req.body;
 
         // Validate input
-        if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role || !location) {
-            return res.status(400).json({ message: "All required fields must be filled" });
+        if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role || !email ) {
+            return next(new ErrorHandler("All required fields must be filled", 400));
         }
 
         // Check if the user is already registered
         const isRegistered = await User.findOne({ userName });
         if (isRegistered) {
-            return res.status(400).json({ message: "User is already registered" });
+            return next(new ErrorHandler("User is already registered", 400));
         }
 
         // Create a new user
@@ -42,8 +42,8 @@ export const createUser = async (req, res, next) => {
             userPass,
             gender,
             phone,
+            email,
             role,
-            location,
             currentCondition: role === "Patient" ? currentCondition : undefined,
             admissionDate: role === "Patient" ? admissionDate : undefined,
             medicalHistory: role === "Patient" ? medicalHistory : undefined,
@@ -54,16 +54,13 @@ export const createUser = async (req, res, next) => {
             shifts: ["Doctor", "Nurse", "Cleaner", "Receptionist"].includes(role) ? shifts : undefined,
         });
 
-        // Generate JWT token and send response
-        const token = user.generateJsonWebToken();
-        res.status(201).json({ message: "User created successfully", token, user });
+        // Use jsontoken utility for consistent token handling
+        jsontoken(user, "User created successfully", 201, res);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server error" });
+        next(new ErrorHandler("Server error", 500));
     }
 };
-
-
 
 export const loginUser = async (req, res, next) => {
     try {
@@ -71,7 +68,7 @@ export const loginUser = async (req, res, next) => {
 
         // Validate input
         if (!userName || !password || !role) {
-            return next(new ErrorHandler("Please fill out the full form", 400));
+            return next(new ErrorHandler("Please fill out all required fields", 400));
         }
 
         // Find the user by username and include the password in the query
@@ -91,9 +88,8 @@ export const loginUser = async (req, res, next) => {
             return next(new ErrorHandler("Role does not match the provided role", 403));
         }
 
-        // Generate JWT token and send response
-        const token = user.generateJsonWebToken();
-        res.status(200).json({ message: "User Login Successfully", token, user });
+        // Use jsontoken utility for consistent token handling
+        jsontoken(user, "User Login Successfully", 200, res);
     } catch (error) {
         console.error(error);
         next(new ErrorHandler("Server error", 500));
