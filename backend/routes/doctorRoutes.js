@@ -1,10 +1,18 @@
-import express from 'express';
-import { viewReport, viewSchedule, setMedicineSchedule } from '../controllers/doctorController.js';
+import express from "express";
+import {
+    viewPatientHealthStatus,
+    viewPatientMedicalHistory,
+    updatePatientMedicineSchedule,
+    viewAllAssignedPatients,
+} from "../controllers/doctorController.js";
 
 const router = express.Router();
 
-router.get('/view-report', viewReport);
-router.get('/view-schedule', viewSchedule);
-router.post('/set-medicine-schedule', setMedicineSchedule);
+router.get("view-health-status/doctor/:doctorId/patient/:patientId/", viewPatientHealthStatus);
+router.get("view-medical-history/doctor/:doctorId/patient/:patientId/", viewPatientMedicalHistory);
+router.put("update-medicine-schedule/doctor/:doctorId/patient/:patientId/", updatePatientMedicineSchedule);
+
+
+router.get("assigne-patients/doctor/:doctorId/", viewAllAssignedPatients);
 
 export default router;

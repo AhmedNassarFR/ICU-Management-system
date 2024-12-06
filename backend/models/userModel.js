@@ -78,6 +78,7 @@ const userSchema = new mongoose.Schema(
         admissionDate: { type: Date },
         medicalHistory: { type: String },
         assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        medicineSchedule:{ type: String},
 
         // Specific fields for Managers
         assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],
