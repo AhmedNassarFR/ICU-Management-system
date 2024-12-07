@@ -1,9 +1,9 @@
 import express from 'express';
-import { setReport, viewSchedule } from '../controllers/nurseController.js';
+import { updateReport, viewSchedule } from '../controllers/nurseController.js';
 
 const router = express.Router();
 
-router.post('/set-report', setReport);
+router.post('/update-report', updateReport);
 router.get('/view-schedule', viewSchedule);
 
 export default router;

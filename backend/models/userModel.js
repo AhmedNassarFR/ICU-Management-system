@@ -62,6 +62,14 @@ const userSchema = new mongoose.Schema(
                 "Receptionist",
             ],
         },
+        
+        services: [
+            {
+                serviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' },
+                reservedAt: { type: Date, default: Date.now },
+            },
+        ]
+        ,
         location: {
             type: {
                 type: String, // Must be "Point" for GeoJSON
@@ -79,6 +87,10 @@ const userSchema = new mongoose.Schema(
         medicalHistory: { type: String },
         assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         medicineSchedule:{ type: String},
+        totalFees: {
+            type: Number,
+            default: 0,
+        }, // Total fees paid by the patient
 
         // Specific fields for Managers
         assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],

@@ -17,4 +17,6 @@ const medicalHistorySchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('MedicalHistory', medicalHistorySchema);
+const MedicalHistory = mongoose.model('MedicalHistory', medicalHistorySchema);
+
+export default MedicalHistory;

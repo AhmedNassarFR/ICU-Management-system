@@ -1,24 +1,33 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const feedbackSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+const feedbackSchema = new mongoose.Schema(
+    {
+        hospital: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Hospital',
+            required: true,
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        rating: {
+            type: Number,
+            required: true,
+            min: 0,
+            max: 5,
+        },
+        comment: {
+            type: String,
+        },
     },
-    hospital: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hospital',
-    },
-    rating: {
-        type: Number,
-        min: 0,
-        max: 5,
-        required: true,
-    },
-    comment: String,
-}, {
-    timestamps: true,
-});
+    {
+        timestamps: true,
+    }
+);
+
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
+
 export default Feedback;

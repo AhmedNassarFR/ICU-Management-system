@@ -3,6 +3,7 @@ import ICU from '../models/icuModel.js';
 import Task from "../models/taskModel.js";
 import User from "../models/userModel.js";
 import VacationRequest from "../models/vacationRequestModel.js";
+import ErrorHandler from "../utils/errorHandler.js";
 
 export const assignBackupManager = async (req, res, next) => {
     try {

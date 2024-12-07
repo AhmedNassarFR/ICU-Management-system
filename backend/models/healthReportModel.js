@@ -17,4 +17,6 @@ const healthReportSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('HealthReport', healthReportSchema);
+const HealthReport = mongoose.model('HealthReport', healthReportSchema);
+
+export default HealthReport;
