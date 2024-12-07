@@ -1,17 +1,14 @@
 import User from "../models/userModel.js";
 
-// Function to get the patient's current health status
 export const viewPatientHealthStatus = async (req, res) => {
     try {
         const { doctorId, patientId } = req.params;
 
-        // Verify if the doctor exists and is authorized
         const doctor = await User.findById(doctorId);
         if (!doctor || doctor.role !== "Doctor") {
             return res.status(403).json({ message: "Unauthorized: Only doctors can access this information." });
         }
 
-        // Find the patient and fetch current health status
         const patient = await User.findById(patientId).populate("assignedDoctor", "userName");
         if (!patient) {
             return res.status(404).json({ message: "Patient not found." });
@@ -35,13 +32,11 @@ export const viewPatientMedicalHistory = async (req, res) => {
     try {
         const { doctorId, patientId } = req.params;
 
-        // Verify if the doctor exists and is authorized
         const doctor = await User.findById(doctorId);
         if (!doctor || doctor.role !== "Doctor") {
             return res.status(403).json({ message: "Unauthorized: Only doctors can access this information." });
         }
 
-        // Find the patient and fetch medical history
         const patient = await User.findById(patientId).populate("assignedDoctor", "userName");
         if (!patient) {
             return res.status(404).json({ message: "Patient not found." });
@@ -65,13 +60,11 @@ export const updatePatientMedicineSchedule = async (req, res) => {
         const { doctorId, patientId } = req.params;
         const { medicineSchedule } = req.body;
 
-        // Verify if the doctor exists and is authorized
         const doctor = await User.findById(doctorId);
         if (!doctor || doctor.role !== "Doctor") {
             return res.status(403).json({ message: "Unauthorized: Only doctors can perform this action." });
         }
 
-        // Find the patient and update medicine schedule
         const patient = await User.findById(patientId).populate("assignedDoctor", "userName");
         if (!patient) {
             return res.status(404).json({ message: "Patient not found." });
@@ -97,13 +90,11 @@ export const viewAllAssignedPatients = async (req, res) => {
     try {
         const { doctorId } = req.params;
 
-        // Verify if the doctor exists and is authorized
         const doctor = await User.findById(doctorId);
         if (!doctor || doctor.role !== "Doctor") {
             return res.status(403).json({ message: "Unauthorized: Only doctors can access this information." });
         }
 
-        // Find all patients assigned to the doctor
         const assignedPatients = await User.find({ assignedDoctor: doctorId }, "userName firstName lastName currentCondition admissionDate medicalHistory");
 
         if (!assignedPatients || assignedPatients.length === 0) {

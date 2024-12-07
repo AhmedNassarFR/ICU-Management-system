@@ -38,7 +38,7 @@ const ICURoomSchema = new mongoose.Schema(
         fees: {
             type: Number,
             required: true,
-            default: 1000, // Default ICU room fee
+            default: 1000,
         },
         isReserved: {
             type: Boolean,

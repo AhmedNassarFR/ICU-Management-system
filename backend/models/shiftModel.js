@@ -15,7 +15,7 @@ const shiftSchema = new mongoose.Schema({
         required: true,
     },
     breakTime: {
-        type: String, // e.g., "30 mins"
+        type: String,
         default: '30 mins',
     },
 }, {

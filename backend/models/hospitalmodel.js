@@ -46,8 +46,6 @@ const hospitalSchema = new mongoose.Schema(
         timestamps: true, 
     }
 );
-
-// Create a 2dsphere index for geospatial queries
 hospitalSchema.index({ location: '2dsphere' });
 
 const Hospital = mongoose.model('Hospital', hospitalSchema);

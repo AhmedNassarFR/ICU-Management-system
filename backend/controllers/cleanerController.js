@@ -3,7 +3,6 @@ import ErrorHandler from '../utils/errorHandler.js';
 
 export const viewRoomsToBeCleaned = async (req, res, next) => {
     try {
-        // Fetch rooms with status 'To Be Cleaned'
         const roomsToBeCleaned = await ICU.find({ status: 'To Be Cleaned' });
 
         if (!roomsToBeCleaned.length) {
@@ -21,12 +20,10 @@ export const markRoomAsCleaned = async (req, res, next) => {
     try {
         const { roomId } = req.params;
 
-        // Validate input
         if (!roomId) {
             return res.status(400).json({ message: "Room ID is required." });
         }
 
-        // Find the room by ID and update its status
         const room = await ICU.findById(roomId);
         if (!room) {
             return next(new ErrorHandler("Room not found", 404));

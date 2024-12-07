@@ -90,7 +90,7 @@ const userSchema = new mongoose.Schema(
         totalFees: {
             type: Number,
             default: 0,
-        }, // Total fees paid by the patient
+        },
 
         // Specific fields for Managers
         assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],
@@ -118,14 +118,8 @@ const userSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
-// Apply the auto-increment plugin to the userId field
 userSchema.plugin(AutoIncrement, { inc_field: "userId" });
-
-// Create a 2dsphere index for geospatial queries
 userSchema.index({ location: "2dsphere" });
-
-// Hashing the password before saving
 userSchema.pre("save", async function (next) {
     if (!this.isModified("userPass")) {
         return next();
@@ -133,13 +127,9 @@ userSchema.pre("save", async function (next) {
     this.userPass = await bcrypt.hash(this.userPass, 10);
     next();
 });
-
-// Compare password method
 userSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.userPass);
 };
-
-// Generate JWT
 userSchema.methods.generateJsonWebToken = function () {
     return jwt.sign(
         { id: this._id, role: this.role },

@@ -3,7 +3,7 @@ import { markRoomAsCleaned, viewRoomsToBeCleaned } from '../controllers/cleanerC
 
 const router = express.Router();
 
-router.post('/view-rooms-tobe-cleaned', viewRoomsToBeCleaned);
+router.get('/view-rooms-tobe-cleaned', viewRoomsToBeCleaned);
 router.post('/mark-room-cleaned', markRoomAsCleaned);
 
 export default router;

@@ -35,8 +35,6 @@ export const addHospital = async (req, res, next) => {
         next(new ErrorHandler(error.message, 500));
     }
 };
-
-// Block Hospital
 export const blockHospital = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -52,8 +50,6 @@ export const blockHospital = async (req, res, next) => {
         next(new ErrorHandler(error.message, 500));
     }
 };
-
-// View Hospitals
 export const viewHospitals = async (req, res, next) => {
     try {
         const { status, name, longitude, latitude } = req.query;
@@ -90,8 +86,6 @@ export const viewHospitals = async (req, res, next) => {
     }
 };
 
-
-// Assign Manager
 export const assignManager = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -191,9 +185,6 @@ export const viewHospitalsRating = async (req, res, next) => {
     }
 };
 
-
-//create a manager account 
-
 export const createManagerAccount = async (req, res, next) => {
     try {
         const { firstName, lastName, userName, password } = req.body;
@@ -209,19 +200,16 @@ export const createManagerAccount = async (req, res, next) => {
             return next(new ErrorHandler("User already exists", 400));
         }
 
-        // Hash the password with bcrypt
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user with the hashed password
         const newUser = new User({
             firstName,
             lastName,
             email,
-            userPass: hashedPassword, // Save the hashed password
+            userPass: hashedPassword, 
             role: "Manager",
         });
 
-        // Save the user to the database
         await newUser.save();
 
         res.status(201).json({
@@ -245,30 +233,25 @@ export const createAdminAccount = async (req, res, next) => {
     try {
         const { firstName, lastName, userName, password } = req.body;
 
-        // Check if all fields are provided
         if (!firstName || !lastName || !email || !password) {
             return next(new ErrorHandler("All fields are required", 400));
         }
 
-        // Check if the user already exists
         const existingUser = await User.findOne({ userName });
         if (existingUser) {
             return next(new ErrorHandler("User already exists", 400));
         }
 
-        // Hash the password with bcrypt
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user with the hashed password
         const newUser = new User({
             firstName,
             lastName,
             email,
-            userPass: hashedPassword, // Save the hashed password
+            userPass: hashedPassword, 
             role: "Admin",
         });
 
-        // Save the user to the database
         await newUser.save();
 
         res.status(201).json({
@@ -288,7 +271,6 @@ export const createAdminAccount = async (req, res, next) => {
 };
 
 
-// view all admins
 export const viewAllAdmins = async (req, res, next) => {
     try {
         const admins = await User.find({ role: "Admin" }).select("-userPass");
@@ -303,7 +285,6 @@ export const viewAllAdmins = async (req, res, next) => {
 };
 
 
-// view all managers
 export const viewAllManagers = async (req, res, next) => {
     try {
         const managers = await User.find({ role: "Manager" }).select("-userPass");
@@ -319,19 +300,16 @@ export const viewAllManagers = async (req, res, next) => {
 };
 
 
-//search a specific manager and his assigned hospital
 export const searchManagerWithHospitals = async (req, res, next) => {
     try {
         const { managerId } = req.params;
 
-        // Fetch the manager
         const manager = await User.findById(managerId).select("-userPass");
 
         if (!manager || manager.role !== "Manager") {
             return next(new ErrorHandler("Manager not found or is not a Manager", 404));
         }
 
-        // Find all hospitals assigned to the manager
         const hospitals = await Hospital.find({ assignedManager: managerId }).select(
             "name address location contactNumber status"
         );
@@ -350,12 +328,10 @@ export const searchManagerWithHospitals = async (req, res, next) => {
 };
 
 
-//search a specific hospital and its feedbacks
 export const searchHospitalWithFeedbacks = async (req, res, next) => {
     try {
         const { hospitalId } = req.params;
 
-        // Fetch the hospital details
         const hospital = await Hospital.findById(hospitalId)
             .select("name address email location contactNumber status");
 
@@ -363,7 +339,6 @@ export const searchHospitalWithFeedbacks = async (req, res, next) => {
             return next(new ErrorHandler("Hospital not found", 404));
         }
 
-        // Fetch feedbacks associated with the hospital
         const feedbacks = await Feedback.find({ hospital: hospitalId })
             .populate("user", "firstName lastName")
             .select("rating comment createdAt");

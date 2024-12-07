@@ -3,7 +3,7 @@ import Hospital from '../models/hospitalModel.js';
 import VisitorRoom from '../models/visitorsRoomModel.js';
 import Service from '../models/serviceModel.js';
 import User from '../models/userModel.js';
-import Feedback from '../models/feedbackModel.js'; // Ensure this is the correct model name
+import Feedback from '../models/feedbackModel.js'; 
 
 
 export const getAvailableICUs = async (req, res) => {
@@ -43,13 +43,11 @@ export const reserveICU = async (req, res) => {
             return res.status(400).json({ message: 'ICU is not available for reservation.' });
         }
 
-        // Mark ICU as reserved
         icu.status = 'Occupied';
         icu.isReserved = true;
         icu.reservedBy = userId;
         await icu.save();
 
-        // Add service to user's reserved services
         const user = await User.findById(userId);
         user.totalFees += icu.fees;
         user.services.push({ serviceId: icuId });
@@ -71,7 +69,7 @@ export const updateMedicalHistory = async (req, res) => {
         }
 
         if (medicalHistory) {
-            user.medicalHistory = medicalHistory; // Update the single string field
+            user.medicalHistory = medicalHistory; 
         }
         if (currentCondition) {
             user.currentCondition = currentCondition;
@@ -90,13 +88,11 @@ export const rateHospital = async (req, res) => {
     const { userId, hospitalId, rating, comment } = req.body;
 
     try {
-        // Ensure the hospital exists
         const hospital = await Hospital.findById(hospitalId);
         if (!hospital) {
             return res.status(404).json({ message: 'Hospital not found.' });
         }
 
-        // Create a new rating
         const newRating = new Feedback({
             hospital: hospitalId,
             user: userId,
@@ -130,7 +126,6 @@ export const reserveVisitorRoom = async (req, res) => {
         room.reservationHistory.push({ user: userId });
         await room.save();
 
-        // Add service to user's reserved services
         const user = await User.findById(userId);
         user.totalFees += room.fees;
         user.services.push({ serviceId: roomId });
@@ -190,7 +185,6 @@ export const reserveKidsArea = async (req, res) => {
         room.reservationHistory.push({ user: userId, timeSlot });
         await room.save();
 
-        // Add service to user's reserved services
         const user = await User.findById(userId);
         user.services.push({ serviceId: roomId });
         await user.save();

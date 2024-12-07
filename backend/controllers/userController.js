@@ -23,18 +23,15 @@ export const createUser = async (req, res, next) => {
             shifts,
         } = req.body;
 
-        // Validate input
         if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role || !location) {
             return res.status(400).json({ message: "All required fields must be filled" });
         }
 
-        // Check if the user is already registered
         const isRegistered = await User.findOne({ userName });
         if (isRegistered) {
             return res.status(400).json({ message: "User is already registered" });
         }
 
-        // Create a new user
         const user = await User.create({
             userName,
             firstName,
@@ -54,7 +51,6 @@ export const createUser = async (req, res, next) => {
             shifts: ["Doctor", "Nurse", "Cleaner", "Receptionist"].includes(role) ? shifts : undefined,
         });
 
-        // Generate JWT token and send response
         const token = user.generateJsonWebToken();
         res.status(201).json({ message: "User created successfully", token, user });
     } catch (error) {
@@ -67,33 +63,27 @@ export const loginUser = async (req, res, next) => {
     try {
         const { userName, password, role, location } = req.body;
 
-        // Validate input
         if (!userName || !password || !role || !location) {
             return next(new ErrorHandler("Please fill out the full form", 400));
         }
 
-        // Find the user by username and include the password in the query
         const user = await User.findOne({ userName }).select("+userPass");
         if (!user) {
             return next(new ErrorHandler("Invalid Username or Password", 404));
         }
 
-        // Compare passwords
         const passwordMatch = await user.comparePassword(password);
         if (!passwordMatch) {
             return next(new ErrorHandler("Invalid Username or Password", 404));
         }
 
-        // Ensure the role matches
         if (role !== user.role) {
             return next(new ErrorHandler("Role does not match the provided role", 403));
         }
 
-        // Update the user's location
         user.location = location;
         await user.save();
 
-        // Generate JWT token and send response
         const token = user.generateJsonWebToken();
         res.status(200).json({ message: "User Login Successfully", token, user });
     } catch (error) {
