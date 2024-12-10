@@ -12,7 +12,7 @@ export const createUser = async (req, res, next) => {
             gender,
             phone,
             role,
-            location,
+            email,
             currentCondition,
             admissionDate,
             medicalHistory,
@@ -23,7 +23,7 @@ export const createUser = async (req, res, next) => {
             shifts,
         } = req.body;
 
-        if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role || !location) {
+        if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role || !email) {
             return res.status(400).json({ message: "All required fields must be filled" });
         }
 
@@ -40,7 +40,7 @@ export const createUser = async (req, res, next) => {
             gender,
             phone,
             role,
-            location,
+            email,
             currentCondition: role === "Patient" ? currentCondition : undefined,
             admissionDate: role === "Patient" ? admissionDate : undefined,
             medicalHistory: role === "Patient" ? medicalHistory : undefined,
@@ -61,9 +61,9 @@ export const createUser = async (req, res, next) => {
 
 export const loginUser = async (req, res, next) => {
     try {
-        const { userName, password, role, location } = req.body;
+        const { userName, password, role } = req.body;
 
-        if (!userName || !password || !role || !location) {
+        if (!userName || !password || !role ) {
             return next(new ErrorHandler("Please fill out the full form", 400));
         }
 
@@ -81,7 +81,6 @@ export const loginUser = async (req, res, next) => {
             return next(new ErrorHandler("Role does not match the provided role", 403));
         }
 
-        user.location = location;
         await user.save();
 
         const token = user.generateJsonWebToken();

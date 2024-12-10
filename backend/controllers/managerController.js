@@ -138,7 +138,7 @@ export const viewICUs = async (req, res, next) => {
 
 export const addEmployee = async (req, res, next) => {
     try {
-        const { firstName, lastName, userName, role, email, phone, userPass } = req.body;
+        const { firstName, lastName, userName, role, email, phone, userPass ,gender } = req.body;
 
         const existingEmployee = await User.findOne({ userName });
         if (existingEmployee) {
@@ -153,6 +153,7 @@ export const addEmployee = async (req, res, next) => {
             phone,
             userPass,
             role,
+            gender,
         });
 
         await newEmployee.save();
