@@ -3,7 +3,7 @@ import styles from "./Login.module.css";
 import PageNav from "../components/PageNav";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -11,12 +11,12 @@ export default function Login() {
       <PageNav />
       <form className={styles.form}>
         <div className={styles.row}>
-          <label htmlFor="email">Email address</label>
+          <label htmlFor="username">User name</label>
           <input
-            type="email"
-            id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            type="text"
+            id="username"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
           />
         </div>
 
