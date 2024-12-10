@@ -1,6 +1,6 @@
 import User from '../models/userModel.js'; 
 import ErrorHandler from '../utils/errorHandler.js';
-import {jsontoken} from '../utils/token.js'; 
+import { jsontoken } from '../utils/token.js'; 
 
 export const createUser = async (req, res, next) => {
     try {
@@ -23,7 +23,7 @@ export const createUser = async (req, res, next) => {
             shifts,
         } = req.body;
 
-        if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role || !email) {
+        if (!userName || !firstName || !lastName || !userPass || !gender || !phone || !role) {
             return res.status(400).json({ message: "All required fields must be filled" });
         }
 
@@ -32,6 +32,7 @@ export const createUser = async (req, res, next) => {
             return res.status(400).json({ message: "User is already registered" });
         }
 
+        // Ensure assignedHospital is only set for roles that require it
         const user = await User.create({
             userName,
             firstName,
@@ -44,18 +45,18 @@ export const createUser = async (req, res, next) => {
             currentCondition: role === "Patient" ? currentCondition : undefined,
             admissionDate: role === "Patient" ? admissionDate : undefined,
             medicalHistory: role === "Patient" ? medicalHistory : undefined,
-            assignedHospital: role === "Admin" ? assignedHospital : undefined,
+            assignedHospital: role === "Receptionist" ? assignedHospital : undefined,
             assignedManagers: role === "Admin" ? assignedManagers : undefined,
             assignedDepartments: role === "Manager" ? assignedDepartments : undefined,
             doctorDepartment: role === "Doctor" ? doctorDepartment : undefined,
             shifts: ["Doctor", "Nurse", "Cleaner", "Receptionist"].includes(role) ? shifts : undefined,
         });
 
-        const token = user.generateJsonWebToken();
-        res.status(201).json({ message: "User created successfully", token, user });
+        // Use the organization's token utility function
+        jsontoken(user, "User created successfully", 201, res);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Server error" });
+        next(new ErrorHandler("Server error", 500));
     }
 };
 
@@ -63,7 +64,7 @@ export const loginUser = async (req, res, next) => {
     try {
         const { userName, password, role } = req.body;
 
-        if (!userName || !password || !role ) {
+        if (!userName || !password || !role) {
             return next(new ErrorHandler("Please fill out the full form", 400));
         }
 
@@ -83,8 +84,8 @@ export const loginUser = async (req, res, next) => {
 
         await user.save();
 
-        const token = user.generateJsonWebToken();
-        res.status(200).json({ message: "User Login Successfully", token, user });
+        // Use the organization's token utility function
+        jsontoken(user, "User Login Successfully", 200, res);
     } catch (error) {
         console.error(error);
         next(new ErrorHandler("Server error", 500));
