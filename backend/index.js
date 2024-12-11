@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import { Server } from 'socket.io';
+import { createServer } from 'http';
 import hospitalRoutes from './routes/hospitalRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -20,35 +21,40 @@ import { errorHandler } from './utils/errorHandler.js';
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
 const port = process.env.PORT || 5000;
-const url = process.env.MONGO_URL;
+const mongoUrl = process.env.MONGO_URL;
 
-// Database connection
-mongoose
-    .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to the database'))
-    .catch((e) => console.log('Database connection error: ' + e));
+// Connect to MongoDB
+(async () => {
+    try {
+        await mongoose.connect(mongoUrl, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('Connected to the database');
+    } catch (error) {
+        console.error('Database connection error:', error);
+        process.exit(1); // Exit the application if database connection fails
+    }
+})();
 
-// Middleware
-app.use(
-    cors({
-        origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        credentials: true,
-    })
-);
+// Middleware setup
+app.use(cors({
+    origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-    fileUpload({
-        useTempFiles: true,
-        tempFileDir: './temp/',
-    })
-);
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: './temp/',
+}));
 
-// Register routes
+// Routes setup
 app.use('/admin', adminRoutes);
 app.use('/patient', patientRoutes);
 app.use('/doctor', doctorRoutes);
@@ -59,16 +65,16 @@ app.use('/receptionist', receptionistRoutes);
 app.use('/user', userRoutes);
 app.use('/hospital', hospitalRoutes);
 
-// Error handler middleware
+// Error handling middleware
 app.use(errorHandler);
 
-// Start the server
-const server = app.listen(port, () => {
+// Start the HTTP server
+httpServer.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
 // Set up Socket.IO
-const io = new Server(server, {
+export const io = new Server(httpServer, {
     cors: {
         origin: [process.env.FRONTEND_URL],
         methods: ['GET', 'POST'],
@@ -77,12 +83,23 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log(`User connected & Socket ID is ${socket.id}`);
+    console.log(`User connected with Socket ID: ${socket.id}`);
 
-    // Emit data to the client
+    // Emit welcome message on connection
     socket.emit('Data', 'Welcome to the server!');
 
+    // Handle disconnection
     socket.on('disconnect', () => {
         console.log(`Socket ID ${socket.id} disconnected`);
     });
+
+    // Example: Function to send updated ICU data to clients
+    const sendUpdatedICUs = (updatedICUs) => {
+        console.log('Sending updated ICU data to all connected clients');
+        io.emit('icuUpdated', updatedICUs);
+    };
+
+    // Expose the `sendUpdatedICUs` function for external use (if needed)
+    // You can call this function from other parts of your application
+    app.set('sendUpdatedICUs', sendUpdatedICUs);
 });

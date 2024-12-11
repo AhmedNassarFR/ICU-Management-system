@@ -7,6 +7,7 @@ import LoginForm from './pages/LoginForm';
 import AdminPage from './pages/AdminPage';
 import Map from './pages/Map';
 import io from 'socket.io-client';
+import Home from './pages/Home';
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
@@ -32,9 +33,9 @@ function App() {
                 <Route path="/" element={<Homepage />} />
                 <Route path="/Login" element={<LoginForm />} />
                 <Route path="/Register" element={<RegistrationForm />} />
-                {/* /* <Route path="/Login" element={<Login />} /> / */}
                 <Route path="/Admin" element={<AdminPage />} />
                 <Route path="/Map" element={<Map />} />
+                <Route path="/Home" element={<Home />} />
                 <Route path="" element={<PageNotFound />} />
             </Routes>
         </BrowserRouter>

@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+    getAvailableICUs,
     updateMedicalHistory,
     rateHospital,
     getMedicineSchedule,
@@ -16,9 +17,13 @@ router.put('/medical-history', updateMedicalHistory);
 router.post('/rate-hospital', rateHospital);
 router.get('/medicine-schedule/:userId', getMedicineSchedule);
 router.get('/total-fees/:userId', getTotalFees);
+
 router.post('/reserve-icu', reserveICU);
+router.get('/get-available-icus',getAvailableICUs)
+
 router.post('/reserve-visitor-room', reserveVisitorRoom);
 router.post('/reserve-kids-area', reserveKidsArea);
 router.get('/reserved-services/:userId', getUserReservedServices);
+
 
 export default router;

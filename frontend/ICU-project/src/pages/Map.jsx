@@ -36,6 +36,7 @@ function Map() {
       <h1>Your Location on the Map</h1>
       <MapContainer
         center={[lat, lng]} // Dynamically set center from GPS
+        //29.986433, 31.305176
         zoom={20} // Zoom level
         style={{ width: "100vh", height: "100vh" }} // Map container size
       >
@@ -43,7 +44,7 @@ function Map() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" // Tile server
         />
-        <Marker position={[lat, lng]}> {/* Dynamically set marker position */}
+        <Marker position={[29.986433, 31.305176]}> {/* Dynamically set marker position */}
           <Popup>
             Your current location: <br /> Latitude: {lat}, Longitude: {lng}
           </Popup>
