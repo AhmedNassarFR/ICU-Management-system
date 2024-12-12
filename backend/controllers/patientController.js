@@ -4,7 +4,8 @@ import VisitorRoom from '../models/visitorsRoomModel.js';
 import Service from '../models/serviceModel.js';
 import User from '../models/userModel.js';
 import Feedback from '../models/feedbackModel.js'; 
-import {io} from '../index.js'
+import {app, io} from '../index.js'
+
 
 export const fetchAvailableICUs = async (longitude, latitude) => {
     const icus = await ICU.find({ status: 'Available' })
@@ -52,7 +53,6 @@ export const reserveICU = async (req, res) => {
     const { userId, icuId } = req.body;
 
     try {
-        // Validate ICU existence and availability
         const icu = await ICU.findById(icuId).populate('hospital', 'name address');
         if (!icu) {
             return res.status(404).json({ message: 'ICU not found.' });
@@ -68,9 +68,9 @@ export const reserveICU = async (req, res) => {
         icu.reservedBy = userId;
         await icu.save();
 
-        // Emit real-time ICU update event
-        sendUpdatedICUs(); // Emit the updated ICUs after reservation
-        io.emit('icuReserved', { icuId, status: 'Occupied' }); // Send a specific update for this ICU
+        // Fetch updated ICU list and emit
+        const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
+        io.emit('icuReserved', updatedICUs);
 
         res.json({
             message: 'ICU reserved successfully.',
@@ -87,6 +87,7 @@ export const reserveICU = async (req, res) => {
         res.status(500).json({ message: 'Failed to reserve ICU.' });
     }
 };
+
 
 export const updateMedicalHistory = async (req, res) => {
     const { userId, medicalHistory, currentCondition } = req.body;

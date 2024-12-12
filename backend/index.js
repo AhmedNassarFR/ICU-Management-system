@@ -20,7 +20,7 @@ import { errorHandler } from "./utils/errorHandler.js";
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 const httpServer = createServer(app);
 const port = process.env.PORT || 5000;
 const mongoUrl = process.env.MONGO_URL;
@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
   // Example: Function to send updated ICU data to clients
   const sendUpdatedICUs = (updatedICUs) => {
     console.log("Sending updated ICU data to all connected clients");
-    io.emit("icuUpdated", updatedICUs);
+    io.emit("icuReserved", updatedICUs);
   };
 
   // Expose the `sendUpdatedICUs` function for external use (if needed)

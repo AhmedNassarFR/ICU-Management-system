@@ -4,15 +4,16 @@ import io from "socket.io-client";
 import "./Home.css";
 
 // Connect to the backend via Socket.IO
-const socket = io("http://localhost:3030");
+ const socket = io("http://localhost:3030");
 
 function Home({ userId }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  
   useEffect(() => {
+    
     const fetchLocationAndICUs = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -23,10 +24,10 @@ function Home({ userId }) {
             try {
               setLoading(true);
               const response = await axios.get(
-                "http://localhost:3030/patient/get-available-icus",
+                'http://localhost:3030/patient/get-available-icus',
                 {
                   params: {
-                    userLocation: `${longitude},${latitude}`, // Fixed the template literal
+                    userLocation: `${longitude},${latitude}`,
                   },
                 }
               );
@@ -39,8 +40,20 @@ function Home({ userId }) {
             }
           },
           (err) => {
-            console.error("Error fetching location:", err);
-            setError("Please enable location services to find ICUs near you.");
+            console.error("Error fetching location:", err.message);
+            switch (err.code) {
+              case err.PERMISSION_DENIED:
+                setError("Location access was denied. Please enable location permissions.");
+                break;
+              case err.POSITION_UNAVAILABLE:
+                setError("Location information is unavailable.");
+                break;
+              case err.TIMEOUT:
+                setError("The request to get your location timed out.");
+                break;
+              default:
+                setError("An unknown error occurred while fetching location.");
+            }
           }
         );
       } else {
@@ -54,21 +67,33 @@ function Home({ userId }) {
     const handleICUUpdate = (updatedICUs) => {
       setICUs(updatedICUs);
     };
-    socket.on("icuUpdated", handleICUUpdate);
+    socket.on("icuReserved", handleICUUpdate);
 
     // Cleanup the socket listener on unmount
     return () => {
-      socket.off("icuUpdated", handleICUUpdate);
+      socket.off("icuReserved", handleICUUpdate);
     };
-  }, []);
+  }, [userId]);
 
   const handleReserveICU = async (icuId) => {
     try {
-      await axios.post("http://localhost:3030/patient/reserve-icu", {
-        userId,
-        icuId,
-      });
+      await axios.post(
+        `http://localhost:3030/patient/reserve-icu`,
+        {
+          userId,
+          icuId,
+        }
+      );
       alert("ICU reserved successfully!");
+
+      // Update the ICUs list with the new reserved ICU
+      setICUs((prevICUs) =>
+        prevICUs.map((icu) =>
+          icu._id === icuId
+            ? { ...icu, status: "Occupied", isReserved: true }
+            : icu
+        )
+      );
     } catch (err) {
       console.error("Error reserving ICU:", err);
       alert("Failed to reserve ICU. Please try again.");
@@ -99,8 +124,9 @@ function Home({ userId }) {
               <button
                 onClick={() => handleReserveICU(icu._id)}
                 className="reserve-button"
+                disabled={icu.status === "Occupied"}
               >
-                Reserve
+                {icu.status === "Occupied" ? "Reserved" : "Reserve"}
               </button>
             </li>
           ))}
