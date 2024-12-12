@@ -8,14 +8,13 @@ export default function Homepage() {
 
       <section>
         <h1>
-          You travel the world.
+          you get sick
           <br />
-          WorldWise keeps track of your adventures.
+          We take care of you
         </h1>
         <h2>
-          A world map that tracks your footsteps into every city you can think
-          of. Never forget your wonderful experiences, and show your friends how
-          you have wandered the world.
+          the best ICUs in the world under the tape of your finger. don't miss
+          your spot and reserve now before its too late
         </h2>
       </section>
     </main>

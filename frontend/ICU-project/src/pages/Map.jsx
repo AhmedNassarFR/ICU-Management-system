@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
@@ -28,7 +28,11 @@ function Map() {
 
   // If the geolocation hasn't been retrieved yet, display a loading message
   if (lat === null || lng === null) {
-    return <div>Loading map...</div>;
+    return (
+      <div>
+        <h2>Loading map...</h2>
+      </div>
+    );
   }
 
   return (
@@ -42,9 +46,9 @@ function Map() {
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" // Tile server
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[29.986433, 31.305176]}> {/* Dynamically set marker position */}
+        <Marker position={[29.986433, 31.305176]}>
           <Popup>
             Your current location: <br /> Latitude: {lat}, Longitude: {lng}
           </Popup>

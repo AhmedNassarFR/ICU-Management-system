@@ -2,27 +2,25 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./RegisterForm.css";
 
-const RegistrationForm = () => {
+function RegistrationForm() {
   const [formData, setFormData] = useState({
     userName: "",
     firstName: "",
     lastName: "",
     gender: "",
     phone: "",
-    email: "", // Added email field
+    email: "",
     userPass: "",
-    role: "Patient", // Default role
+    role: "Patient",
   });
 
   const [errors, setErrors] = useState({});
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Form validation
   const validateForm = () => {
     let formErrors = {};
     // Validate username
@@ -47,19 +45,15 @@ const RegistrationForm = () => {
     return formErrors;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Perform validation
     const formErrors = validateForm();
     setErrors(formErrors);
 
-    // If there are errors, stop the submission
     if (Object.keys(formErrors).length > 0) return;
 
     try {
-      // Sending the JSON data
       const response = await axios.post(
         "http://localhost:3030/user/create-user",
         formData
@@ -201,8 +195,12 @@ const RegistrationForm = () => {
         {/* Submit Button */}
         <button type="submit">Register</button>
       </form>
+      <div className="login-link">
+        <span>Already have an account?</span>
+        <a href="/login">Log in</a>
+      </div>
     </div>
   );
-};
+}
 
 export default RegistrationForm;
