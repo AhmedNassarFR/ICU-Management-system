@@ -9,6 +9,9 @@ import ICUSelect from "./pages/ICUSelect";
 import Map from "./pages/Map";
 import Home from "./pages/Home";
 import io from "socket.io-client";
+import PrivateRoute from "./pages/PrivateRoute";
+import Doctor from "./pages/Doctor";
+import Manager from "./pages/Manager";
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
@@ -38,7 +41,30 @@ function App() {
         <Route path="/Admin" element={<AdminPage />} />
         <Route path="/Map" element={<Map />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/icu" element={<ICUSelect />} />
+        <Route
+          path="/icu"
+          element={
+            <PrivateRoute requiredRole="Patient">
+              <ICUSelect />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/Doctor"
+          element={
+            <PrivateRoute requiredRole="Doctor">
+              <Doctor />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/Manager"
+          element={
+            <PrivateRoute requiredRole="Manager">
+              <Manager />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
