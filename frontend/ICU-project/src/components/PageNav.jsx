@@ -13,6 +13,9 @@ function PageNav() {
           <NavLink to="/Login" className={styles.ctaLink}>
             Login
           </NavLink>
+          <NavLink to="/Register" className={styles.ctaLink}>
+            Register
+          </NavLink>
         </li>
       </ul>
     </nav>

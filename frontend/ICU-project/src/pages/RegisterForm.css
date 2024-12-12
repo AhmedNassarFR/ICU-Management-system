@@ -1,40 +1,77 @@
-/* RegistrationForm.css */
+/* Modern Registration Form CSS */
+:root {
+  --primary-color: #4a6cf7;
+  --primary-color-hover: #235325;
+  --text-color-primary: #333;
+  --text-color-secondary: #666;
+  --background-gradient-start: #f0f4ff;
+  --background-gradient-end: #ffffff;
+  --input-border-color: #e0e6ed;
+  --input-focus-border-color: #4a6cf7;
+  --input-shadow-color: rgba(74, 108, 247, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(to bottom right, #e0e7ff, #f5faff);
-  height: 100vh;
-  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 1.6;
+  color: var(--text-color-primary);
 }
 
 .registration-form {
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 30px 40px;
-  width: 360px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.06), 
+    0 5px 15px rgba(0, 0, 0, 0.04);
+  padding: 40px 50px;
+  width: 100%;
+  max-width: 480px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .registration-form h2 {
-  font-size: 24px;
+  font-size: 28px;
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 30px;
+  color: var(--text-color-primary);
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   position: relative;
 }
 
 .form-group label {
   display: block;
   font-size: 14px;
-  color: #444;
-  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
 }
 
 input[type="text"],
@@ -42,171 +79,183 @@ input[type="password"],
 input[type="email"],
 input[type="number"] {
   width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
-  color: #555;
+  border: 1.5px solid var(--input-border-color);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: var(--text-color-primary);
   outline: none;
-  transition: all 0.3s ease;
+  transition: 
+    border-color 0.3s ease, 
+    box-shadow 0.3s ease;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus,
 input[type="number"]:focus {
-  border-color: #7f9cff;
-  box-shadow: 0 0 4px rgba(127, 156, 255, 0.5);
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 0 0 4px var(--input-shadow-color);
 }
 
 button[type="submit"] {
   width: 100%;
-  background-color: #217aff;
+  /* background-color: #4caf50; */
   color: white;
   border: none;
-  border-radius: 20px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 
+    background-color 0.3s ease, 
+    transform 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 button[type="submit"]:hover {
-  background-color: #125ad3;
+  background-color: var(--primary-color-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
 }
 
-.radio-option {
-  display: flex;
-  align-items: center;
-  margin-right: 15px;
-  font-size: 14px;
+button[type="submit"]:active {
+  transform: translateY(1px);
 }
 
-.radio-option input[type="radio"] {
-  margin-right: 8px;
-  accent-color: #217aff; /* Customize the color of the radio button */
-}
-
-.custom-radio.male:hover {
-  color: darkblue;
-}
-
-.custom-radio.female:hover {
-  color: darkpink;
-}
-
-.login-link {
-  text-align: center;
-  margin-top: 15px;
-  font-size: 14px;
-}
-
-.login-link a {
-  color: #217aff;
-  text-decoration: none;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-}
-
-/* Added CSS for First and Last Name on Same Row */
 .row {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
 .row .form-group {
   flex: 1;
 }
 
-.form-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #444;
-}
-
-/* Fancy styling for the First and Last Name in the same row */
-.row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px; /* Add margin for spacing */
-}
-
-.row .form-group {
-  flex: 1;
-}
-
-.form-group input {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
-  color: #555;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-input[type="text"]:focus {
-  border-color: #7f9cff;
-  box-shadow: 0 0 4px rgba(127, 156, 255, 0.5);
-}
-
-/* Gender section with spacing */
 .radio-group {
   display: flex;
   gap: 30px;
   align-items: center;
-  margin-top: 15px;
-  margin-bottom: 20px; /* Space between gender and phone number */
+  margin: 20px 0;
 }
 
-/* Radio button styling */
 .radio-option {
   display: flex;
   align-items: center;
-  font-size: 14px;
   cursor: pointer;
-}
-
-.radio-option input[type="radio"] {
-  margin-right: 10px;
-  accent-color: #217aff; /* Customize the color of the radio button */
-  width: 20px;
-  height: 20px;
-}
-
-.radio-option label {
-  font-weight: bold;
-  color: #444;
   transition: color 0.3s ease;
 }
 
-/* Hover effect */
-.radio-option.male:hover label {
-  color: darkblue;
+.radio-option input[type="radio"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--input-border-color);
+  border-radius: 50%;
+  outline: none;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.radio-option.female:hover label {
-  color: rgb(255, 43, 188);
+.radio-option input[type="radio"]:checked {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
 }
 
-.radio-option input[type="radio"]:checked + label {
-  color: #217aff; /* Change color when selected */
+.radio-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
 }
 
-/* Phone number input style */
-.phone-input {
-  margin-top: 10px;
+.radio-option label {
+  font-weight: 500;
+  color: var(--text-color-secondary);
 }
-.error-text {
-  color: rgb(255, 68, 26);
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
   font-size: 14px;
-  margin-top: 5px;
-  font-weight: bold;
+}
+
+.login-link a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.login-link a:hover {
+  color: var(--primary-color-hover);
+  text-decoration: underline;
+}
+
+.error-text {
+  color: #ff4d4d;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 480px) {
+  .registration-form {
+    width: 95%;
+    padding: 30px 25px;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+.login-redirect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-redirect span {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: normal;
+}
+
+.login-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
 }

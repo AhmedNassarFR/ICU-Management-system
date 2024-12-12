@@ -71,6 +71,10 @@ const RegistrationForm = () => {
       alert("Registration failed!");
     }
   };
+  const handleLoginRedirect = () => {
+
+    window.location.href = "/login";
+  };
 
   return (
     <div className="registration-form">
@@ -200,6 +204,16 @@ const RegistrationForm = () => {
 
         {/* Submit Button */}
         <button type="submit">Register</button>
+        <div className="login-redirect">
+          <span>Already have an account?</span>
+          <button
+            type="button"
+            onClick={handleLoginRedirect}
+            className="login-button"
+          >
+            Login
+          </button>
+        </div>
       </form>
     </div>
   );
