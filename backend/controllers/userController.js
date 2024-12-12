@@ -91,3 +91,7 @@ export const loginUser = async (req, res, next) => {
         next(new ErrorHandler("Server error", 500));
     }
 };
+
+
+
+//logout user, update user
