@@ -1,5 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import styles from "./PageNav.module.css";
+import "../index.css";
 import Logo from "./Logo";
 function PageNav() {
   return (
@@ -10,9 +11,9 @@ function PageNav() {
           <NavLink to="/">Home</NavLink>
         </li>
         <li>
-          <NavLink to="/Login" className={styles.ctaLink}>
-            Login
-          </NavLink>
+          <Link to="/Login" className={styles.ctaLink}>
+            Get YOur ICU
+          </Link>
         </li>
       </ul>
     </nav>

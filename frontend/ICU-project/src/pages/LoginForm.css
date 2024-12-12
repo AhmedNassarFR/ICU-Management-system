@@ -2,127 +2,143 @@
 
 /* General container */
 .login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 400px;
-    height:auto;
-    /* max-width: 500px; */
-    margin-top: 20px;
-    margin: auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* width: 100%; */
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: auto;
+  max-width: 500px;
+  margin-top: 20px;
+  margin: auto;
+  padding: 45px;
+  background-color: #f9f9f9;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+h2 {
+  text-align: center;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Labels */
+label {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Input Fields */
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Success Message */
+.success-message {
+  color: green;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Submit Button */
+button {
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #217aff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* Dropdown Menu (Role) */
+select {
+  font-size: 16px;
+}
+
+/* Responsiveness for mobile */
+@media (max-width: 600px) {
+  .login-form {
+    padding: 15px;
+    width: 100%;
   }
-  h2 {
-    text-align: center;
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
+
   form {
-    display: flex;
-    flex-direction: column;
     width: 100%;
   }
-  
-  /* Form Groups */
+
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
-  
-  /* Labels */
-  label {
-    margin-bottom: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Input Fields */
-  input,
-  select {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 8px;
-    transition: all 0.3s ease;
-  }
-  
-  input:focus,
-  select:focus {
-    border-color: #4caf50;
-    outline: none;
-  }
-  
-  /* Error Message */
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: center;
-  }
-  
-  /* Success Message */
-  .success-message {
-    color: green;
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: center;
-  }
-  
-  /* Submit Button */
+
   button {
-    padding: 12px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    margin-top: 20px;
+    font-size: 14px;
+    padding: 10px;
   }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  button:disabled {
-    background-color: #bdbdbd;
-    cursor: not-allowed;
-  }
-  
-  /* Dropdown Menu (Role) */
-  select {
-    font-size: 16px;
-  }
-  
-  /* Responsiveness for mobile */
-  @media (max-width: 600px) {
-    .login-form {
-      padding: 15px;
-      width: 100%;
-    }
-  
-    form {
-      width: 100%;
-    }
-  
-    .form-group {
-      margin-bottom: 15px;
-    }
-  
-    button {
-      font-size: 14px;
-      padding: 10px;
-    }
-  }
-  
+}

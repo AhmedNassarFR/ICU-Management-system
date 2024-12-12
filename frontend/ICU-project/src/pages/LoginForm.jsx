@@ -18,15 +18,13 @@ const LoginForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError(""); // Clear previous error messages
-    setSuccessMessage(""); // Clear previous success messages
+    setError("");
+    setSuccessMessage("");
 
     try {
-      // Sending login data to the backend
       const response = await axios.post(
         "http://localhost:3030/user/login-user",
         formData
@@ -99,6 +97,10 @@ const LoginForm = () => {
         {/* Success Message */}
         {successMessage && <p className="success-message">{successMessage}</p>}
       </form>
+      <div className="register-link">
+        <span>Don't have an account?</span>
+        <a href="/register">Register</a>
+      </div>
     </div>
   );
 };
