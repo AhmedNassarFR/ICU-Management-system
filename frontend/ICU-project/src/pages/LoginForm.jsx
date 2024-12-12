@@ -156,10 +156,6 @@ const LoginForm = () => {
           </p>
         )}
       </form>
-      <div className="register-link">
-        <span>Don't have an account?</span>
-        <a href="/register">Register</a>
-      </div>
     </div>
   );
 };

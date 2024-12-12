@@ -66,7 +66,6 @@ function RegistrationForm() {
     }
   };
   const handleLoginRedirect = () => {
-
     window.location.href = "/login";
   };
 
@@ -209,10 +208,6 @@ function RegistrationForm() {
           </button>
         </div>
       </form>
-      <div className="login-link">
-        <span>Already have an account?</span>
-        <a href="/login">Log in</a>
-      </div>
     </div>
   );
 }
