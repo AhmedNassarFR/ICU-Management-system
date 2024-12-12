@@ -4,58 +4,87 @@ import VisitorRoom from '../models/visitorsRoomModel.js';
 import Service from '../models/serviceModel.js';
 import User from '../models/userModel.js';
 import Feedback from '../models/feedbackModel.js'; 
+import {io} from '../index.js'
 
+export const fetchAvailableICUs = async (longitude, latitude) => {
+    const icus = await ICU.find({ status: 'Available' })
+        .populate('hospital', 'name address location')
+        .exec();
 
-export const getAvailableICUs = async (req, res) => {
-    const { userLocation } = req.query; // [longitude, latitude]
+    const nearbyICUs = icus.filter((icu) => {
+        const [hospitalLng, hospitalLat] = icu.hospital.location.coordinates;
+        const R = 6371; // Radius of Earth in kilometers
+        const dLat = ((hospitalLat - latitude) * Math.PI) / 180;
+        const dLng = ((hospitalLng - longitude) * Math.PI) / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((latitude * Math.PI) / 180) *
+            Math.cos((hospitalLat * Math.PI) / 180) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // Distance in kilometers
+        return distance ; // Check if within 10 km radius
+    });
 
-    try {
-        const icus = await ICU.find({ status: 'Available' })
-            .populate('hospital', 'name address location')
-            .exec();
-
-        if (userLocation) {
-            const [lng, lat] = userLocation.split(',');
-            const nearbyICUs = icus.filter((icu) => {
-                const [hospitalLng, hospitalLat] = icu.hospital.location.coordinates;
-                const distance = Math.sqrt(
-                    (lng - hospitalLng) ** 2 + (lat - hospitalLat) ** 2
-                );
-                return distance <= 10; // Assuming a 10km radius
-            });
-
-            return res.json({ icus: nearbyICUs });
-        }
-
-        res.json({ icus });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+    return nearbyICUs;
 };
 
-
+// Existing route handler
+export const getAvailableICUs = async (req, res) => {
+    const { userLocation } = req.query;
+    if (!userLocation) {
+        return res.status(400).json({ message: 'User location is required.' });
+    }
+    const [lng, lat] = userLocation.split(',').map(Number);
+    if (isNaN(lng) || isNaN(lat)) {
+        return res.status(400).json({ message: 'Invalid location format.' });
+    }
+    try {
+        const icus = await fetchAvailableICUs(lng, lat);
+        res.json({ icus });
+    } catch (err) {
+        console.error('Error fetching ICUs:', err);
+        res.status(500).json({ message: 'Failed to fetch ICUs.' });
+    }
+};
 export const reserveICU = async (req, res) => {
     const { userId, icuId } = req.body;
 
     try {
-        const icu = await ICU.findById(icuId);
-        if (!icu || icu.status !== 'Available') {
+        // Validate ICU existence and availability
+        const icu = await ICU.findById(icuId).populate('hospital', 'name address');
+        if (!icu) {
+            return res.status(404).json({ message: 'ICU not found.' });
+        }
+
+        if (icu.status !== 'Available') {
             return res.status(400).json({ message: 'ICU is not available for reservation.' });
         }
 
+        // Update ICU status
         icu.status = 'Occupied';
         icu.isReserved = true;
         icu.reservedBy = userId;
         await icu.save();
 
-        const user = await User.findById(userId);
-        user.totalFees += icu.fees;
-        user.services.push({ serviceId: icuId });
-        await user.save();
+        // Emit real-time ICU update event
+        sendUpdatedICUs(); // Emit the updated ICUs after reservation
+        io.emit('icuReserved', { icuId, status: 'Occupied' }); // Send a specific update for this ICU
 
-        res.json({ message: 'ICU reserved successfully.', icu });
+        res.json({
+            message: 'ICU reserved successfully.',
+            icu: {
+                id: icu._id,
+                hospital: icu.hospital,
+                specialization: icu.specialization,
+                fees: icu.fees,
+                status: icu.status,
+            },
+        });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error('Error reserving ICU:', err);
+        res.status(500).json({ message: 'Failed to reserve ICU.' });
     }
 };
 

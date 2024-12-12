@@ -4,37 +4,64 @@ import ICU from '../models/icuModel.js';
 import User from '../models/userModel.js';
 import Feedback from '../models/feedbackModel.js';
 import bcrypt from "bcrypt"; 
+import validator from 'validator';
 
 // Add Hospital with ICUs
+
 export const addHospital = async (req, res, next) => {
     try {
-        const { name, address, email, longitude, latitude, contactNumber} = req.body;
+        const { name, address, email, longitude, latitude, contactNumber } = req.body;
 
-        if (!name || !address || !email || !longitude || !latitude || !contactNumber ) {
-            return next(new ErrorHandler("All fields are required, including longitude, latitude, and ICU specializations.", 400));
+        // Validate that all fields are provided
+        if (!name || !address || !email || !longitude || !latitude || !contactNumber) {
+            return next(new ErrorHandler("All fields are required, including longitude, latitude", 400));
         }
 
+        // Validate the email format
+        if (!validator.isEmail(email)) {
+            return next(new ErrorHandler("Invalid email address", 400));
+        }
+
+        // Check if the hospital already exists by email
+        const existingHospital = await Hospital.findOne({ email });
+        if (existingHospital) {
+            return next(new ErrorHandler("A hospital with this email already exists", 400));
+        }
+
+        // Ensure longitude and latitude are valid numbers
+        const lon = parseFloat(longitude);
+        const lat = parseFloat(latitude);
+
+        if (isNaN(lon) || isNaN(lat)) {
+            return next(new ErrorHandler("Invalid longitude or latitude", 400));
+        }
+
+        // Create the new hospital
         const newHospital = new Hospital({
             name,
             address,
             email,
             location: {
                 type: "Point",
-                coordinates: [parseFloat(longitude), parseFloat(latitude)],
+                coordinates: [lon, lat], // Longitude first, then latitude
             },
             contactNumber,
         });
 
+        // Save the hospital to the database
         await newHospital.save();
 
+        // Send the response back to the client
         res.status(201).json({
             message: "Hospital added successfully.",
             hospital: newHospital,
         });
     } catch (error) {
+        // Handle unexpected errors
         next(new ErrorHandler(error.message, 500));
     }
 };
+
 export const blockHospital = async (req, res, next) => {
     try {
         const { id } = req.params;

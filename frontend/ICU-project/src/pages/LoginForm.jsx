@@ -47,7 +47,6 @@ const LoginForm = () => {
     setSuccessMessage("");
 
     try {
-      // Sending login data to the backend
       const response = await axios.post(
         "http://localhost:3030/user/login-user",
         formData
@@ -157,6 +156,10 @@ const LoginForm = () => {
           </p>
         )}
       </form>
+      <div className="register-link">
+        <span>Don't have an account?</span>
+        <a href="/register">Register</a>
+      </div>
     </div>
   );
 };

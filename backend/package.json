@@ -25,9 +25,11 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7",
     "prettyjson": "^1.2.5",
+    "socket.io": "^4.8.1",
     "swe_project": "file:",
     "uuid": "^8.3.2",
-    "validator": "^13.12.0"
+    "validator": "^13.12.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "eslint": "^9.16.0",
