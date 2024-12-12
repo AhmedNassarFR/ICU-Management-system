@@ -121,12 +121,12 @@ io.on("connection", (socket) => {
   });
 
   // Example: Function to send updated ICU data to clients
-  const sendUpdatedICUs = (updatedICUs) => {
-    console.log("Sending updated ICU data to all connected clients");
-    io.emit("icuReserved", updatedICUs);
-  };
+  // const sendUpdatedICUs = (updatedICUs) => {
+  //   console.log("Sending updated ICU data to all connected clients");
+  //   io.emit("icuReserved", updatedICUs);
+  // };
 
-  // Expose the `sendUpdatedICUs` function for external use (if needed)
-  // You can call this function from other parts of your application
-  app.set("sendUpdatedICUs", sendUpdatedICUs);
+  // // Expose the `sendUpdatedICUs` function for external use (if needed)
+  // // You can call this function from other parts of your application
+  // app.set("sendUpdatedICUs", sendUpdatedICUs);
 });

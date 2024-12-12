@@ -4,7 +4,7 @@ import Task from "../models/taskModel.js";
 import User from "../models/userModel.js";
 import VacationRequest from "../models/vacationRequestModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
-
+import { io } from "../index.js";
 export const assignBackupManager = async (req, res, next) => {
     try {
         const { hospitalId, backupManagerId } = req.body;
@@ -56,6 +56,9 @@ export const registerICU = async (req, res, next) => {
         const newICU = new ICU(icuData);
 
         await newICU.save();
+
+        const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
+        io.emit('icuUpdated', updatedICUs);
 
         res.status(201).json({
             success: true,

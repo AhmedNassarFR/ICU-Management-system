@@ -70,7 +70,7 @@ export const reserveICU = async (req, res) => {
 
         // Fetch updated ICU list and emit
         const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
-        io.emit('icuReserved', updatedICUs);
+        io.emit('icuUpdated', updatedICUs);
 
         res.json({
             message: 'ICU reserved successfully.',

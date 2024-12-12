@@ -67,11 +67,11 @@ function Home({ userId }) {
     const handleICUUpdate = (updatedICUs) => {
       setICUs(updatedICUs);
     };
-    socket.on("icuReserved", handleICUUpdate);
+    socket.on("icuUpdated", handleICUUpdate);
 
     // Cleanup the socket listener on unmount
     return () => {
-      socket.off("icuReserved", handleICUUpdate);
+      socket.off("icuUpdated", handleICUUpdate);
     };
   }, [userId]);
 
