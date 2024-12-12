@@ -1,6 +1,8 @@
 import User from '../models/userModel.js'; 
 import ErrorHandler from '../utils/errorHandler.js';
 import { jsontoken } from '../utils/token.js'; 
+import jwt from 'jsonwebtoken';
+
 
 export const createUser = async (req, res, next) => {
     try {
@@ -94,4 +96,64 @@ export const loginUser = async (req, res, next) => {
 
 
 
+
+//   export const verifyToken = async (req, res) => {
+//     const token = req.headers["Authorization"]?.split(" ")[1]; // Extract token from Authorization header
+  
+//     if (!token) {
+//       return res.status(401).json({ message: "No token provided" });
+//     }
+  
+//     try {
+//       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Verify token with your secret
+//       const user = await User.findById(decoded.userId); // Find user by ID stored in the token
+  
+//       if (!user) {
+//         return res.status(404).json({ message: "User not found" });
+//       }
+  
+//       res.status(200).json({ role: user.role }); // Return user's role
+//     } catch (error) {
+//       console.error("Token verification error:", error);
+//       res.status(401).json({ message: "Invalid token" });
+//     }
+//   }
+
+export const verifyToken = async (req, res) => {
+    const token = req.body.token;
+  
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+  
+    // Verify the token (using your authentication logic)
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Invalid token" });
+      }
+  
+      // Token is valid
+      res.status(200).json({ message: "Token verified", role: decoded.role });
+    });
+  }
+
+
+// app.post("/user/verify-token", (req, res) => {
+//         const token = req.body.token;
+      
+//         if (!token) {
+//           return res.status(401).json({ message: "No token provided" });
+//         }
+      
+//         // Verify the token (using your authentication logic)
+//         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//           if (err) {
+//             return res.status(401).json({ message: "Invalid token" });
+//           }
+      
+//           // Token is valid
+//           res.status(200).json({ message: "Token verified", role: decoded.role });
+//         });
+//       });
+      
 //logout user, update user

@@ -40,13 +40,36 @@ const mongoUrl = process.env.MONGO_URL;
 })();
 
 // Middleware setup
+// app.use(
+//   cors({
+//     origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//     allowedHeaders: ['Authorization', 'Content-Type'],
+//   })
+// );
+
+
+const allowedOrigins = [process.env.FRONTEND_URL, process.env.DASHBOARD_URL];
+
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      if (allowedOrigins.includes(origin) || !origin) {
+        // Allow requests from allowed origins or non-browser clients
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type", "Accept", "X-Requested-With"],
   })
 );
+
+app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
