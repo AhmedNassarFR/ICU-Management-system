@@ -39,7 +39,7 @@ function AddHospital() {
 
       if (response.ok) {
         toast.success("Hospital added successfully!");
-        navigate("/hospitals"); // Redirect to the hospitals list page or any desired route
+        navigate("/ViewHospital");
       } else {
         toast.error(data.message || "Failed to add hospital");
       }
