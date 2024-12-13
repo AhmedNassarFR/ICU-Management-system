@@ -1,63 +1,56 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Doctor.css";
-
-const STATIC_PATIENTS = [
-  {
-    id: 1,
-    firstName: "John",
-    lastName: "Doe",
-    age: 45,
-    gender: "Male",
-    currentCondition: "Recovering from Surgery",
-    admissionDate: "2024-01-15",
-    healthStatus: {
-      temperature: "98.6°F",
-      bloodPressure: "120/80",
-      heartRate: "72 bpm",
-    },
-    medicalHistory: [
-      "Appendectomy in 2020",
-      "Hypertension management",
-      "Annual checkup in 2023",
-    ],
-    medicineSchedule:
-      "Morning: Antibiotics\nAfternoon: Pain Management\nEvening: Recovery Supplements",
-  },
-  {
-    id: 2,
-    firstName: "Emily",
-    lastName: "Smith",
-    age: 35,
-    gender: "Female",
-    currentCondition: "Post-Pregnancy Care",
-    admissionDate: "2024-02-01",
-    healthStatus: {
-      temperature: "98.4°F",
-      bloodPressure: "115/75",
-      heartRate: "68 bpm",
-    },
-    medicalHistory: [
-      "Normal delivery",
-      "No prior major health issues",
-      "Routine prenatal care",
-    ],
-    medicineSchedule:
-      "Morning: Prenatal Vitamins\nAfternoon: Calcium Supplements\nEvening: Iron Tablets",
-  },
-];
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const DoctorDashboard = () => {
+  const { id: doctorId } = useParams();
+  const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
-  const [Paintnet, setPaintnet] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const filteredPatients = STATIC_PATIENTS.filter((patient) =>
+  // Fetch patients data from API
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        setLoading(true);
+
+        // Correct URL path for axios
+        const response = await axios.get(
+          `http://localhost:3030/doctor/assigned-patients/doctor/${doctorId}/`
+        );
+
+        // Check if the response status is ok
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch patients data.");
+        }
+
+        console.log(response.data.message);
+        // Set the patients data from the response
+        setPatients(response.data.patients);
+        
+        
+      } catch (error) {
+        setError("Unable to fetch patients. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, []);
+
+  // Filter patients based on search term
+  const filteredPatients = patients.filter((patient) =>
     `${patient.firstName} ${patient.lastName}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
 
+  // Render patient card
   const renderPatientCard = (patient) => (
     <div
       key={patient.id}
@@ -73,7 +66,7 @@ const DoctorDashboard = () => {
           </h3>
           <span className="patient-condition">{patient.currentCondition}</span>
         </div>
-        <span className="patient-age">{patient.age} years</span>
+        
       </div>
       <div className="patient-card-footer">
         <span>Admitted: {patient.admissionDate}</span>
@@ -81,6 +74,7 @@ const DoctorDashboard = () => {
     </div>
   );
 
+  // Render patient details
   const renderPatientDetails = () => {
     if (!selectedPatient) return null;
 
@@ -104,7 +98,7 @@ const DoctorDashboard = () => {
         </div>
 
         <div className="patient-details-tabs">
-          {["overview", "health", "history", "medicine"].map((tab) => (
+          {["overview","history", "medicine"].map((tab) => (
             <button
               key={tab}
               className={activeTab === tab ? "active" : ""}
@@ -121,9 +115,7 @@ const DoctorDashboard = () => {
               <div className="overview-grid">
                 <div className="overview-item">
                   <h4>Personal Information</h4>
-                  <p>
-                    <strong>Age:</strong> {selectedPatient.age}
-                  </p>
+                  
                   <p>
                     <strong>Gender:</strong> {selectedPatient.gender}
                   </p>
@@ -140,28 +132,12 @@ const DoctorDashboard = () => {
             </div>
           )}
 
-          {activeTab === "health" && (
-            <div className="health-tab">
-              <div className="health-stats">
-                {Object.entries(selectedPatient.healthStatus).map(
-                  ([key, value]) => (
-                    <div key={key} className="health-stat">
-                      <span>{key.replace(/([A-Z])/g, " $1")}</span>
-                      <strong>{value}</strong>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          )}
 
           {activeTab === "history" && (
             <div className="history-tab">
               <h3>Medical History</h3>
               <ul>
-                {selectedPatient.medicalHistory.map((entry, index) => (
-                  <li key={index}>{entry}</li>
-                ))}
+                {selectedPatient.medicalHistory}
               </ul>
             </div>
           )}
@@ -196,7 +172,6 @@ const DoctorDashboard = () => {
             <span className="notification-badge">2</span>
           </button>
           <div className="profile-section">
-            {/* <div className="profile-icon">DR</div> */}
             <span className="profile-name">Dr. Sarah Thompson</span>
           </div>
         </div>
@@ -210,7 +185,12 @@ const DoctorDashboard = () => {
               {filteredPatients.length} Total
             </span>
           </div>
-          {filteredPatients.length > 0 ? (
+
+          {loading ? (
+            <div className="loading">Loading patients...</div>
+          ) : error ? (
+            <div className="error">{error}</div>
+          ) : filteredPatients.length > 0 ? (
             filteredPatients.map(renderPatientCard)
           ) : (
             <div className="no-patients">No patients found</div>

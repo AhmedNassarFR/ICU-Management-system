@@ -1,14 +1,3 @@
-/* AddHospital.module.css */
-
-section {
-  background-color: #f0f4f8; /* Light background color */
-  min-height: 100vh; /* Full height for the section */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 0;
-}
-
 .container {
   margin: auto;
   width: 100%;

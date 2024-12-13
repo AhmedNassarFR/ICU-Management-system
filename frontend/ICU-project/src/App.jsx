@@ -5,7 +5,6 @@ import PageNotFound from "./pages/PageNotFound";
 import LoginForm from "./pages/LoginForm";
 import RegistrationForm from "./pages/RegisterForm";
 import AdminPage from "./pages/AdminPage";
-import ICUSelect from "./pages/ICUSelect";
 import io from "socket.io-client";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
@@ -13,6 +12,7 @@ import Doctor from "./pages/Doctor";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
 import ManagerDashboard from "./pages/ManagerDashboard";
+import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
@@ -42,9 +42,10 @@ function App() {
         <Route path="/Admin" element={<AdminPage />} />
         {/* <Route path="/Home" element={<UserHomeScreen />} /> */}
         <Route path="/Addhospital" element={<AddHospital />} />
+        <Route path="/ViewHospital" element={<ViewAllHospital />} />
 
         <Route
-          path="/Home"
+          path="/Home/:id"
           element={
             <PrivateRoute requiredRole="Patient">
               <UserHomeScreen />
@@ -52,7 +53,7 @@ function App() {
           }
         />
         <Route
-          path="/Doctor"
+          path="/Doctor/:id"
           element={
             <PrivateRoute requiredRole="Doctor">
               <Doctor />
@@ -60,7 +61,7 @@ function App() {
           }
         />
         <Route
-          path="/Manager"
+          path="/Manager/:id"
           element={
             <PrivateRoute requiredRole="Manager">
               <ManagerDashboard />

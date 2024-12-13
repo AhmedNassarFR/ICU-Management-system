@@ -5,6 +5,7 @@ import Service from '../models/serviceModel.js';
 import User from '../models/userModel.js';
 import Feedback from '../models/feedbackModel.js'; 
 import {app, io} from '../index.js'
+import { updateUser } from './userController.js';
 
 
 export const fetchAvailableICUs = async (longitude, latitude) => {
@@ -49,6 +50,8 @@ export const getAvailableICUs = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch ICUs.' });
     }
 };
+
+
 export const reserveICU = async (req, res) => {
     const { userId, icuId } = req.body;
 
@@ -61,6 +64,15 @@ export const reserveICU = async (req, res) => {
         if (icu.status !== 'Available') {
             return res.status(400).json({ message: 'ICU is not available for reservation.' });
         }
+
+        // Find all doctors in the User collection
+        const doctors = await User.find({ role: 'Doctor' });
+        if (doctors.length === 0) {
+            return res.status(404).json({ message: 'No available doctors to assign.' });
+        }
+
+        // Randomly select a doctor from the list
+        const randomDoctor = doctors[Math.floor(Math.random() * doctors.length)];
 
         // Update ICU status
         icu.status = 'Occupied';
@@ -79,8 +91,12 @@ export const reserveICU = async (req, res) => {
         const newService = new Service(serviceDetails);
         await newService.save();
 
+        // Update the assigned doctor field for the user and add the patient to the doctor's patients list
+        await updateUser(userId, { assignedDoctor: randomDoctor._id });
+        await updateUser(randomDoctor._id, { $push: { patients: userId } });
+
         // Fetch updated ICU list and emit
-        const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
+        const updatedICUs = await ICU.find({ status: 'Available', }).populate('hospital', 'name address').exec();
         io.emit('icuUpdated', updatedICUs);
 
         res.json({
@@ -91,6 +107,10 @@ export const reserveICU = async (req, res) => {
                 specialization: icu.specialization,
                 fees: icu.fees,
                 status: icu.status,
+            },
+            assignedDoctor: {
+                id: randomDoctor._id,
+                name: `${randomDoctor.firstName} ${randomDoctor.lastName}`,
             },
         });
     } catch (err) {

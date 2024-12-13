@@ -380,3 +380,32 @@ export const calculateFees = async (req, res, next) => {
         next(new ErrorHandler(`Error while calculating fees: ${error.message}`, 500));
     }
 };
+
+
+export const viewAllEmployees = async (req, res) => {
+    try {
+      // Correctly access managerId from params
+      const { managerId } = req.params;
+  
+      // Fetch the manager from the database
+      const manager = await User.findById(managerId);
+      if (!manager || manager.role !== "Manager") {
+        return res.status(403).json({ message: "Unauthorized: Only managers can access this information." });
+      }
+  
+      // Fetch the assigned employees
+      const assignedEmployees = await User.find({ assignedManager: managerId }, "userName firstName lastName department role"); 
+  
+      if (!assignedEmployees || assignedEmployees.length === 0) {
+        return res.status(404).json({ message: "No employees assigned to this manager." });
+      }
+  
+      // Return the employees data
+      res.status(200).json({
+        message: "Employees assigned to this manager retrieved successfully.",
+        employees: assignedEmployees,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };

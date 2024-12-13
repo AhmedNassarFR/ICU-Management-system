@@ -84,7 +84,7 @@ const userSchema = new mongoose.Schema(
         // Specific fields for Patients
         currentCondition: { type: String }, // e.g., allergies, symptoms
         admissionDate: { type: Date },
-        medicalHistory: { type: String },
+        medicalHistory: { type: String || "no medical history" },
         assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         medicineSchedule:{ type: String},
         totalFees: {
@@ -95,6 +95,14 @@ const userSchema = new mongoose.Schema(
         // Specific fields for Managers
         assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],
         assignedEmployees: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Employees under their management
+
+
+        //for employees
+
+        assignedManager: { type: mongoose.Schema.Types.ObjectId, ref: "Manager" },
+
+
+
 
         // Specific fields for Doctors
         doctorDepartment: { type: String }, // Department specialization
