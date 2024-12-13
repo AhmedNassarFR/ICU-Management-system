@@ -64,19 +64,26 @@ export const addHospital = async (req, res, next) => {
 
 export const blockHospital = async (req, res, next) => {
     try {
-        const { id } = req.params;
-
-        const hospital = await Hospital.findByIdAndUpdate(id, { status: 'Blocked' }, { new: true });
-
-        if (!hospital) {
-            return next(new ErrorHandler("Hospital not found.", 404));
-        }
-
-        res.status(200).json({ message: "Hospital blocked successfully.", hospital });
+      const { id } = req.params;
+  
+      // Find and update the hospital status
+      const hospital = await Hospital.findByIdAndUpdate(id, { status: 'Blocked' }, { new: true });
+  
+      if (!hospital) {
+        return next(new ErrorHandler("Hospital not found.", 404));
+      }
+  
+      // Update ICU rooms status to 'Occupied' for the blocked hospital
+      await ICU.updateMany(
+        { hospital: id }, // Filter for ICU rooms belonging to the blocked hospital
+        { status: 'Occupied' } // Set status to 'Occupied'
+      );
+  
+      res.status(200).json({ message: "Hospital blocked successfully.", hospital });
     } catch (error) {
-        next(new ErrorHandler(error.message, 500));
+      next(new ErrorHandler(error.message, 500));
     }
-};
+  };
 export const viewHospitals = async (req, res, next) => {
     try {
         const { status, name, longitude, latitude } = req.query;

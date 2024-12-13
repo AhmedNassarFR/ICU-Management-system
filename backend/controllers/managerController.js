@@ -57,7 +57,7 @@ export const registerICU = async (req, res, next) => {
 
         await newICU.save();
 
-        const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
+        const updatedICUs = await ICU.find({ status: 'Available',  }).populate('hospital', 'name address').exec();
         io.emit('icuUpdated', updatedICUs);
 
         res.status(201).json({
@@ -141,35 +141,45 @@ export const viewICUs = async (req, res, next) => {
 
 export const addEmployee = async (req, res, next) => {
     try {
-        const { firstName, lastName, userName, role, email, phone, userPass ,gender } = req.body;
-
-        const existingEmployee = await User.findOne({ userName });
-        if (existingEmployee) {
-            return next(new ErrorHandler("Username already exists", 400));
-        }
-
-        const newEmployee = new User({
-            firstName,
-            lastName,
-            userName,
-            email,
-            phone,
-            userPass,
-            role,
-            gender,
-        });
-
-        await newEmployee.save();
-
-        res.status(201).json({
-            success: true,
-            message: "Employee added successfully",
-            data: newEmployee,
-        });
+      // Correctly access managerId from the request (modify if needed)
+      const { managerId } = req.body; // Assuming managerId is sent in the request body
+  
+      const { firstName, lastName, userName, role, email, phone, userPass, gender } = req.body;
+  
+      const existingEmployee = await User.findOne({ userName });
+      if (existingEmployee) {
+        return next(new ErrorHandler("Username already exists", 400));
+      }
+  
+      // Check if manager exists (optional)
+      const manager = await User.findById(managerId);
+      if (!manager || manager.role !== "Manager") {
+        return next(new ErrorHandler("Invalid manager ID or role", 400)); // Adjust error message as needed
+      }
+  
+      const newEmployee = new User({
+        firstName,
+        lastName,
+        userName,
+        email,
+        phone,
+        userPass,
+        role,
+        gender,
+        assignedManager: managerId, // Add the manager ID
+      });
+  
+      await newEmployee.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Employee added successfully",
+        data: newEmployee,
+      });
     } catch (error) {
-        next(new ErrorHandler(error.message, 500));
+      next(new ErrorHandler(error.message, 500));
     }
-};
+  };
 
 export const removeEmployee = async (req, res, next) => {
     try {
