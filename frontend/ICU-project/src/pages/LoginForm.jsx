@@ -66,46 +66,50 @@ const LoginForm = () => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-
+  
     if (isLockedOut) {
       setError("Too many failed attempts. Please wait.");
       return;
     }
-
+  
     if (!formData.role) {
       setError("Please select a role.");
       return;
     }
-
+  
     try {
       const response = await axios.post(
         "http://localhost:3030/user/login-user",
         formData
       );
-
+  
       if (response.status === 200) {
         // Store the auth token and user role
         localStorage.setItem("authToken", response.data.token);
-        localStorage.setItem("userRole", formData.role); // Store role in localStorage
-
+        localStorage.setItem("userRole", formData.role);
+  
+        const userId = response.data.user.id; // Assuming the user object contains an `id` field
         setSuccessMessage("Login successful! Redirecting...");
         setLoginAttempts(0);
-
+  
         // Get redirect path based on the selected role
-        const redirectPath = roleRedirectPaths[formData.role] || "/dashboard";
-        navigate(redirectPath);
+        const redirectPath = roleRedirectPaths[formData.role] || "/login";
+        
+        // Redirect with user ID as a path parameter
+        navigate(`${redirectPath}/${userId}`);
       }
     } catch (err) {
       setError("Login failed. Please check your credentials.");
       const newAttempts = loginAttempts + 1;
       setLoginAttempts(newAttempts);
-
+  
       if (newAttempts >= MAX_ATTEMPTS) {
         setError("Too many failed attempts. Locking out...");
         startLockoutTimer();
       }
     }
   };
+  
 
   // Redirect to register page
   const handleRegisterRedirect = () => {

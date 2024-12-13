@@ -84,10 +84,24 @@ export const loginUser = async (req, res, next) => {
             return next(new ErrorHandler("Role does not match the provided role", 403));
         }
 
-        await user.save();
+        // Exclude the password from the user data before sending it
+        const userData = {
+            id: user._id, // Include user ID
+            userName: user.userName,
+            role: user.role, // Add other relevant fields if needed
+        };
 
         // Use the organization's token utility function
-        jsontoken(user, "User Login Successfully", 200, res);
+        const token = jsontoken(userData, "User Login Successfully", 200, res);
+
+        // Send the token and user data to the frontend
+        res.status(200).json({
+            success: true,
+            message: "User Login Successfully",
+            token,
+            user: userData, // Include user ID in the response
+        });
+
     } catch (error) {
         console.error(error);
         next(new ErrorHandler("Server error", 500));
