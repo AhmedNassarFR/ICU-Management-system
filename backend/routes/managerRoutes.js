@@ -14,6 +14,7 @@ import {
     updateVacationRequest,
     viewVacationRequests,
     calculateFees,
+    viewAllEmployees
 } from '../controllers/managerController.js';
 
 const router = express.Router();
@@ -32,5 +33,7 @@ router.post('/handle-vacation-request', handleVacationRequest);
 router.put('/update-vacation-request/:requestId', updateVacationRequest);
 router.get('/view-vacation-requests', viewVacationRequests);
 router.get('/calculate-fees/:serviceId', calculateFees);
+
+router.get('/view-all-employees/:managerId', viewAllEmployees);
 
 export default router;

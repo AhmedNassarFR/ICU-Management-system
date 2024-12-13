@@ -6,7 +6,10 @@ import "./Icus.css";
 // Connect to the backend via Socket.IO
 const socket = io("http://localhost:3030");
 
-function Icus({ userId }) {
+
+
+function Icus({userId} ) {
+  console.log(userId);
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,6 +30,7 @@ function Icus({ userId }) {
                 {
                   params: {
                     userLocation: `${longitude},${latitude}`,
+                    userId: userId,  // Include userId in the request params
                   },
                 }
               );
@@ -74,7 +78,7 @@ function Icus({ userId }) {
     return () => {
       socket.off("icuUpdated", handleICUUpdate);
     };
-  }, [userId]);
+  }, [userId]);  // Re-fetch when userId changes
 
   const handleReserveICU = async (icuId) => {
     try {

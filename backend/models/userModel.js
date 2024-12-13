@@ -96,6 +96,14 @@ const userSchema = new mongoose.Schema(
         assignedDepartments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Department" }],
         assignedEmployees: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Employees under their management
 
+
+        //for employees
+
+        assignedManager: { type: mongoose.Schema.Types.ObjectId, ref: "Manager" },
+
+
+
+
         // Specific fields for Doctors
         doctorDepartment: { type: String }, // Department specialization
         patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // List of assigned patients

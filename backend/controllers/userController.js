@@ -171,3 +171,14 @@ export const verifyToken = async (req, res) => {
 //       });
       
 //logout user, update user
+
+export const updateUser = async (userId, updates) => {
+    try {
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+        return updatedUser;
+    } catch (err) {
+        console.error(`Error updating user with ID ${userId}:`, err);
+        throw new Error('Failed to update user.');
+    }
+};
+
