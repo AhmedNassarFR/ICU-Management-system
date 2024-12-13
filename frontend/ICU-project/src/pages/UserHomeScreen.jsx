@@ -5,8 +5,12 @@ import "./UserHomeScreen.css";
 function UserHomeScreen() {
   return (
     <div className="user-home-container">
-      <Icus />
-      <Map />
+      <div className="icus">
+        <Icus />
+      </div>
+      <div className="map">
+        <Map />
+      </div>
     </div>
   );
 }

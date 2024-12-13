@@ -54,17 +54,8 @@ const allowedOrigins = [process.env.FRONTEND_URL, process.env.DASHBOARD_URL];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (allowedOrigins.includes(origin) || !origin) {
-        // Allow requests from allowed origins or non-browser clients
-        callback(null, origin);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
-    allowedHeaders: ["Authorization", "Content-Type", "Accept", "X-Requested-With"],
   })
 );
 
