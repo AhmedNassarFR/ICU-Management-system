@@ -1,4 +1,4 @@
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "./PageNav.module.css";
 import "../index.css";
 import Logo from "./Logo";
@@ -8,12 +8,9 @@ function PageNav() {
       <Logo />
       <ul>
         <li>
-          <NavLink to="/">Home</NavLink>
-        </li>
-        <li>
-          <NavLink to="/Register" className={styles.ctaLink}>
+          <Link to="/Register" className={styles.ctaLink}>
             Register
-          </NavLink>
+          </Link>
           <Link to="/Login" className={styles.ctaLink}>
             Get YOur ICU
           </Link>

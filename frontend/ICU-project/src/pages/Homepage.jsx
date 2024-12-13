@@ -13,8 +13,8 @@ export default function Homepage() {
           We take care of you
         </h1>
         <h2>
-          the best ICUs in the world under the tape of your finger. don't miss
-          your spot and reserve now before its too late
+          the best ICUs in the world under the tape of your finger. don&apos;t
+          miss your spot and reserve now before its too late
         </h2>
       </section>
     </main>

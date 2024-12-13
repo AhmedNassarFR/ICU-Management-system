@@ -7,11 +7,11 @@ import RegistrationForm from "./pages/RegisterForm";
 import AdminPage from "./pages/AdminPage";
 import ICUSelect from "./pages/ICUSelect";
 import Map from "./pages/Map";
-import Home from "./pages/Home";
 import io from "socket.io-client";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
 import Manager from "./pages/Manager";
+import Icus from "./pages/Icus";
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
@@ -40,7 +40,7 @@ function App() {
         <Route path="/Register" element={<RegistrationForm />} />
         <Route path="/Admin" element={<AdminPage />} />
         <Route path="/Map" element={<Map />} />
-        <Route path="/Home" element={<Home />} />
+        <Route path="/Icus" element={<Icus />} />
         <Route
           path="/icu"
           element={

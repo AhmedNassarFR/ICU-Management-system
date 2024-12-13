@@ -24,7 +24,7 @@ function Map() {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-  }, []); // Only run once when the component mounts
+  }, []);
 
   // If the geolocation hasn't been retrieved yet, display a loading message
   if (lat === null || lng === null) {
@@ -39,10 +39,9 @@ function Map() {
     <div className="App">
       <h1>Your Location on the Map</h1>
       <MapContainer
-        center={[lat, lng]} // Dynamically set center from GPS
-        //29.986433, 31.305176
-        zoom={20} // Zoom level
-        style={{ width: "100vh", height: "100vh" }} // Map container size
+        center={[lat, lng]}
+        zoom={18}
+        style={{ width: "50vh", height: "50vh" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
