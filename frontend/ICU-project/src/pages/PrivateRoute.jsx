@@ -23,7 +23,7 @@ const PrivateRoute = ({ children, requiredRole }) => {
         if (response.status === 200) {
           setIsAuthenticated(true);
           setUserRole(response.data.role);
-
+          console.log("This is Requrired Role", { requiredRole });
           // Check if the role matches the required role
           if (requiredRole && response.data.role !== requiredRole) {
             navigate("/unauthorized"); // Redirect to Unauthorized page
