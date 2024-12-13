@@ -18,25 +18,25 @@ function AdminPage() {
         />
         <DashboardCard
           title={"View Hospitals"}
-          icon={"🚑 "}
+          icon={"🚑"}
           color={"#ff8b94"}
           route="/"
         />
         <DashboardCard
           title={"View All Admins"}
-          icon={"👩‍💼 "}
+          icon={"👩‍💼"}
           color={"#d4a5ff"}
           route="/"
         />
         <DashboardCard
           title={"View All Managers"}
-          icon={"🛠️ "}
+          icon={"🛠️"}
           color={"#fdfd96 "}
           route="/"
         />
         <DashboardCard
           title={"Search Managers By Hospitals"}
-          icon={"🔍 "}
+          icon={"🔍"}
           color={"#ffd3b6"}
           route="/"
         />
