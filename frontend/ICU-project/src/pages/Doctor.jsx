@@ -32,10 +32,7 @@ const DoctorDashboard = () => {
         // Set the patients data from the response
         setPatients(response.data.patients);
         
-        console.log(response.data.patients);
-
-        setSelectedPatient(response.data.patients)
-        // Assuming the response contains a 'patients' field
+        
       } catch (error) {
         setError("Unable to fetch patients. Please try again later.");
       } finally {
@@ -68,7 +65,7 @@ const DoctorDashboard = () => {
           </h3>
           <span className="patient-condition">{patient.currentCondition}</span>
         </div>
-        <span className="patient-age">{patient.age} years</span>
+        
       </div>
       <div className="patient-card-footer">
         <span>Admitted: {patient.admissionDate}</span>
@@ -100,7 +97,7 @@ const DoctorDashboard = () => {
         </div>
 
         <div className="patient-details-tabs">
-          {["overview", "health", "history", "medicine"].map((tab) => (
+          {["overview","history", "medicine"].map((tab) => (
             <button
               key={tab}
               className={activeTab === tab ? "active" : ""}
@@ -117,9 +114,7 @@ const DoctorDashboard = () => {
               <div className="overview-grid">
                 <div className="overview-item">
                   <h4>Personal Information</h4>
-                  <p>
-                    <strong>Age:</strong> {selectedPatient.age}
-                  </p>
+                  
                   <p>
                     <strong>Gender:</strong> {selectedPatient.gender}
                   </p>
@@ -136,28 +131,12 @@ const DoctorDashboard = () => {
             </div>
           )}
 
-          {activeTab === "health" && (
-            <div className="health-tab">
-              <div className="health-stats">
-                {Object.entries(selectedPatient.healthStatus).map(
-                  ([key, value]) => (
-                    <div key={key} className="health-stat">
-                      <span>{key.replace(/([A-Z])/g, " $1")}</span>
-                      <strong>{value}</strong>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          )}
 
           {activeTab === "history" && (
             <div className="history-tab">
               <h3>Medical History</h3>
               <ul>
-                {selectedPatient.medicalHistory.map((entry, index) => (
-                  <li key={index}>{entry}</li>
-                ))}
+                {selectedPatient.medicalHistory}
               </ul>
             </div>
           )}

@@ -51,7 +51,7 @@ function AddHospital() {
 
   return (
     <section className="bg-indigo-50">
-      <div className={styles.container}>
+      <div className={styles.container} >
         <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
           <form onSubmit={submitForm}>
             <h2 className="text-3xl text-center font-semibold mb-6">

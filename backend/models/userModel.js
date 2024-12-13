@@ -84,7 +84,7 @@ const userSchema = new mongoose.Schema(
         // Specific fields for Patients
         currentCondition: { type: String }, // e.g., allergies, symptoms
         admissionDate: { type: Date },
-        medicalHistory: { type: String },
+        medicalHistory: { type: String || "no medical history" },
         assignedDoctor: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         medicineSchedule:{ type: String},
         totalFees: {

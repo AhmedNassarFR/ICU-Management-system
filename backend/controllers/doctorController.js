@@ -96,7 +96,7 @@ export const viewAllAssignedPatients = async (req, res) => {
       }
   
       // Fetch the assigned patients
-      const assignedPatients = await User.find({ assignedDoctor: doctorId }, "userName firstName lastName currentCondition admissionDate medicalHistory");
+      const assignedPatients = await User.find({ assignedDoctor: doctorId }, "userName firstName lastName currentCondition admissionDate medicalHistory gender medicineSchedule medicalHistory");
   
       if (!assignedPatients || assignedPatients.length === 0) {
         return res.status(404).json({ message: "No patients assigned to this doctor." });
