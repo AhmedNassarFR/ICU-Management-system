@@ -11,6 +11,7 @@ import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
 import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
+import AddHospital from "./pages/adminPages/AddHospital";
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/Register" element={<RegistrationForm />} />
         <Route path="/Admin" element={<AdminPage />} />
         <Route path="/Home" element={<UserHomeScreen />} />
+        <Route path="/Addhospital" element={<AddHospital />} />
 
         <Route
           path="/icu"
@@ -64,6 +66,14 @@ function App() {
             </PrivateRoute>
           }
         />
+        {/* <Route
+          path="/Addhospital"
+          element={
+            <PrivateRoute requiredRole="Admin">
+              <AddHospital />
+            </PrivateRoute>
+          }
+        /> */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

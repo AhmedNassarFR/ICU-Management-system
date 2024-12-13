@@ -1,0 +1,49 @@
+.admin-page-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  justify-content: space-between; /* Distribute space between cards */
+  gap: 20px; /* Add space between cards */
+  padding: 20px;
+  background-color: #f4f4f9;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  cursor: pointer;
+  flex: 1; /* Make cards grow equally */
+  max-width: 250px; /* Optional: Limit the width of each card */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.dashboard-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.color-lightgreen {
+  background-color: #a8e6cf;
+}
+
+.color-lightred {
+  background-color: #ff8b94;
+}
+
+.color-lightpurple {
+  background-color: #d4a5ff;
+}
