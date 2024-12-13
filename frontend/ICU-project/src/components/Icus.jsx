@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import io from "socket.io-client";
-import "./Home.css";
+import "./Icus.css";
 
 // Connect to the backend via Socket.IO
- const socket = io("http://localhost:3030");
+const socket = io("http://localhost:3030");
 
-function Home({ userId }) {
+function Icus({ userId }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   useEffect(() => {
-    
     const fetchLocationAndICUs = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -24,7 +23,7 @@ function Home({ userId }) {
             try {
               setLoading(true);
               const response = await axios.get(
-                'http://localhost:3030/patient/get-available-icus',
+                "http://localhost:3030/patient/get-available-icus",
                 {
                   params: {
                     userLocation: `${longitude},${latitude}`,
@@ -43,7 +42,9 @@ function Home({ userId }) {
             console.error("Error fetching location:", err.message);
             switch (err.code) {
               case err.PERMISSION_DENIED:
-                setError("Location access was denied. Please enable location permissions.");
+                setError(
+                  "Location access was denied. Please enable location permissions."
+                );
                 break;
               case err.POSITION_UNAVAILABLE:
                 setError("Location information is unavailable.");
@@ -77,13 +78,10 @@ function Home({ userId }) {
 
   const handleReserveICU = async (icuId) => {
     try {
-      await axios.post(
-        `http://localhost:3030/patient/reserve-icu`,
-        {
-          userId,
-          icuId,
-        }
-      );
+      await axios.post(`http://localhost:3030/patient/reserve-icu`, {
+        userId,
+        icuId,
+      });
       alert("ICU reserved successfully!");
 
       // Update the ICUs list with the new reserved ICU
@@ -136,4 +134,4 @@ function Home({ userId }) {
   );
 }
 
-export default Home;
+export default Icus;

@@ -16,7 +16,7 @@ function DashboardCard({ title, icon, color, route }) {
     >
       <div className={styles.content}>
         <span className={styles.title}>{title}</span>
-        <span className={styles.icon}>{icon}</span>oa
+        <span className={styles.icon}>{icon}</span>
       </div>
     </div>
   );

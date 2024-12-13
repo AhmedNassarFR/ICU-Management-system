@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import styles from "./Map.module.css";
 
 function Map() {
   // State to store latitude and longitude values
@@ -24,7 +25,7 @@ function Map() {
     } else {
       console.log("Geolocation is not supported by this browser.");
     }
-  }, []); // Only run once when the component mounts
+  }, []);
 
   // If the geolocation hasn't been retrieved yet, display a loading message
   if (lat === null || lng === null) {
@@ -36,14 +37,8 @@ function Map() {
   }
 
   return (
-    <div className="App">
-      <h1>Your Location on the Map</h1>
-      <MapContainer
-        center={[lat, lng]} // Dynamically set center from GPS
-        //29.986433, 31.305176
-        zoom={20} // Zoom level
-        style={{ width: "100vh", height: "100vh" }} // Map container size
-      >
+    <div className={styles.container}>
+      <MapContainer center={[lat, lng]} zoom={18} className={styles.map}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
