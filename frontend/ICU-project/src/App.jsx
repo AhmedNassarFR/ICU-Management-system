@@ -52,7 +52,7 @@ function App() {
           }
         />
         <Route
-          path="/Doctor"
+          path="/Doctor/:id"
           element={
             <PrivateRoute requiredRole="Doctor">
               <Doctor />
@@ -60,7 +60,7 @@ function App() {
           }
         />
         <Route
-          path="/Manager"
+          path="/Manager/:id"
           element={
             <PrivateRoute requiredRole="Manager">
               <Manager />
