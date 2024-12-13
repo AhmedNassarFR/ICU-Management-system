@@ -30,7 +30,7 @@ const LoginForm = () => {
 
   // Role-based redirect paths
   const roleRedirectPaths = {
-    Patient: "/icu",
+    Patient: "/Home",
     Doctor: "/doctor",
     Manager: "/manager",
     Nurse: "/nurse",
