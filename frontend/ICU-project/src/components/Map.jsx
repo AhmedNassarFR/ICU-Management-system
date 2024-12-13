@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import styles from "./Map.module.css";
-import Icus from "./Icus.jsx";
 
 function Map() {
   // State to store latitude and longitude values
@@ -39,10 +38,6 @@ function Map() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <Icus />
-      </div>
-      <h1 className={styles.header}>Your Location on the Map</h1>
       <MapContainer center={[lat, lng]} zoom={18} className={styles.map}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
