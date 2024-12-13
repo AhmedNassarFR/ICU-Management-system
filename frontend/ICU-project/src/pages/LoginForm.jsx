@@ -32,7 +32,7 @@ const LoginForm = () => {
   const roleRedirectPaths = {
     Patient: "/Home",
     Doctor: "/doctor",
-    Manager: "/manager",
+    Manager: "/Manager",
     Nurse: "/nurse",
     Cleaner: "/cleaner",
     Receptionist: "/reception",
@@ -93,6 +93,7 @@ const LoginForm = () => {
 
         // Get redirect path based on the selected role
         const redirectPath = roleRedirectPaths[formData.role] || "/dashboard";
+        console.log(formData);
         navigate(redirectPath);
       }
     } catch (err) {

@@ -9,9 +9,10 @@ import ICUSelect from "./pages/ICUSelect";
 import io from "socket.io-client";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
-import Manager from "./pages/Manager";
+// import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
+import ManagerDashboard from "./pages/ManagerDashboard";
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
@@ -62,7 +63,7 @@ function App() {
           path="/Manager"
           element={
             <PrivateRoute requiredRole="Manager">
-              <Manager />
+              <ManagerDashboard />
             </PrivateRoute>
           }
         />
