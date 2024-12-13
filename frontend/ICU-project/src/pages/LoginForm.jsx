@@ -32,7 +32,7 @@ const LoginForm = () => {
   const roleRedirectPaths = {
     Patient: "/Home",
     Doctor: "/doctor",
-    Manager: "/manager",
+    Manager: "/Manager",
     Nurse: "/nurse",
     Cleaner: "/cleaner",
     Receptionist: "/reception",
