@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Doctor.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -17,17 +17,17 @@ const DoctorDashboard = () => {
     const fetchPatients = async () => {
       try {
         setLoading(true);
-        
+
         // Correct URL path for axios
         const response = await axios.get(
           `http://localhost:3030/doctor/assigned-patients/doctor/${doctorId}/`
         );
-        
+
         // Check if the response status is ok
         if (response.status !== 200) {
           throw new Error("Failed to fetch patients data.");
         }
-        
+
         console.log(response.data.message);
         // Set the patients data from the response
         setPatients(response.data.patients);
@@ -39,9 +39,8 @@ const DoctorDashboard = () => {
         setLoading(false);
       }
     };
-    
-    fetchPatients();
 
+    fetchPatients();
   }, []);
 
   // Filter patients based on search term
@@ -55,7 +54,9 @@ const DoctorDashboard = () => {
   const renderPatientCard = (patient) => (
     <div
       key={patient.id}
-      className={`patient-card ${selectedPatient?.id === patient.id ? "selected" : ""}`}
+      className={`patient-card ${
+        selectedPatient?.id === patient.id ? "selected" : ""
+      }`}
       onClick={() => setSelectedPatient(patient)}
     >
       <div className="patient-card-header">
@@ -180,7 +181,9 @@ const DoctorDashboard = () => {
         <div className="patients-list">
           <div className="patients-list-header">
             <h2>My Patients</h2>
-            <span className="patient-count">{filteredPatients.length} Total</span>
+            <span className="patient-count">
+              {filteredPatients.length} Total
+            </span>
           </div>
 
           {loading ? (

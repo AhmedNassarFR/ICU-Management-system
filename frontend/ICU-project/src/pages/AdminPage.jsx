@@ -20,7 +20,7 @@ function AdminPage() {
           title={"View Hospitals"}
           icon={"🚑"}
           color={"#ff8b94"}
-          route="/"
+          route="/ViewHospital"
         />
         <DashboardCard
           title={"View All Admins"}
