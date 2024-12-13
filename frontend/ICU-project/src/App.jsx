@@ -39,14 +39,14 @@ function App() {
         <Route path="/Login" element={<LoginForm />} />
         <Route path="/Register" element={<RegistrationForm />} />
         <Route path="/Admin" element={<AdminPage />} />
-        <Route path="/Home" element={<UserHomeScreen />} />
+        {/* <Route path="/Home" element={<UserHomeScreen />} /> */}
         <Route path="/Addhospital" element={<AddHospital />} />
 
         <Route
-          path="/icu"
+          path="/Home"
           element={
             <PrivateRoute requiredRole="Patient">
-              <ICUSelect />
+              <UserHomeScreen />
             </PrivateRoute>
           }
         />

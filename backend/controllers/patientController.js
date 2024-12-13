@@ -68,6 +68,17 @@ export const reserveICU = async (req, res) => {
         icu.reservedBy = userId;
         await icu.save();
 
+        // Create a service entry for the ICU reservation
+        const serviceDetails = {
+            name: `ICU Reservation - ${icu.hospital.name}`,
+            fee: icu.fees,
+            category: 'ICU',
+            description: `Reserved by user ID: ${userId} at hospital ${icu.hospital.name}, address: ${icu.hospital.address}`,
+        };
+
+        const newService = new Service(serviceDetails);
+        await newService.save();
+
         // Fetch updated ICU list and emit
         const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
         io.emit('icuUpdated', updatedICUs);
@@ -88,6 +99,45 @@ export const reserveICU = async (req, res) => {
     }
 };
 
+
+export const freeICU = async (req, res) => {
+    const { userId, icuId } = req.body;
+
+    try {
+        const icu = await ICU.findById(icuId).populate('hospital', 'name address');
+        if (!icu) {
+            return res.status(404).json({ message: 'ICU not found.' });
+        }
+
+        if (icu.status !== 'Available') {
+            return res.status(400).json({ message: 'ICU is not available for reservation.' });
+        }
+
+        // Update ICU status
+        icu.status = 'Available';
+        icu.isReserved = true;
+        icu.reservedBy = userId;
+        await icu.save();
+
+        // Fetch updated ICU list and emit
+        const updatedICUs = await ICU.find({ status: 'Available' }).populate('hospital', 'name address').exec();
+        io.emit('icuUpdated', updatedICUs);
+
+        res.json({
+            message: 'ICU reserved successfully.',
+            icu: {
+                id: icu._id,
+                hospital: icu.hospitalId,
+                specialization: icu.specialization,
+                fees: icu.fees,
+                status: icu.status,
+            },
+        });
+    } catch (err) {
+        console.error('Error reserving ICU:', err);
+        res.status(500).json({ message: 'Failed to reserve ICU.' });
+    }
+};
 
 export const updateMedicalHistory = async (req, res) => {
     const { userId, medicalHistory, currentCondition } = req.body;
@@ -238,5 +288,44 @@ export const getUserReservedServices = async (req, res) => {
         res.json({ services: user.services });
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+};
+
+
+
+
+// Function to create a new service and save it to the database
+export const createService = async (req, res) => {
+    try {
+        // Extract service details from the request body
+        const { name, fee, category, description } = req.body;
+
+        // Validate required fields
+        if (!name || !fee) {
+            return res.status(400).json({ message: 'Name and fee are required.' });
+        }
+
+        // Create a new service instance
+        const newService = new Service({
+            name,
+            fee,
+            category,
+            description,
+        });
+
+        // Save the service to the database
+        const savedService = await newService.save();
+
+        // Respond with the saved service
+        res.status(201).json({
+            message: 'Service created successfully.',
+            service: savedService,
+        });
+    } catch (error) {
+        // Handle errors and respond with a status 500 if needed
+        res.status(500).json({
+            message: 'Error creating service.',
+            error: error.message,
+        });
     }
 };

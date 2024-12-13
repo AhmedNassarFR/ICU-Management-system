@@ -1,13 +1,13 @@
 .home-container {
-  padding: 20px;
+  padding: 15px; /* Reduced padding */
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
   min-height: 100vh;
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: 1.8rem; /* Slightly smaller font size */
+  margin-bottom: 15px; /* Reduced margin */
   color: #333;
   text-align: center;
 }
@@ -25,31 +25,31 @@ h1 {
 
 .icu-item {
   background-color: #fff;
-  padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px; /* Reduced padding */
+  margin-bottom: 10px; /* Reduced margin */
+  border-radius: 6px; /* Slightly smaller border radius */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtler shadow */
 }
 
 .icu-item h3 {
-  font-size: 1.5rem;
+  font-size: 1.3rem; /* Reduced font size */
   margin: 0;
   color: #333;
 }
 
 .icu-item p {
-  font-size: 1rem;
-  margin: 10px 0;
+  font-size: 0.9rem; /* Reduced font size */
+  margin: 8px 0; /* Smaller margin */
   color: #555;
 }
 
 .reserve-button {
   background-color: #007bff;
   color: #fff;
-  padding: 10px 20px;
-  font-size: 1rem;
+  padding: 8px 16px; /* Reduced padding */
+  font-size: 0.9rem; /* Slightly smaller font size */
   border: none;
-  border-radius: 5px;
+  border-radius: 4px; /* Reduced border radius */
   cursor: pointer;
   transition: background-color 0.3s;
 }

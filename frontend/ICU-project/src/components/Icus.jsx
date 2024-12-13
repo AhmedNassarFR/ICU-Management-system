@@ -108,7 +108,6 @@ function Icus({ userId }) {
 
   return (
     <div className="home-container">
-      <h1>ICUs Near You</h1>
       {icus.length === 0 ? (
         <p>No ICUs available near your location.</p>
       ) : (
