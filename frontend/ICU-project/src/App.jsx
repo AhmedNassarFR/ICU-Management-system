@@ -12,6 +12,7 @@ import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
 // import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
+import PatientHomePage from "./pages/PatientHomePage";
 //import ManagerDashboard from "./pages/Manager";
 
 function App() {
@@ -39,6 +40,14 @@ function App() {
           element={
             <PrivateRoute requiredRole="Doctor">
               <Doctor />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/PatientProfile/:id"
+          element={
+            <PrivateRoute requiredRole="Patient">
+              <PatientHomePage />
             </PrivateRoute>
           }
         />

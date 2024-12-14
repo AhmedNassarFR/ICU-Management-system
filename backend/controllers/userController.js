@@ -210,3 +210,41 @@ export const updateMedicalDetails = async (req, res) => {
         res.status(500).json({ message: "Failed to update medical details" });
     }
 };
+export const showUserDetails = async (req, res, next) => {
+    const { userId } = req.params; // Extract user ID from route parameters
+  
+    try {
+      // Find the user by ID
+      const user = await User.findById(userId);
+      
+      // Check if user exists
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // If the user is found, return their details
+      res.status(200).json({
+        success: true,
+        user: {
+          userName: user.userName,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          gender: user.gender,
+          phone: user.phone,
+          role: user.role,
+          email: user.email,
+          currentCondition: user.currentCondition,
+          admissionDate: user.admissionDate,
+          medicalHistory: user.medicalHistory,
+          assignedHospital: user.assignedHospital,
+          assignedManagers: user.assignedManagers,
+          assignedDepartments: user.assignedDepartments,
+          doctorDepartment: user.doctorDepartment,
+          shifts: user.shifts,
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      next(new ErrorHandler("Server error", 500));
+    }
+  };
