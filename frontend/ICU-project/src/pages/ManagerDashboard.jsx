@@ -11,6 +11,12 @@ const ManagerDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    deadline: "",
+  });
 
   // Fetch assigned employees
   useEffect(() => {
@@ -123,7 +129,7 @@ const ManagerDashboard = () => {
               <h3>Employee Tasks</h3>
               <button
                 className="create-task-btn"
-                onClick={() => handleCreateTask()}
+                onClick={() => setIsTaskModalOpen(true)}
               >
                 Create New Task
               </button>
@@ -148,17 +154,26 @@ const ManagerDashboard = () => {
   };
 
   // Task creation handler
-  const handleCreateTask = async () => {
+  const submitTask = async () => {
     try {
-      // Implement task creation logic
-      // This would open a modal or navigate to a task creation form
-      // Example API call:
-      // const response = await axios.post('http://localhost:3030/manager/create-task', {
-      //   employeeId: selectedEmployee._id,
-      //   // other task details
-      // });
+      const response = await axios.post(
+        `http://localhost:3030/manager/create-task`,
+        {
+          ...newTask,
+          employeeId: selectedEmployee._id,
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Task created successfully!");
+        setIsTaskModalOpen(false);
+        setNewTask({ title: "", description: "", deadline: "" });
+      } else {
+        throw new Error("Failed to create task.");
+      }
     } catch (error) {
       console.error("Error creating task:", error);
+      alert("There was an issue creating the task. Please try again.");
     }
   };
 
@@ -229,6 +244,69 @@ const ManagerDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Task Modal */}
+      {isTaskModalOpen && (
+        <div className="task-modal">
+          <div className="modal-content">
+            <h3>Create New Task</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                submitTask();
+              }}
+            >
+              <div className="form-group">
+                <label htmlFor="taskTitle">Title</label>
+                <input
+                  id="taskTitle"
+                  type="text"
+                  value={newTask.title}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, title: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="taskDescription">Description</label>
+                <textarea
+                  id="taskDescription"
+                  value={newTask.description}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, description: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="taskDeadline">Deadline</label>
+                <input
+                  id="taskDeadline"
+                  type="date"
+                  value={newTask.deadline}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, deadline: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="form-actions">
+                <button type="submit" className="submit-btn">
+                  Create Task
+                </button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => setIsTaskModalOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -8,11 +8,12 @@ import AdminPage from "./pages/AdminPage";
 import io from "socket.io-client";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
-// import Manager from "./pages/Manager";
+ import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
-import ManagerDashboard from "./pages/ManagerDashboard";
+//import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
+import ManagerDashboard from "./pages/Manager";
 
 // Use the correct server URL for the socket connection
 const socket = io("http://localhost:3030", {
