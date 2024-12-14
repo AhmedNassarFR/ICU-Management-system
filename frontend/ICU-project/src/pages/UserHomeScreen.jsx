@@ -1,9 +1,7 @@
-// src/pages/UserHomeScreen.jsx
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // Import useNavigate
-import styles from "./UserHomeScreen.module.css";
-import Icus from "../components/Icus";
-import Map from "../components/Map";
+import Map from "../components/Map.jsx";
+import Icus from "../components/Icus.jsx";
+import "./UserHomeScreen.css";
+import { useParams } from "react-router-dom";
 
 function UserHomeScreen() {
   const { id: userId } = useParams();

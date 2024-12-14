@@ -12,8 +12,6 @@ import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
 // import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
-import PatientHomePage from "./pages/PatientHomePage";
-import UpdateMedicalDetails from "./pages/UpdateMedicalDetails";
 //import ManagerDashboard from "./pages/Manager";
 
 function App() {
@@ -27,10 +25,6 @@ function App() {
         <Route path="/Home" element={<UserHomeScreen />} />
         <Route path="/Addhospital" element={<AddHospital />} />
         <Route path="/ViewHospital" element={<ViewAllHospital />} />
-        <Route
-          path="/UpdateDetails/:userId/:icuId"
-          element={<UpdateMedicalDetails />}
-        />
 
         <Route
           path="/Home/:id"
@@ -69,6 +63,15 @@ function App() {
           element={
             <PrivateRoute requiredRole="Admin">
               <AddHospital />
+            </PrivateRoute>
+          }
+        /> */}
+
+        {/* <Route
+          path="/Managerr/:id"
+          element={
+            <PrivateRoute requiredRole="Manager">
+              <ManagerDashboard />
             </PrivateRoute>
           }
         /> */}
