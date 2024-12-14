@@ -1,10 +1,11 @@
 // import styles from "./Homepage.module.css";
-import PageNav from "../components/PageNav";
+
+import LandingPage from "./LandingPage";
 
 export default function Homepage() {
   return (
     <main>
-      <PageNav />
+      <LandingPage />
     </main>
   );
 }

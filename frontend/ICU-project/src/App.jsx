@@ -7,6 +7,7 @@ import AdminPage from "./pages/AdminPage";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
 // import Manager from "./pages/Manager";
+//import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
 // import ManagerDashboard from "./pages/ManagerDashboard";
