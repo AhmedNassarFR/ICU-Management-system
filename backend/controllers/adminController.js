@@ -84,7 +84,8 @@ export const addHospital = async (req, res, next) => {
 
 export const viewHospitals = async (req, res, next) => {
   try {
-    const { status, name, longitude, latitude } = req.query;
+    const { status, name, longitude, latitude , hospitalId} = req.query;
+    
 
     const query = {};
 
