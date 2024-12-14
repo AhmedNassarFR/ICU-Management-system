@@ -31,10 +31,8 @@ const DoctorDashboard = () => {
         console.log(response.data.message);
         // Set the patients data from the response
         setPatients(response.data.patients);
-        
-        
       } catch (error) {
-        setError("Unable to fetch patients. Please try again later.");
+        setError("Unable to fetch patients. Please try again later.", error);
       } finally {
         setLoading(false);
       }
@@ -66,7 +64,6 @@ const DoctorDashboard = () => {
           </h3>
           <span className="patient-condition">{patient.currentCondition}</span>
         </div>
-        
       </div>
       <div className="patient-card-footer">
         <span>Admitted: {patient.admissionDate}</span>
@@ -98,7 +95,7 @@ const DoctorDashboard = () => {
         </div>
 
         <div className="patient-details-tabs">
-          {["overview","history", "medicine"].map((tab) => (
+          {["overview", "history", "medicine"].map((tab) => (
             <button
               key={tab}
               className={activeTab === tab ? "active" : ""}
@@ -115,7 +112,7 @@ const DoctorDashboard = () => {
               <div className="overview-grid">
                 <div className="overview-item">
                   <h4>Personal Information</h4>
-                  
+
                   <p>
                     <strong>Gender:</strong> {selectedPatient.gender}
                   </p>
@@ -132,13 +129,10 @@ const DoctorDashboard = () => {
             </div>
           )}
 
-
           {activeTab === "history" && (
             <div className="history-tab">
               <h3>Medical History</h3>
-              <ul>
-                {selectedPatient.medicalHistory}
-              </ul>
+              <ul>{selectedPatient.medicalHistory}</ul>
             </div>
           )}
 

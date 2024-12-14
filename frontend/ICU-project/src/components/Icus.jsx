@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import "./Icus.css";
 
-// Connect to the backend via Socket.IO
-const socket = io("http://localhost:3030");
+// // Connect to the backend via Socket.IO
+// const socket = io("http://localhost:3030");
 
-
-
-function Icus({userId} ) {
-  console.log(userId);
+function Icus({ userId }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,7 +27,6 @@ function Icus({userId} ) {
                 {
                   params: {
                     userLocation: `${longitude},${latitude}`,
-                    userId: userId,  // Include userId in the request params
                   },
                 }
               );
@@ -78,7 +74,7 @@ function Icus({userId} ) {
     return () => {
       socket.off("icuUpdated", handleICUUpdate);
     };
-  }, [userId]);  // Re-fetch when userId changes
+  }, [userId]);
 
   const handleReserveICU = async (icuId) => {
     try {
