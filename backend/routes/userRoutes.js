@@ -5,7 +5,8 @@ import{
     loginUser,
     verifyToken,
     updateUser,
-    updateMedicalDetails
+    updateMedicalDetails,
+    showUserDetails,
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -16,6 +17,8 @@ router.post('/login-user', loginUser);
 router.post("/verify-token", verifyToken);
 //router.put("/update-user", updateUser);
 router.put("/:userId/update-medical-details", updateMedicalDetails);
+router.get('/details/:userId', showUserDetails);
+
 
 
 export default router;

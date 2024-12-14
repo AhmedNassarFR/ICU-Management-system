@@ -1,13 +1,13 @@
-// In UserHomeScreen.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import styles from "./UserHomeScreen.module.css";
 import Icus from "../components/Icus";
 import Map from "../components/Map";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 function UserHomeScreen() {
   const { id: userId } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate hook to programmatically navigate
   const [specialization, setSpecialization] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(true);
   const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
@@ -55,6 +55,11 @@ function UserHomeScreen() {
       );
       alert("Medical details updated successfully!");
       setIsSecondPopupVisible(false); // Close the popup after success
+
+      // Navigate to the PatientHomePage after successful submission
+      navigate(`/PatientProfile/${userId}`, {
+        state: { userId }, // Passing the userId as state to the next page
+      });
     } catch (error) {
       console.error("Error updating medical details:", error);
       alert("Failed to update medical details. Please try again.");
