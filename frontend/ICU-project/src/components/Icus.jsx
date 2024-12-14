@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import io from "socket.io-client";
 import "./Icus.css";
+import socket from "../socket.js";
 
-// Connect to the backend via Socket.IO
-const socket = io("http://localhost:3030");
+// // Connect to the backend via Socket.IO
+// const socket = io("http://localhost:3030");
 
-
-
-function Icus({userId} ) {
-  console.log(userId);
+function Icus({ userId }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,6 +18,7 @@ function Icus({userId} ) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
+            console.log("Latitude:", latitude, "Longitude:", longitude);
             setLocation({ latitude, longitude });
 
             try {
@@ -30,7 +28,6 @@ function Icus({userId} ) {
                 {
                   params: {
                     userLocation: `${longitude},${latitude}`,
-                    userId: userId,  // Include userId in the request params
                   },
                 }
               );
@@ -78,7 +75,7 @@ function Icus({userId} ) {
     return () => {
       socket.off("icuUpdated", handleICUUpdate);
     };
-  }, [userId]);  // Re-fetch when userId changes
+  }, [userId]);
 
   const handleReserveICU = async (icuId) => {
     try {
@@ -118,7 +115,7 @@ function Icus({userId} ) {
         <ul className="icu-list">
           {icus.map((icu) => (
             <li key={icu._id} className="icu-item">
-              <h3>{icu.hospital.name}</h3>
+              <h3>{icu.hospital ? icu.hospital.name : "not assigned"}</h3>
               <p>Address: {icu.hospital.address}</p>
               <p>Specialization: {icu.specialization}</p>
               <p>Fees: ${icu.fees}</p>

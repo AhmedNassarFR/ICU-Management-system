@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import socket from "../../socket"; // Ensure the correct path
 import "./ViewAllHospital.css";
 
 function ViewAllHospital() {
@@ -24,10 +25,20 @@ function ViewAllHospital() {
     };
 
     fetchHospitals();
+
+    socket.on("hospitalAdded", (newHospital) => {
+      console.log("New hospital added:", newHospital);
+      setHospitals((prevHospitals) => [...prevHospitals, newHospital]);
+    });
+
+    return () => {
+      socket.off("hospitalAdded");
+    };
   }, []);
 
   const handleDelete = async (hospitalId) => {
     try {
+      console.log(hospitalId);
       await axios.delete(
         `http://localhost:3030/admin/delete-hospital/${hospitalId}`
       );
@@ -41,13 +52,13 @@ function ViewAllHospital() {
 
   const handleBlock = async (hospitalId) => {
     try {
-      await axios.post(
+      await axios.put(
         `http://localhost:3030/admin/block-hospital/${hospitalId}`
       );
       setHospitals(
         hospitals.map((hospital) =>
           hospital._id === hospitalId
-            ? { ...hospital, isBlocked: true }
+            ? { ...hospital, status: "Blocked" }
             : hospital
         )
       );
@@ -55,6 +66,25 @@ function ViewAllHospital() {
     } catch (err) {
       console.error("Error blocking hospital:", err);
       alert("Failed to block hospital. Please try again.");
+    }
+  };
+
+  const handleUnblock = async (hospitalId) => {
+    try {
+      await axios.put(
+        `http://localhost:3030/admin/unblock-hospital/${hospitalId}`
+      );
+      setHospitals(
+        hospitals.map((hospital) =>
+          hospital._id === hospitalId
+            ? { ...hospital, status: "Active" }
+            : hospital
+        )
+      );
+      alert("Hospital Unblocked successfully!");
+    } catch (err) {
+      console.error("Error Unblocking hospital:", err);
+      alert("Failed to Unblock hospital. Please try again.");
     }
   };
 
@@ -77,7 +107,7 @@ function ViewAllHospital() {
             <div
               key={hospital._id}
               className={`hospital-card ${
-                hospital.isBlocked ? "hospital-card-blocked" : ""
+                hospital.status === "Active" ? "" : "hospital-card-blocked"
               }`}
             >
               <h2>{hospital.name}</h2>
@@ -91,8 +121,7 @@ function ViewAllHospital() {
                 <strong>Contact:</strong> {hospital.contactNumber}
               </p>
               <p>
-                <strong>Status:</strong>{" "}
-                {hospital.isBlocked ? "Blocked" : "Active"}
+                <strong>Status:</strong> {hospital.status}
               </p>
               <div className="hospital-actions">
                 <button
@@ -101,12 +130,19 @@ function ViewAllHospital() {
                 >
                   🗑️ Delete
                 </button>
-                {!hospital.isBlocked && (
+                {hospital.status === "Active" ? (
                   <button
                     className="action-button block-button"
                     onClick={() => handleBlock(hospital._id)}
                   >
-                    🚫 Block
+                    ⛔️ Block
+                  </button>
+                ) : (
+                  <button
+                    className="action-button unblock-button"
+                    onClick={() => handleUnblock(hospital._id)}
+                  >
+                    ✅ Unblock
                   </button>
                 )}
               </div>

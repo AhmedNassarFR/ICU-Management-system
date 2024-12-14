@@ -20,12 +20,12 @@ import { errorHandler } from "./utils/errorHandler.js";
 
 dotenv.config();
 
-export const app = express();
+const app = express();
 const httpServer = createServer(app);
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3030;
 const mongoUrl = process.env.MONGO_URL;
 
-// Connect to MongoDB
+// MongoDB Connection
 (async () => {
   try {
     await mongoose.connect(mongoUrl, {
@@ -35,32 +35,19 @@ const mongoUrl = process.env.MONGO_URL;
     console.log("Connected to the database");
   } catch (error) {
     console.error("Database connection error:", error);
-    process.exit(1); // Exit the application if database connection fails
+    process.exit(1);
   }
 })();
 
-// Middleware setup
-// app.use(
-//   cors({
-//     origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//     credentials: true,
-//     allowedHeaders: ['Authorization', 'Content-Type'],
-//   })
-// );
-
-
-const allowedOrigins = [process.env.FRONTEND_URL, process.env.DASHBOARD_URL];
-
+// Middleware
+const allowedOrigins = [process.env.FRONTEND_URL];
 app.use(
   cors({
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
-
-app.options("*", cors());
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
@@ -72,7 +59,7 @@ app.use(
   })
 );
 
-// Routes setup
+// Routes
 app.use("/admin", adminRoutes);
 app.use("/patient", patientRoutes);
 app.use("/doctor", doctorRoutes);
@@ -83,16 +70,16 @@ app.use("/receptionist", receptionistRoutes);
 app.use("/user", userRoutes);
 app.use("/hospital", hospitalRoutes);
 
-// Error handling middleware
+// Error Handling Middleware
 app.use(errorHandler);
 
-// Start the HTTP server
+// Start Server
 httpServer.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
 // Set up Socket.IO
-export const io = new Server(httpServer, {
+const io = new Server(httpServer, {
   cors: {
     origin: [process.env.FRONTEND_URL],
     methods: ["GET", "POST"],
@@ -101,23 +88,21 @@ export const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`User connected with Socket ID: ${socket.id}`);
+  console.log(`User connected: ${socket.id}`);
 
-  // Emit welcome message on connection
+  // Emit data on connection
   socket.emit("Data", "Welcome to the server!");
+
+  // Listen for custom events
+  socket.on("hospitalAdded", (newHospital) => {
+    console.log("New hospital received:", newHospital);
+    io.emit("hospitalAdded", newHospital); // Broadcast to all connected clients
+  });
 
   // Handle disconnection
   socket.on("disconnect", () => {
-    console.log(`Socket ID ${socket.id} disconnected`);
+    console.log(`Socket disconnected: ${socket.id}`);
   });
-
-  // Example: Function to send updated ICU data to clients
-  // const sendUpdatedICUs = (updatedICUs) => {
-  //   console.log("Sending updated ICU data to all connected clients");
-  //   io.emit("icuReserved", updatedICUs);
-  // };
-
-  // // Expose the `sendUpdatedICUs` function for external use (if needed)
-  // // You can call this function from other parts of your application
-  // app.set("sendUpdatedICUs", sendUpdatedICUs);
 });
+
+export { app, io };
