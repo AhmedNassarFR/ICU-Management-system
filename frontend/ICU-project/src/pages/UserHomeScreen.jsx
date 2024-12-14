@@ -6,10 +6,9 @@ import { useParams } from "react-router-dom";
 
 function UserHomeScreen() {
   const { id: doctorId } = useParams();
-  const [specialization, setSpecialization] = useState("");  // State to hold the ICU specialization
-  const [isPopupVisible, setIsPopupVisible] = useState(true);  // State to control the popup visibility
+  const [specialization, setSpecialization] = useState(""); // State to hold the ICU specialization
+  const [isPopupVisible, setIsPopupVisible] = useState(true); // State to control the popup visibility
 
-  // ICU Specializations
   const specializationOptions = [
     "Medical ICU",
     "Surgical ICU",
@@ -26,18 +25,17 @@ function UserHomeScreen() {
     "Geriatric ICU",
     "Post-Anesthesia Care Unit",
     "Obstetric ICU",
-    "Infectious Disease ICU"
+    "Infectious Disease ICU",
   ];
 
   const handleSpecializationSubmit = (event) => {
     event.preventDefault();
-    setIsPopupVisible(false);  // Hide the popup after form submission
+    setIsPopupVisible(false); // Hide the popup after form submission
   };
 
   return (
     <div className="user-home-container">
-      {/* Popup form for ICU specialization */}
-      {isPopupVisible && (
+      {isPopupVisible ? (
         <div className="popup-container">
           <div className="popup-box">
             <h2>Select Your ICU Specialization</h2>
@@ -49,7 +47,9 @@ function UserHomeScreen() {
                   onChange={(e) => setSpecialization(e.target.value)}
                   required
                 >
-                  <option value="" disabled>Select a specialization</option>
+                  <option value="" disabled>
+                    Select a specialization
+                  </option>
                   {specializationOptions.map((option, index) => (
                     <option key={index} value={option}>
                       {option}
@@ -61,10 +61,7 @@ function UserHomeScreen() {
             </form>
           </div>
         </div>
-      )}
-
-      {/* Show the content after specialization selection */}
-      {!isPopupVisible && (
+      ) : (
         <>
           <div className="icus">
             <Icus userId={doctorId} specialization={specialization} />
@@ -74,13 +71,6 @@ function UserHomeScreen() {
           </div>
         </>
       )}
-    <div className={styles.userHomeContainer}>
-      <div className={styles.icus}>
-        <Icus userId={doctorId} />
-      </div>
-      <div className={styles.map}>
-        <Map />
-      </div>
     </div>
   );
 }
