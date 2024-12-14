@@ -23,9 +23,7 @@ function Icus({ userId, specialization, onReserveICU }) {
               const response = await axios.get(
                 "http://localhost:3030/patient/get-available-icus",
                 {
-                  params: {
-                    userLocation: `${longitude},${latitude}`,
-                  },
+                  params: { userLocation: `${longitude},${latitude}` },
                 }
               );
               setICUs(response.data.icus || []);
@@ -36,24 +34,7 @@ function Icus({ userId, specialization, onReserveICU }) {
               setLoading(false);
             }
           },
-          (err) => {
-            console.error("Error fetching location:", err.message);
-            switch (err.code) {
-              case err.PERMISSION_DENIED:
-                setError(
-                  "Location access was denied. Please enable location permissions."
-                );
-                break;
-              case err.POSITION_UNAVAILABLE:
-                setError("Location information is unavailable.");
-                break;
-              case err.TIMEOUT:
-                setError("The request to get your location timed out.");
-                break;
-              default:
-                setError("An unknown error occurred while fetching location.");
-            }
-          }
+          (err) => setError("Error fetching location.", err)
         );
       } else {
         setError("Geolocation is not supported by your browser.");
@@ -61,17 +42,8 @@ function Icus({ userId, specialization, onReserveICU }) {
     };
 
     fetchLocationAndICUs();
-
-    // Listen for real-time ICU updates
-    const handleICUUpdate = (updatedICUs) => {
-      setICUs(updatedICUs);
-    };
-    socket.on("icuUpdated", handleICUUpdate);
-
-    // Cleanup the socket listener on unmount
-    return () => {
-      socket.off("icuUpdated", handleICUUpdate);
-    };
+    socket.on("icuUpdated", setICUs);
+    return () => socket.off("icuUpdated", setICUs);
   }, [userId]);
 
   const handleReserveICU = async (icuId) => {
@@ -82,11 +54,6 @@ function Icus({ userId, specialization, onReserveICU }) {
       });
       alert("ICU reserved successfully!");
 
-      // Trigger the parent popup handler
-      if (onReserveICU) {
-        onReserveICU();
-      }
-
       // Update the ICUs list with the new reserved ICU
       setICUs((prevICUs) =>
         prevICUs.map((icu) =>
@@ -96,23 +63,9 @@ function Icus({ userId, specialization, onReserveICU }) {
         )
       );
     } catch (err) {
-      console.error("Error reserving ICU:", err);
-      alert("Failed to reserve ICU. Please try again.");
+      alert("Failed to reserve ICU. Try again.", err);
     }
   };
-
-  if (loading) {
-    return <p>Loading ICUs...</p>;
-  }
-
-  if (error) {
-    return <p className={styles.error}>{error}</p>;
-  }
-
-  // Filter the ICUs based on the selected specialization
-  const filteredICUs = icus.filter(
-    (icu) => icu.specialization === specialization
-  );
 
   return (
     <div className={styles.homeContainer}>

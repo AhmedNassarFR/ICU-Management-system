@@ -63,7 +63,8 @@ function UserHomeScreen() {
 
   return (
     <div className={styles.userHomeContainer}>
-      {isPopupVisible ? (
+      {/* Render Popup if it is visible */}
+      {isPopupVisible && (
         <div className={styles.popupContainer}>
           <div className={styles.popupBox}>
             <h2>Select Your ICU Specialization</h2>
@@ -74,7 +75,6 @@ function UserHomeScreen() {
                   value={specialization}
                   onChange={(e) => setSpecialization(e.target.value)}
                   required
-                  className={styles.select}
                 >
                   <option value="" disabled>
                     Select a specialization
@@ -86,9 +86,7 @@ function UserHomeScreen() {
                   ))}
                 </select>
               </label>
-              <button type="submit" className={styles.submitButton}>
-                Submit
-              </button>
+              <button type="submit">Submit</button>
             </form>
           </div>
         </div>
