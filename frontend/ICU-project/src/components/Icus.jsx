@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Icus.css";
+import styles from "./Icus.module.css";
 import socket from "../socket.js";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
-// // Connect to the backend via Socket.IO
-// const socket = io("http://localhost:3030");
-
-function Icus({ userId }) {
+function Icus({ userId, specialization, onReserveICU }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  // Fetch location and ICUs on mount
   useEffect(() => {
     const fetchLocationAndICUs = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            console.log("Latitude:", latitude, "Longitude:", longitude);
             setLocation({ latitude, longitude });
 
             try {
@@ -85,6 +85,14 @@ function Icus({ userId }) {
       });
       alert("ICU reserved successfully!");
 
+      // Use the navigate function to redirect
+      navigate(`/UpdateDetails/${userId}/${icuId}`);
+
+      // Trigger the parent popup handler
+      if (onReserveICU) {
+        onReserveICU();
+      }
+
       // Update the ICUs list with the new reserved ICU
       setICUs((prevICUs) =>
         prevICUs.map((icu) =>
@@ -104,24 +112,32 @@ function Icus({ userId }) {
   }
 
   if (error) {
-    return <p className="error">{error}</p>;
+    return <p className={styles.error}>{error}</p>;
   }
 
+  // Filter the ICUs based on the selected specialization
+  const filteredICUs = icus.filter(
+    (icu) => icu.specialization === specialization
+  );
+
   return (
-    <div className="home-container">
-      {icus.length === 0 ? (
-        <p>No ICUs available near your location.</p>
+    <div className={styles.homeContainer}>
+      {filteredICUs.length === 0 ? (
+        <p>
+          No ICUs available for the specialization &quot;{specialization}&quot;
+          near your location.
+        </p>
       ) : (
-        <ul className="icu-list">
-          {icus.map((icu) => (
-            <li key={icu._id} className="icu-item">
-              <h3>{icu.hospital ? icu.hospital.name : "not assigned"}</h3>
+        <ul className={styles.icuList}>
+          {filteredICUs.map((icu) => (
+            <li key={icu._id} className={styles.icuItem}>
+              <h3>{icu.hospital ? icu.hospital.name : "Not assigned"}</h3>
               <p>Address: {icu.hospital.address}</p>
               <p>Specialization: {icu.specialization}</p>
               <p>Fees: ${icu.fees}</p>
               <button
                 onClick={() => handleReserveICU(icu._id)}
-                className="reserve-button"
+                className={styles.reserveButton}
                 disabled={icu.status === "Occupied"}
               >
                 {icu.status === "Occupied" ? "Reserved" : "Reserve"}
