@@ -1,18 +1,15 @@
-import React, { useState } from "react";
-import axios from "axios";
+// src/pages/UserHomeScreen.jsx
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"; // Import useNavigate
 import styles from "./UserHomeScreen.module.css";
 import Icus from "../components/Icus";
 import Map from "../components/Map";
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 function UserHomeScreen() {
   const { id: userId } = useParams();
-  const navigate = useNavigate(); // Initialize useNavigate hook to programmatically navigate
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [specialization, setSpecialization] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(true);
-  const [isSecondPopupVisible, setIsSecondPopupVisible] = useState(false);
-  const [currentCondition, setCurrentCondition] = useState("");
-  const [medicalHistory, setMedicalHistory] = useState("");
 
   const specializationOptions = [
     "Medical ICU",
@@ -39,31 +36,7 @@ function UserHomeScreen() {
   };
 
   const handleOpenSecondPopup = () => {
-    setIsSecondPopupVisible(true);
-  };
-
-  const handleSecondPopupSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Send data to the backend using the updateUser function
-      await axios.put(
-        `http://localhost:3030/user/${userId}/update-medical-details`,
-        {
-          currentCondition,
-          medicalHistory,
-        }
-      );
-      alert("Medical details updated successfully!");
-      setIsSecondPopupVisible(false); // Close the popup after success
-
-      // Navigate to the PatientHomePage after successful submission
-      navigate(`/PatientProfile/${userId}`, {
-        state: { userId }, // Passing the userId as state to the next page
-      });
-    } catch (error) {
-      console.error("Error updating medical details:", error);
-      alert("Failed to update medical details. Please try again.");
-    }
+    navigate(`/update-medical-details/${userId}`); // Navigate to the new page for updating medical details
   };
 
   return (
@@ -94,43 +67,6 @@ function UserHomeScreen() {
               <button type="submit" className={styles.submitButton}>
                 Submit
               </button>
-            </form>
-          </div>
-        </div>
-      ) : isSecondPopupVisible ? (
-        <div className={styles.popupContainer}>
-          <div className={styles.popupBox}>
-            <h2>Update Medical Details</h2>
-            <form onSubmit={handleSecondPopupSubmit}>
-              <label>
-                Current Condition:
-                <textarea
-                  value={currentCondition}
-                  onChange={(e) => setCurrentCondition(e.target.value)}
-                  className={styles.textArea}
-                  required
-                />
-              </label>
-              <label>
-                Medical History (Optional):
-                <textarea
-                  value={medicalHistory}
-                  onChange={(e) => setMedicalHistory(e.target.value)}
-                  className={styles.textArea}
-                />
-              </label>
-              <div className={styles.buttonGroup}>
-                <button type="submit" className={styles.submitButton}>
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  className={styles.cancelButton}
-                  onClick={() => setIsSecondPopupVisible(false)}
-                >
-                  Cancel
-                </button>
-              </div>
             </form>
           </div>
         </div>

@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./Icus.module.css";
 import socket from "../socket.js";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
 function Icus({ userId, specialization, onReserveICU }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch location and ICUs on mount
   useEffect(() => {
@@ -82,6 +85,9 @@ function Icus({ userId, specialization, onReserveICU }) {
       });
       alert("ICU reserved successfully!");
 
+      // Use the navigate function to redirect
+      navigate(`/UpdateDetails/${userId}/${icuId}`);
+
       // Trigger the parent popup handler
       if (onReserveICU) {
         onReserveICU();
@@ -118,8 +124,8 @@ function Icus({ userId, specialization, onReserveICU }) {
     <div className={styles.homeContainer}>
       {filteredICUs.length === 0 ? (
         <p>
-          No ICUs available for the specialization "{specialization}" near your
-          location.
+          No ICUs available for the specialization &quot;{specialization}&quot;
+          near your location.
         </p>
       ) : (
         <ul className={styles.icuList}>
