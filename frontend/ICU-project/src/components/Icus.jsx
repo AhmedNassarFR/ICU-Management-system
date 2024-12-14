@@ -3,19 +3,19 @@ import axios from "axios";
 import styles from "./Icus.module.css";
 import socket from "../socket.js";
 
-function Icus({ userId, specialization }) {
+function Icus({ userId, specialization, onReserveICU }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Fetch location and ICUs on mount
   useEffect(() => {
     const fetchLocationAndICUs = async () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            console.log("Latitude:", latitude, "Longitude:", longitude);
             setLocation({ latitude, longitude });
 
             try {
@@ -82,6 +82,11 @@ function Icus({ userId, specialization }) {
       });
       alert("ICU reserved successfully!");
 
+      // Trigger the parent popup handler
+      if (onReserveICU) {
+        onReserveICU();
+      }
+
       // Update the ICUs list with the new reserved ICU
       setICUs((prevICUs) =>
         prevICUs.map((icu) =>
@@ -110,16 +115,16 @@ function Icus({ userId, specialization }) {
   );
 
   return (
-    <div className="home-container">
+    <div className={styles.homeContainer}>
       {filteredICUs.length === 0 ? (
         <p>
           No ICUs available for the specialization "{specialization}" near your
           location.
         </p>
       ) : (
-        <ul className="icu-list">
+        <ul className={styles.icuList}>
           {filteredICUs.map((icu) => (
-            <li key={icu._id} className="icu-item">
+            <li key={icu._id} className={styles.icuItem}>
               <h3>{icu.hospital ? icu.hospital.name : "Not assigned"}</h3>
               <p>Address: {icu.hospital.address}</p>
               <p>Specialization: {icu.specialization}</p>

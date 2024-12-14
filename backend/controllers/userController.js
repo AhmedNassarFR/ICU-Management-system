@@ -183,3 +183,30 @@ export const updateUser = async (userId, updates) => {
     }
 };
 
+
+export const updateMedicalDetails = async (req, res) => {
+    const { userId } = req.params;
+    const { currentCondition, medicalHistory } = req.body;
+
+    try {
+        // Prepare the update payload
+        const updates = {};
+        if (currentCondition) updates.currentCondition = currentCondition;
+        if (medicalHistory) updates.medicalHistory = medicalHistory;
+
+        // Call the updateUser service function
+        const updatedUser = await updateUser(userId, updates);
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Medical details updated successfully",
+            user: updatedUser,
+        });
+    } catch (err) {
+        console.error("Error updating medical details:", err);
+        res.status(500).json({ message: "Failed to update medical details" });
+    }
+};
