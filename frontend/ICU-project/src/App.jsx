@@ -57,15 +57,6 @@ function App() {
             </PrivateRoute>
           }
         /> */}
-
-        <Route
-          path="/Managerr/:id"
-          element={
-            <PrivateRoute requiredRole="Manager">
-              <ManagerDashboard />
-            </PrivateRoute>
-          }
-        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

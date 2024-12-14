@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Icus.css";
+import styles from "./Icus.module.css";
 import socket from "../socket.js";
-
-// // Connect to the backend via Socket.IO
-// const socket = io("http://localhost:3030");
 
 function Icus({ userId }) {
   const [location, setLocation] = useState(null);
@@ -104,24 +101,24 @@ function Icus({ userId }) {
   }
 
   if (error) {
-    return <p className="error">{error}</p>;
+    return <p className={styles.error}>{error}</p>;
   }
 
   return (
-    <div className="home-container">
+    <div className={styles.homeContainer}>
       {icus.length === 0 ? (
         <p>No ICUs available near your location.</p>
       ) : (
-        <ul className="icu-list">
+        <ul className={styles.icuList}>
           {icus.map((icu) => (
-            <li key={icu._id} className="icu-item">
+            <li key={icu._id} className={styles.icuItem}>
               <h3>{icu.hospital ? icu.hospital.name : "not assigned"}</h3>
-              <p>Address: {icu.hospital.address}</p>
+              <p>Address: {icu.hospital?.address || "N/A"}</p>
               <p>Specialization: {icu.specialization}</p>
               <p>Fees: ${icu.fees}</p>
               <button
                 onClick={() => handleReserveICU(icu._id)}
-                className="reserve-button"
+                className={styles.reserveButton}
                 disabled={icu.status === "Occupied"}
               >
                 {icu.status === "Occupied" ? "Reserved" : "Reserve"}
