@@ -105,7 +105,7 @@ export const reserveICU = async (req, res) => {
 
   try {
     const icu = await ICU.findById(icuId).populate("hospital", "name address");
-    if (!icu) {
+    if (!icu.hospital) {
       return res.status(404).json({ message: "ICU not found." });
     }
 

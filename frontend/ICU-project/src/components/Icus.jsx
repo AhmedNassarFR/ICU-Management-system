@@ -115,7 +115,7 @@ function Icus({ userId }) {
         <ul className="icu-list">
           {icus.map((icu) => (
             <li key={icu._id} className="icu-item">
-              <h3>{icu.hospital.name}</h3>
+              <h3>{icu.hospital ? icu.hospital.name : "not assigned"}</h3>
               <p>Address: {icu.hospital.address}</p>
               <p>Specialization: {icu.specialization}</p>
               <p>Fees: ${icu.fees}</p>
