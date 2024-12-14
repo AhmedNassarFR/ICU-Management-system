@@ -140,7 +140,8 @@ const DoctorDashboard = () => {
                     <strong>Gender:</strong> {selectedPatient.gender}
                   </p>
                   <p>
-                    <strong>Admission Date:</strong> {selectedPatient.admissionDate}
+                    <strong>Admission Date:</strong>{" "}
+                    {selectedPatient.admissionDate}
                   </p>
                 </div>
                 <div className="overview-item">
@@ -154,14 +155,19 @@ const DoctorDashboard = () => {
           {activeTab === "history" && (
             <div className="history-tab">
               <h3>Medical History</h3>
-              <p>{selectedPatient.medicalHistory || "No medical history available."}</p>
+              <p>
+                {selectedPatient.medicalHistory ||
+                  "No medical history available."}
+              </p>
             </div>
           )}
 
           {activeTab === "medicine" && (
             <div className="medicine-tab">
               <h3>Medicine Schedule</h3>
-              <pre>{selectedPatient.medicineSchedule || "No schedule available."}</pre>
+              <pre>
+                {selectedPatient.medicineSchedule || "No schedule available."}
+              </pre>
               <textarea
                 className="medicine-input"
                 placeholder="Update medicine schedule"
