@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Map from "../components/Map.jsx";
 import Icus from "../components/Icus.jsx";
-import "./UserHomeScreen.css";
+import styles from "./UserHomeScreen.module.css";
 import { useParams } from "react-router-dom";
 
 function UserHomeScreen() {
@@ -74,6 +74,13 @@ function UserHomeScreen() {
           </div>
         </>
       )}
+    <div className={styles.userHomeContainer}>
+      <div className={styles.icus}>
+        <Icus userId={doctorId} />
+      </div>
+      <div className={styles.map}>
+        <Map />
+      </div>
     </div>
   );
 }

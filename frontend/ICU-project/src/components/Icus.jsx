@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Icus.css";
+import styles from "./Icus.module.css";
 import socket from "../socket.js";
 
 function Icus({ userId, specialization }) {
@@ -101,7 +101,7 @@ function Icus({ userId, specialization }) {
   }
 
   if (error) {
-    return <p className="error">{error}</p>;
+    return <p className={styles.error}>{error}</p>;
   }
 
   // Filter the ICUs based on the selected specialization
@@ -126,7 +126,7 @@ function Icus({ userId, specialization }) {
               <p>Fees: ${icu.fees}</p>
               <button
                 onClick={() => handleReserveICU(icu._id)}
-                className="reserve-button"
+                className={styles.reserveButton}
                 disabled={icu.status === "Occupied"}
               >
                 {icu.status === "Occupied" ? "Reserved" : "Reserve"}
