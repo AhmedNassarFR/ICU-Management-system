@@ -3,10 +3,7 @@ import axios from "axios";
 import "./Icus.css";
 import socket from "../socket.js";
 
-// // Connect to the backend via Socket.IO
-// const socket = io("http://localhost:3030");
-
-function Icus({ userId }) {
+function Icus({ userId, specialization }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -107,15 +104,23 @@ function Icus({ userId }) {
     return <p className="error">{error}</p>;
   }
 
+  // Filter the ICUs based on the selected specialization
+  const filteredICUs = icus.filter(
+    (icu) => icu.specialization === specialization
+  );
+
   return (
     <div className="home-container">
-      {icus.length === 0 ? (
-        <p>No ICUs available near your location.</p>
+      {filteredICUs.length === 0 ? (
+        <p>
+          No ICUs available for the specialization "{specialization}" near your
+          location.
+        </p>
       ) : (
         <ul className="icu-list">
-          {icus.map((icu) => (
+          {filteredICUs.map((icu) => (
             <li key={icu._id} className="icu-item">
-              <h3>{icu.hospital ? icu.hospital.name : "not assigned"}</h3>
+              <h3>{icu.hospital ? icu.hospital.name : "Not assigned"}</h3>
               <p>Address: {icu.hospital.address}</p>
               <p>Specialization: {icu.specialization}</p>
               <p>Fees: ${icu.fees}</p>
