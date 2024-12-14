@@ -4,7 +4,6 @@
   justify-content: space-between; /* Distribute space between cards */
   gap: 20px; /* Add space between cards */
   padding: 20px;
-  background-color: #f4f4f9;
   font-family: Arial, sans-serif;
 }
 

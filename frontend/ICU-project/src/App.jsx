@@ -1,11 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import { useEffect } from "react";
 import Homepage from "./pages/HomePage";
 import PageNotFound from "./pages/PageNotFound";
 import LoginForm from "./pages/LoginForm";
 import RegistrationForm from "./pages/RegisterForm";
 import AdminPage from "./pages/AdminPage";
-// import io from "socket.io-client";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
 // import Manager from "./pages/Manager";
@@ -14,25 +12,7 @@ import AddHospital from "./pages/adminPages/AddHospital";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
 
-// Use the correct server URL for the socket connection
-// const socket = io("http://localhost:3030", {
-//   // transports: ["websocket"], // Use WebSocket transport explicitly
-//   autoConnect: true, // Automatically connect
-// });
-
 function App() {
-  // useEffect(() => {
-  //   // Listen for "Data" event when the component mounts
-  //   socket.on("Data", (data) => {
-  //     console.log("Data received from server:", data);
-  //   });
-
-  //   // Cleanup to avoid memory leaks
-  //   return () => {
-  //     socket.off("Data");
-  //   };
-  // }, []);
-
   return (
     <BrowserRouter>
       <Routes>

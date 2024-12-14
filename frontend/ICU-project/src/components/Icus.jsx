@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import io from "socket.io-client";
 import "./Icus.css";
+import socket from "../socket.js";
 
 // // Connect to the backend via Socket.IO
 // const socket = io("http://localhost:3030");
@@ -18,6 +18,7 @@ function Icus({ userId }) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
+            console.log("Latitude:", latitude, "Longitude:", longitude);
             setLocation({ latitude, longitude });
 
             try {
