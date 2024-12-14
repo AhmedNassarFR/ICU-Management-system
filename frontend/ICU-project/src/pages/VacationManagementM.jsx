@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./ManagerDashboard.css";
+import "./Manageer.module.css";
 
 const VacationManagement = () => {
   const [vacationRequests, setVacationRequests] = useState([]);
@@ -12,7 +12,9 @@ const VacationManagement = () => {
 
   const fetchVacationRequests = async () => {
     try {
-      const response = await axios.get("/api/vacation-requests");
+      const response = await axios.get(
+        "http://localhost:3030/manager/handle-vacation-request"
+      );
       setVacationRequests(response.data.data);
     } catch (error) {
       console.error("Error fetching vacation requests:", error);
@@ -32,7 +34,10 @@ const VacationManagement = () => {
 
   const handleUpdateVacationRequest = async (requestId, status) => {
     try {
-      await axios.patch(`/api/vacation-request/${requestId}`, { status });
+      await axios.patch(
+        `http://localhost:3030/manager/update-vacation-request/:requestId`,
+        { status }
+      );
       fetchVacationRequests();
     } catch (error) {
       console.error("Error updating vacation request:", error);

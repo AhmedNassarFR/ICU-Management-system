@@ -1,0 +1,211 @@
+/* Manager Dashboard Specific Styles */
+.manager-dashboard {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fa;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.manager-dashboard .dashboard-header {
+    background-color: #2c3e50;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.manager-dashboard .dashboard-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.manager-dashboard .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.manager-dashboard .search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.manager-dashboard .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #7f8c8d;
+}
+
+.manager-dashboard .search-input {
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 20px;
+    width: 250px;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.manager-dashboard .search-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.manager-dashboard .notification-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.manager-dashboard .notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+}
+
+.manager-dashboard .profile-section {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.manager-dashboard .profile-name {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.manager-dashboard .dashboard-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+    padding: 1rem 2rem;
+}
+
+.manager-dashboard .employees-list {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.manager-dashboard .employees-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 0.5rem;
+}
+
+.manager-dashboard .employees-list-header h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+.manager-dashboard .employee-count {
+    background-color: #3498db;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.manager-dashboard .employee-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.manager-dashboard .employee-card:hover {
+    background-color: #e9ecef;
+    transform: translateX(5px);
+}
+
+.manager-dashboard .employee-card.selected {
+    border-left: 4px solid #3498db;
+    background-color: #e8f4f8;
+}
+
+.manager-dashboard .employee-card h3 {
+    margin: 0 0 0.3rem 0;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+.manager-dashboard .employee-role {
+    color: #7f8c8d;
+    font-size: 0.8rem;
+}
+
+.manager-dashboard .employee-details {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.manager-dashboard .employee-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.manager-dashboard .employee-details-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.manager-dashboard .employee-details-tabs button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: #7f8c8d;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.manager-dashboard .employee-details-tabs button.active {
+    color: #3498db;
+    border-bottom-color: #3498db;
+}
+
+.manager-dashboard .no-employees,
+.manager-dashboard .loading,
+.manager-dashboard .error,
+.manager-dashboard .no-employee-selected {
+    text-align: center;
+    color: #7f8c8d;
+    padding: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .manager-dashboard .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+}

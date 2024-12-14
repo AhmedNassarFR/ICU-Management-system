@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./ManagerDashboard.css";
+import "./Manageer.module.css";
 
 const ICUManagement = () => {
   const [icus, setICUs] = useState([]);
