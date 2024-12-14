@@ -1,3 +1,64 @@
+.popupContainer {
+  position: fixed; /* Center popup overlay */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+  z-index: 9999;
+}
+
+.popupBox {
+  background-color: #ffffff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  text-align: center;
+}
+
+.popupBox h2 {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  color: #333333;
+}
+
+.popupBox label {
+  display: block;
+  font-size: 1rem;
+  color: #555555;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.popupBox select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.popupBox button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3b7fbf;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.popupBox button:hover {
+  background-color: #2a6398;
+}
+
 .userHomeContainer {
   display: flex;
   flex-direction: column;
@@ -35,58 +96,4 @@
   .map {
     height: 100%;
   }
-}
-
-.popup-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-box {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  text-align: center;
-}
-
-.popup-box h2 {
-  margin-bottom: 20px;
-}
-
-.popup-box select {
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-}
-
-.popup-box input {
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 100%;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-}
-
-.popup-box button {
-  padding: 10px 20px;
-  background-color: #3b7fbf;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.popup-box button:hover {
-  background-color: #2a6398;
 }

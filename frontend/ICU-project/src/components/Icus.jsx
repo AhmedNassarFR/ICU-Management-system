@@ -15,7 +15,6 @@ function Icus({ userId, specialization }) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            console.log("Latitude:", latitude, "Longitude:", longitude);
             setLocation({ latitude, longitude });
 
             try {
@@ -23,9 +22,7 @@ function Icus({ userId, specialization }) {
               const response = await axios.get(
                 "http://localhost:3030/patient/get-available-icus",
                 {
-                  params: {
-                    userLocation: `${longitude},${latitude}`,
-                  },
+                  params: { userLocation: `${longitude},${latitude}` },
                 }
               );
               setICUs(response.data.icus || []);
@@ -36,24 +33,7 @@ function Icus({ userId, specialization }) {
               setLoading(false);
             }
           },
-          (err) => {
-            console.error("Error fetching location:", err.message);
-            switch (err.code) {
-              case err.PERMISSION_DENIED:
-                setError(
-                  "Location access was denied. Please enable location permissions."
-                );
-                break;
-              case err.POSITION_UNAVAILABLE:
-                setError("Location information is unavailable.");
-                break;
-              case err.TIMEOUT:
-                setError("The request to get your location timed out.");
-                break;
-              default:
-                setError("An unknown error occurred while fetching location.");
-            }
-          }
+          (err) => setError("Error fetching location.", err)
         );
       } else {
         setError("Geolocation is not supported by your browser.");
@@ -61,17 +41,8 @@ function Icus({ userId, specialization }) {
     };
 
     fetchLocationAndICUs();
-
-    // Listen for real-time ICU updates
-    const handleICUUpdate = (updatedICUs) => {
-      setICUs(updatedICUs);
-    };
-    socket.on("icuUpdated", handleICUUpdate);
-
-    // Cleanup the socket listener on unmount
-    return () => {
-      socket.off("icuUpdated", handleICUUpdate);
-    };
+    socket.on("icuUpdated", setICUs);
+    return () => socket.off("icuUpdated", setICUs);
   }, [userId]);
 
   const handleReserveICU = async (icuId) => {
@@ -81,60 +52,47 @@ function Icus({ userId, specialization }) {
         icuId,
       });
       alert("ICU reserved successfully!");
-
-      // Update the ICUs list with the new reserved ICU
-      setICUs((prevICUs) =>
-        prevICUs.map((icu) =>
+      setICUs((prev) =>
+        prev.map((icu) =>
           icu._id === icuId
             ? { ...icu, status: "Occupied", isReserved: true }
             : icu
         )
       );
     } catch (err) {
-      console.error("Error reserving ICU:", err);
-      alert("Failed to reserve ICU. Please try again.");
+      alert("Failed to reserve ICU. Try again.", err);
     }
   };
 
-  if (loading) {
-    return <p>Loading ICUs...</p>;
-  }
-
-  if (error) {
-    return <p className={styles.error}>{error}</p>;
-  }
-
-  // Filter the ICUs based on the selected specialization
-  const filteredICUs = icus.filter(
-    (icu) => icu.specialization === specialization
-  );
-
   return (
-    <div className="home-container">
-      {filteredICUs.length === 0 ? (
-        <p>
-          No ICUs available for the specialization "{specialization}" near your
-          location.
-        </p>
-      ) : (
-        <ul className="icu-list">
-          {filteredICUs.map((icu) => (
-            <li key={icu._id} className="icu-item">
-              <h3>{icu.hospital ? icu.hospital.name : "Not assigned"}</h3>
-              <p>Address: {icu.hospital.address}</p>
-              <p>Specialization: {icu.specialization}</p>
-              <p>Fees: ${icu.fees}</p>
-              <button
-                onClick={() => handleReserveICU(icu._id)}
-                className={styles.reserveButton}
-                disabled={icu.status === "Occupied"}
-              >
-                {icu.status === "Occupied" ? "Reserved" : "Reserve"}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className={styles.container}>
+      <div className={styles.icuSection}>
+        {loading ? (
+          <p>Loading ICUs...</p>
+        ) : error ? (
+          <p className={styles.error}>{error}</p>
+        ) : icus.length === 0 ? (
+          <p>No ICUs available for {specialization} specialization.</p>
+        ) : (
+          <ul className={styles.icuList}>
+            {icus.map((icu) => (
+              <li key={icu._id} className={styles.icuCard}>
+                <h3>{icu.hospital?.name || "Unknown Hospital"}</h3>
+                <p>Address: {icu.hospital?.address}</p>
+                <p>Specialization: {icu.specialization}</p>
+                <p>Fees: ${icu.fees}</p>
+                <button
+                  onClick={() => handleReserveICU(icu._id)}
+                  className={styles.reserveButton}
+                  disabled={icu.status === "Occupied"}
+                >
+                  {icu.status === "Occupied" ? "Reserved" : "Reserve"}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

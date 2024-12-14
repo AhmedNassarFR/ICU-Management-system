@@ -30,12 +30,13 @@ function UserHomeScreen() {
 
   const handleSpecializationSubmit = (event) => {
     event.preventDefault();
-    setIsPopupVisible(false); // Hide the popup after form submission
+    setIsPopupVisible(false);
   };
 
   return (
     <div className={styles.userHomeContainer}>
-      {isPopupVisible ? (
+      {/* Render Popup if it is visible */}
+      {isPopupVisible && (
         <div className={styles.popupContainer}>
           <div className={styles.popupBox}>
             <h2>Select Your ICU Specialization</h2>
@@ -46,7 +47,6 @@ function UserHomeScreen() {
                   value={specialization}
                   onChange={(e) => setSpecialization(e.target.value)}
                   required
-                  className={styles.select}
                 >
                   <option value="" disabled>
                     Select a specialization
@@ -58,13 +58,14 @@ function UserHomeScreen() {
                   ))}
                 </select>
               </label>
-              <button type="submit" className={styles.submitButton}>
-                Submit
-              </button>
+              <button type="submit">Submit</button>
             </form>
           </div>
         </div>
-      ) : (
+      )}
+
+      {/* Render main page content after popup is dismissed */}
+      {!isPopupVisible && (
         <>
           <div className={styles.icus}>
             <Icus userId={doctorId} specialization={specialization} />
