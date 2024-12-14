@@ -4,7 +4,7 @@ import styles from "./Icus.module.css";
 import socket from "../socket.js";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 
-function Icus({ userId, specialization, onReserveICU }) {
+function Icus({ userId, specialization }) {
   const [location, setLocation] = useState(null);
   const [icus, setICUs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -89,9 +89,9 @@ function Icus({ userId, specialization, onReserveICU }) {
       navigate(`/UpdateDetails/${userId}/${icuId}`);
 
       // Trigger the parent popup handler
-      if (onReserveICU) {
-        onReserveICU();
-      }
+      // if (onReserveICU) {
+      //   onReserveICU();
+      // }
 
       // Update the ICUs list with the new reserved ICU
       setICUs((prevICUs) =>

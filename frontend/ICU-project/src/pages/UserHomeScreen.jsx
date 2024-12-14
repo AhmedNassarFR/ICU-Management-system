@@ -35,9 +35,9 @@ function UserHomeScreen() {
     setIsPopupVisible(false);
   };
 
-  const handleOpenSecondPopup = () => {
-    navigate(`/update-medical-details/${userId}`); // Navigate to the new page for updating medical details
-  };
+  // const handleOpenSecondPopup = () => {
+  //   navigate(`/update-medical-details/${userId}`); // Navigate to the new page for updating medical details
+  // };
 
   return (
     <div className={styles.userHomeContainer}>
@@ -73,11 +73,7 @@ function UserHomeScreen() {
       ) : (
         <>
           <div className={styles.icus}>
-            <Icus
-              userId={userId}
-              specialization={specialization}
-              onReserveICU={handleOpenSecondPopup}
-            />
+            <Icus userId={userId} specialization={specialization} />
           </div>
           <div className={styles.map}>
             <Map />

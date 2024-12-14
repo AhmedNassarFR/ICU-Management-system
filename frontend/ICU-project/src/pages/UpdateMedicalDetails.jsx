@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styles from "./UserHomeScreen.module.css"; // You can create your own styles
 
 const UpdateMedicalDetails = () => {
-  const { userId } = useParams(); // Access the userId from the URL params
+  const { userId, icuId } = useParams(); // Access the userId from the URL params
   const navigate = useNavigate(); // Use navigate to programmatically navigate
   const [currentCondition, setCurrentCondition] = useState("");
   const [medicalHistory, setMedicalHistory] = useState("");
@@ -24,12 +24,21 @@ const UpdateMedicalDetails = () => {
       alert("Medical details updated successfully!");
 
       // Navigate to PatientProfile page after successful update
-      navigate(`/PatientProfile/${userId}`);
+      navigate(`/PatientProfile/${userId}/${icuId}`);
     } catch (error) {
       console.error("Error updating medical details:", error);
       alert("Failed to update medical details. Please try again.");
     }
   };
+
+  async function handleCancel({ userId, icuId }) {
+    await axios.post("http://localhost:3030/patient/free-icu", {
+      userId: userId,
+      icuId: icuId,
+    });
+
+    navigate(`/Home/${userId}`);
+  }
 
   return (
     <div className={styles.popupContainer}>
@@ -54,13 +63,17 @@ const UpdateMedicalDetails = () => {
             />
           </label>
           <div className={styles.buttonGroup}>
-            <button type="submit" className={styles.submitButton}>
+            <button
+              type="submit"
+              className={styles.submitButton}
+              onClick={() => handleSubmit}
+            >
               Submit
             </button>
             <button
               type="button"
               className={styles.cancelButton}
-              onClick={() => navigate(`/UserHomeScreen/${userId}`)} // Navigate back to home screen
+              onClick={() => handleCancel({ userId, icuId })} // Navigate back to home screen
             >
               Cancel
             </button>

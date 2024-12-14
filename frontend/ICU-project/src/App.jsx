@@ -49,7 +49,7 @@ function App() {
           }
         />
         <Route
-          path="/PatientProfile/:id"
+          path="/PatientProfile/:userId/:icuId"
           element={
             <PrivateRoute requiredRole="Patient">
               <PatientHomePage />
