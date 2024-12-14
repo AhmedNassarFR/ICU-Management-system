@@ -163,23 +163,16 @@ export const freeICU = async (req, res) => {
       return res.status(404).json({ message: "ICU not found." });
     }
 
-    if (icu.status === "Available") {
+    if (icu.status !== "Available") {
       return res
         .status(400)
-        .json({ message: "ICU is already free and not reserved." });
+        .json({ message: "ICU is not available for reservation." });
     }
 
-    // Check if the ICU is reserved by the user
-    if (icu.reservedBy.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "You are not authorized to free this ICU." });
-    }
-
-    // Free the ICU (mark as available and reset reservation)
+    // Update ICU status
     icu.status = "Available";
-    icu.isReserved = false;
-    icu.reservedBy = null;
+    icu.isReserved = true;
+    icu.reservedBy = userId;
     await icu.save();
 
     // Fetch updated ICU list and emit
@@ -189,7 +182,7 @@ export const freeICU = async (req, res) => {
     io.emit("icuUpdated", updatedICUs);
 
     res.json({
-      message: "ICU freed successfully.",
+      message: "ICU reserved successfully.",
       icu: {
         id: icu._id,
         hospital: icu.hospitalId,
@@ -199,8 +192,8 @@ export const freeICU = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Error freeing ICU:", err);
-    res.status(500).json({ message: "Failed to free ICU." });
+    console.error("Error reserving ICU:", err);
+    res.status(500).json({ message: "Failed to reserve ICU." });
   }
 };
 
