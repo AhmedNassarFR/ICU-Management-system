@@ -11,35 +11,31 @@ const DoctorDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [newMedicineSchedule, setNewMedicineSchedule] = useState("");
 
   // Fetch patients data from API
   useEffect(() => {
     const fetchPatients = async () => {
       try {
         setLoading(true);
-
-        // Correct URL path for axios
         const response = await axios.get(
           `http://localhost:3030/doctor/assigned-patients/doctor/${doctorId}/`
         );
 
-        // Check if the response status is ok
         if (response.status !== 200) {
           throw new Error("Failed to fetch patients data.");
         }
 
-        console.log(response.data.message);
-        // Set the patients data from the response
         setPatients(response.data.patients);
       } catch (error) {
-        setError("Unable to fetch patients. Please try again later.", error);
+        setError("Unable to fetch patients. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchPatients();
-  }, []);
+  }, [doctorId]);
 
   // Filter patients based on search term
   const filteredPatients = patients.filter((patient) =>
@@ -48,25 +44,53 @@ const DoctorDashboard = () => {
       .includes(searchTerm.toLowerCase())
   );
 
+  // Handle medicine schedule update
+  const handleUpdateMedicineSchedule = async () => {
+    const patientId = selectedPatient?.id || selectedPatient?._id;
+
+    if (!patientId || !newMedicineSchedule.trim()) {
+      alert("Please select a patient and enter a valid medicine schedule.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3030/doctor/update-medicine-schedule/doctor/${doctorId}/patient/${patientId}`,
+        { medicineSchedule: newMedicineSchedule }
+      );
+
+      if (response.status === 200) {
+        setSelectedPatient((prev) => ({
+          ...prev,
+          medicineSchedule: newMedicineSchedule,
+        }));
+        setNewMedicineSchedule(""); // Clear input
+        alert("Medicine schedule updated successfully.");
+      } else {
+        throw new Error("Failed to update medicine schedule.");
+      }
+    } catch (error) {
+      console.error("Error updating medicine schedule:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
   // Render patient card
   const renderPatientCard = (patient) => (
     <div
-      key={patient.id}
+      key={patient.id || patient._id} // Handle cases where the field might be `_id`
       className={`patient-card ${
         selectedPatient?.id === patient.id ? "selected" : ""
       }`}
-      onClick={() => setSelectedPatient(patient)}
+      onClick={() => {
+        console.log("Selected patient:", patient); // Debug log
+        setSelectedPatient(patient);
+      }}
     >
       <div className="patient-card-header">
-        <div>
-          <h3>
-            {patient.firstName} {patient.lastName}
-          </h3>
-          <span className="patient-condition">{patient.currentCondition}</span>
-        </div>
-      </div>
-      <div className="patient-card-footer">
-        <span>Admitted: {patient.admissionDate}</span>
+        <h3>
+          {patient.firstName} {patient.lastName}
+        </h3>
       </div>
     </div>
   );
@@ -112,13 +136,11 @@ const DoctorDashboard = () => {
               <div className="overview-grid">
                 <div className="overview-item">
                   <h4>Personal Information</h4>
-
                   <p>
                     <strong>Gender:</strong> {selectedPatient.gender}
                   </p>
                   <p>
-                    <strong>Admission Date:</strong>{" "}
-                    {selectedPatient.admissionDate}
+                    <strong>Admission Date:</strong> {selectedPatient.admissionDate}
                   </p>
                 </div>
                 <div className="overview-item">
@@ -132,14 +154,26 @@ const DoctorDashboard = () => {
           {activeTab === "history" && (
             <div className="history-tab">
               <h3>Medical History</h3>
-              <ul>{selectedPatient.medicalHistory}</ul>
+              <p>{selectedPatient.medicalHistory || "No medical history available."}</p>
             </div>
           )}
 
           {activeTab === "medicine" && (
             <div className="medicine-tab">
               <h3>Medicine Schedule</h3>
-              <pre>{selectedPatient.medicineSchedule}</pre>
+              <pre>{selectedPatient.medicineSchedule || "No schedule available."}</pre>
+              <textarea
+                className="medicine-input"
+                placeholder="Update medicine schedule"
+                value={newMedicineSchedule}
+                onChange={(e) => setNewMedicineSchedule(e.target.value)}
+              ></textarea>
+              <button
+                className="update-medicine-btn"
+                onClick={handleUpdateMedicineSchedule}
+              >
+                Update Schedule
+              </button>
             </div>
           )}
         </div>

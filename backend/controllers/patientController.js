@@ -26,7 +26,7 @@ export const fetchAvailableICUs = async (longitude, latitude) => {
 
   // Filter nearby ICUs based on distance
   const nearbyICUs = icus.filter((icu) => {
-    if (!icu.hospital) {
+    if (!icu.hospital || !icu) {
       // Skip if the ICU doesn't have a hospital
       console.log("Skipping ICU due to missing hospital:", icu._id);
       return false;
@@ -105,7 +105,7 @@ export const reserveICU = async (req, res) => {
 
   try {
     const icu = await ICU.findById(icuId).populate("hospital", "name address");
-    if (!icu.hospital) {
+    if (!icu.hospital || !icu) {
       return res.status(404).json({ message: "ICU not found." });
     }
 

@@ -9,10 +9,9 @@ import Doctor from "./pages/Doctor";
 import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
-// import ManagerDashboard from "./pages/ManagerDashboard";
+import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
-// import ManagerDashboard from "./pages/Manager";
-import ManagerDashboard from "./pages/Manageer";
+//import ManagerDashboard from "./pages/Manager";
 
 function App() {
   return (

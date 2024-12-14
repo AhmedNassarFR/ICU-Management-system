@@ -53,7 +53,7 @@ export const viewPatientHealthStatus = async (req, res) => {
     }
   };
 
-export const updatePatientMedicineSchedule = async (req, res) => {
+  export const updatePatientMedicineSchedule = async (req, res) => {
     try {
         const { doctorId, patientId } = req.params;
         const { medicineSchedule } = req.body;
@@ -72,6 +72,7 @@ export const updatePatientMedicineSchedule = async (req, res) => {
             return res.status(403).json({ message: "You are not assigned to this patient." });
         }
 
+        // Update the medicine schedule
         patient.medicineSchedule = medicineSchedule;
         await patient.save();
 
@@ -80,9 +81,10 @@ export const updatePatientMedicineSchedule = async (req, res) => {
             updatedSchedule: patient.medicineSchedule,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "An error occurred: " + error.message });
     }
 };
+
 
 export const viewAllAssignedPatients = async (req, res) => {
     try {
