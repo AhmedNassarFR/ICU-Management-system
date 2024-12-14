@@ -4,7 +4,8 @@ import "./UserHomeScreen.css";
 import { useParams } from "react-router-dom";
 
 function UserHomeScreen() {
-  const { id: doctorId } = useParams();  return (
+  const { id: doctorId } = useParams();
+  return (
     <div className="user-home-container">
       <div className="icus">
         <Icus userId={doctorId} />

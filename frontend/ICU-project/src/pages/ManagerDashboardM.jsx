@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "./ManagerDashboard.css";
+import axios from "axios";
+import "./ManagerDashboard.module.css";
 
 const ManagerDashboard = () => {
   const { id: managerId } = useParams();
@@ -11,29 +11,28 @@ const ManagerDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [newTask, setNewTask] = useState({
-    title: "",
-    description: "",
-    deadline: "",
-  });
 
-  // Fetch assigned employees
+  // Fetch employees data from API
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
+
+        // Fetch assigned employees for the manager
         const response = await axios.get(
-          `http://localhost:3030/manager/view-all-employees/${managerId}`
+          `http://localhost:3030/manager/assigned-employees/${managerId}/`
         );
 
+        // Check if the response status is ok
         if (response.status !== 200) {
           throw new Error("Failed to fetch employees data.");
         }
 
+        console.log(response.data.message);
+        // Set the employees data from the response
         setEmployees(response.data.employees);
       } catch (error) {
-        setError("Unable to fetch employees. Please try again later.");
+        setError("Unable to fetch employees. Please try again later.", error);
       } finally {
         setLoading(false);
       }
@@ -52,9 +51,9 @@ const ManagerDashboard = () => {
   // Render employee card
   const renderEmployeeCard = (employee) => (
     <div
-      key={employee._id}
+      key={employee.id}
       className={`employee-card ${
-        selectedEmployee?._id === employee._id ? "selected" : ""
+        selectedEmployee?.id === employee.id ? "selected" : ""
       }`}
       onClick={() => setSelectedEmployee(employee)}
     >
@@ -96,7 +95,7 @@ const ManagerDashboard = () => {
         </div>
 
         <div className="employee-details-tabs">
-          {["overview", "tasks", "vacation"].map((tab) => (
+          {["overview", "tasks", "vacations"].map((tab) => (
             <button
               key={tab}
               className={activeTab === tab ? "active" : ""}
@@ -114,10 +113,19 @@ const ManagerDashboard = () => {
                 <div className="overview-item">
                   <h4>Personal Information</h4>
                   <p>
-                    <strong>Role:</strong> {selectedEmployee.role}
+                    <strong>Email:</strong> {selectedEmployee.email}
                   </p>
                   <p>
+                    <strong>Phone:</strong> {selectedEmployee.phone}
+                  </p>
+                </div>
+                <div className="overview-item">
+                  <h4>Work Details</h4>
+                  <p>
                     <strong>Department:</strong> {selectedEmployee.department}
+                  </p>
+                  <p>
+                    <strong>Role:</strong> {selectedEmployee.role}
                   </p>
                 </div>
               </div>
@@ -126,67 +134,42 @@ const ManagerDashboard = () => {
 
           {activeTab === "tasks" && (
             <div className="tasks-tab">
-              <h3>Employee Tasks</h3>
-              <button
-                className="create-task-btn"
-                onClick={() => setIsTaskModalOpen(true)}
-              >
-                Create New Task
-              </button>
-              {/* Tasks list would be populated here */}
+              <h3>Assigned Tasks</h3>
+              <ul>
+                {selectedEmployee.tasks && selectedEmployee.tasks.length > 0 ? (
+                  selectedEmployee.tasks.map((task) => (
+                    <li key={task.id}>
+                      {task.name} - {task.status}
+                    </li>
+                  ))
+                ) : (
+                  <p>No tasks assigned</p>
+                )}
+              </ul>
             </div>
           )}
 
-          {activeTab === "vacation" && (
-            <div className="vacation-tab">
+          {activeTab === "vacations" && (
+            <div className="vacations-tab">
               <h3>Vacation Requests</h3>
-              <button
-                className="manage-vacation-btn"
-                onClick={() => handleVacationRequests()}
-              >
-                Manage Vacation Requests
-              </button>
+              <ul>
+                {selectedEmployee.vacationRequests &&
+                selectedEmployee.vacationRequests.length > 0 ? (
+                  selectedEmployee.vacationRequests.map((request) => (
+                    <li key={request.id}>
+                      {request.startDate} - {request.endDate}
+                      (Status: {request.status})
+                    </li>
+                  ))
+                ) : (
+                  <p>No vacation requests</p>
+                )}
+              </ul>
             </div>
           )}
         </div>
       </div>
     );
-  };
-
-  // Task creation handler
-  const submitTask = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3030/manager/create-task`,
-        {
-          ...newTask,
-          employeeId: selectedEmployee._id,
-        }
-      );
-
-      if (response.status === 200) {
-        alert("Task created successfully!");
-        setIsTaskModalOpen(false);
-        setNewTask({ title: "", description: "", deadline: "" });
-      } else {
-        throw new Error("Failed to create task.");
-      }
-    } catch (error) {
-      console.error("Error creating task:", error);
-      alert("There was an issue creating the task. Please try again.");
-    }
-  };
-
-  // Vacation request handler
-  const handleVacationRequests = async () => {
-    try {
-      // Implement vacation request management logic
-      // This could open a modal to view and approve/reject requests
-      // Example API call:
-      // const response = await axios.get(`http://localhost:3030/manager/vacation-requests/${selectedEmployee._id}`);
-    } catch (error) {
-      console.error("Error managing vacation requests:", error);
-    }
   };
 
   return (
@@ -205,10 +188,10 @@ const ManagerDashboard = () => {
             />
           </div>
           <button className="notification-btn">
-            <span className="notification-badge">2</span>
+            <span className="notification-badge">3</span>
           </button>
           <div className="profile-section">
-            <span className="profile-name">Manager Dashboard</span>
+            <span className="profile-name">Manager Name</span>
           </div>
         </div>
       </header>
@@ -244,69 +227,6 @@ const ManagerDashboard = () => {
           )}
         </div>
       </div>
-
-      {/* Task Modal */}
-      {isTaskModalOpen && (
-        <div className="task-modal">
-          <div className="modal-content">
-            <h3>Create New Task</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                submitTask();
-              }}
-            >
-              <div className="form-group">
-                <label htmlFor="taskTitle">Title</label>
-                <input
-                  id="taskTitle"
-                  type="text"
-                  value={newTask.title}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, title: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="taskDescription">Description</label>
-                <textarea
-                  id="taskDescription"
-                  value={newTask.description}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, description: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="taskDeadline">Deadline</label>
-                <input
-                  id="taskDeadline"
-                  type="date"
-                  value={newTask.deadline}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, deadline: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="submit-btn">
-                  Create Task
-                </button>
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={() => setIsTaskModalOpen(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./ManagerDashboard.css";
+import "./Manageer.module.css";
 
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);

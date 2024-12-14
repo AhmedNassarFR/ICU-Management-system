@@ -6,12 +6,13 @@ import RegistrationForm from "./pages/RegisterForm";
 import AdminPage from "./pages/AdminPage";
 import PrivateRoute from "./pages/PrivateRoute";
 import Doctor from "./pages/Doctor";
- import Manager from "./pages/Manager";
+import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
-//import ManagerDashboard from "./pages/ManagerDashboard";
+// import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
-import ManagerDashboard from "./pages/Manager";
+// import ManagerDashboard from "./pages/Manager";
+import ManagerDashboard from "./pages/Manageer";
 
 function App() {
   return (
@@ -57,6 +58,15 @@ function App() {
             </PrivateRoute>
           }
         /> */}
+
+        <Route
+          path="/Managerr/:id"
+          element={
+            <PrivateRoute requiredRole="Manager">
+              <ManagerDashboard />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
