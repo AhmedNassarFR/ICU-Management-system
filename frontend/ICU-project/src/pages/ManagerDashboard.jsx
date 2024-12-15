@@ -2,6 +2,9 @@ import DashboardCard from "../components/DashBoardCard";
 import styles from "./ManagerDashboard.module.css";
 
 function ManagerDashboard() {
+  const { id: managerId } = useParams();
+  const [activeTab, setActiveTab] = useState("icu");
+
   return (
     <>
       <div>

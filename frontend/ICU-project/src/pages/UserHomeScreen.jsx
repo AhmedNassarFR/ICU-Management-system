@@ -1,14 +1,18 @@
-// src/pages/UserHomeScreen.jsx
-import { useState } from "react";
-import { useParams } from "react-router-dom"; // Import useNavigate
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import styles from "./UserHomeScreen.module.css";
 import Icus from "../components/Icus";
 import Map from "../components/Map";
 
 function UserHomeScreen() {
   const { id: userId } = useParams();
+  const navigate = useNavigate();
   const [specialization, setSpecialization] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(true);
+  const [icus, setICUs] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const specializationOptions = [
     "Medical ICU",
@@ -29,14 +33,55 @@ function UserHomeScreen() {
     "Infectious Disease ICU",
   ];
 
+  useEffect(() => {
+    const fetchLocationAndICUs = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+
+            try {
+              setLoading(true);
+              const response = await axios.get(
+                "http://localhost:3030/patient/get-available-icus",
+                {
+                  params: {
+                    userLocation: `${longitude},${latitude}`,
+                  },
+                }
+              );
+              setICUs(response.data.icus || []);
+            } catch (err) {
+              console.error("Error fetching ICUs:", err);
+              setError("Unable to fetch ICUs. Please try again later.");
+            } finally {
+              setLoading(false);
+            }
+          },
+          (err) => {
+            console.error("Error fetching location:", err.message);
+            const errorMessages = {
+              [err.PERMISSION_DENIED]:
+                "Location access was denied. Please enable location permissions.",
+              [err.POSITION_UNAVAILABLE]:
+                "Location information is unavailable.",
+              [err.TIMEOUT]: "The request to get your location timed out.",
+            };
+            setError(errorMessages[err.code] || "An unknown error occurred.");
+          }
+        );
+      } else {
+        setError("Geolocation is not supported by your browser.");
+      }
+    };
+
+    fetchLocationAndICUs();
+  }, []);
+
   const handleSpecializationSubmit = (e) => {
     e.preventDefault();
     setIsPopupVisible(false);
   };
-
-  // const handleOpenSecondPopup = () => {
-  //   navigate(`/update-medical-details/${userId}`); // Navigate to the new page for updating medical details
-  // };
 
   return (
     <div className={styles.userHomeContainer}>
@@ -71,12 +116,24 @@ function UserHomeScreen() {
         </div>
       ) : (
         <>
-          <div className={styles.icus}>
-            <Icus userId={userId} specialization={specialization} />
-          </div>
-          <div className={styles.map}>
-            <Map />
-          </div>
+          {loading ? (
+            <p>Loading ICUs...</p>
+          ) : error ? (
+            <p className={styles.error}>{error}</p>
+          ) : (
+            <>
+              <div className={styles.icus}>
+                <Icus
+                  userId={userId}
+                  specialization={specialization}
+                  icus={icus}
+                />
+              </div>
+              <div className={styles.map}>
+                <Map icus={icus} />
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

@@ -25,7 +25,7 @@ router.delete('/delete-icu/:icuId', deleteICU);
 router.put('/update-icu/:icuId', updateICU);
 router.get('/view-icus', viewICUs);
 router.post('/add-employee', addEmployee);
-router.delete('/remove-employee/:userName', removeEmployee);
+router.delete('/remove-employee/:userId', removeEmployee);
 router.get('/track-employee-tasks', trackEmployeeTasks);
 router.post('/create-and-assign-task', createAndAssignTask);
 router.post('/register-visitor-room', registerVisitorRoom);

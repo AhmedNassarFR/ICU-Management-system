@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./RegisterForm.css";
 
@@ -47,12 +47,12 @@ function RegistrationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formErrors = validateForm();
     setErrors(formErrors);
-
+  
     if (Object.keys(formErrors).length > 0) return;
-
+  
     try {
       const response = await axios.post(
         "http://localhost:3030/user/create-user",
@@ -60,11 +60,19 @@ function RegistrationForm() {
       );
       console.log("Response:", response.data);
       alert("Registration successful!");
+  
+      await axios.post("http://localhost:3030/user/send-email", {
+        email: formData.email,
+        name: formData.firstName,
+      });
+      alert("Welcome email sent!");
     } catch (err) {
       console.error("Error:", err.response?.data || err.message);
-      alert("Registration failed!");
+      alert("An error occurred. Please try again!");
     }
   };
+  
+  
   const handleLoginRedirect = () => {
     window.location.href = "/login";
   };

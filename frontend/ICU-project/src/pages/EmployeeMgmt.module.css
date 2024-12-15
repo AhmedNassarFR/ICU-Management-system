@@ -1,0 +1,165 @@
+/* EmployeeManagement.module.css */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.title {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.05rem;
+}
+
+.response {
+  background-color: #e8f4f8;
+  border-left: 4px solid #3498db;
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table thead {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.table th, .table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.table tr:hover {
+  background-color: #f1f4f7;
+  transition: background-color 0.3s ease;
+}
+
+.removeButton, 
+.assignButton, 
+.trackButton {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.removeButton {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.assignButton {
+  background-color: #3498db;
+  color: white;
+}
+
+.trackButton {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.removeButton:hover {
+  background-color: #c0392b;
+}
+
+.assignButton:hover {
+  background-color: #2980b9;
+}
+
+.trackButton:hover {
+  background-color: #27ae60;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal > div {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form button {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.form button:first-of-type {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.form button:last-of-type {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.form button:hover {
+  opacity: 0.9;
+}
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.employee-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.employee-card.selected {
+  background-color: #f0f8ff; /* Light blue when selected */
+}
