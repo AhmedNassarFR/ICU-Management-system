@@ -7,87 +7,62 @@ import Feedback from "../models/feedbackModel.js";
 import { app, io } from "../index.js";
 
 export const fetchAvailableICUs = async (longitude, latitude) => {
-  console.log("This is the fetch function. Longitude:", longitude);
-  console.log("This is the fetch function. Latitude:", latitude);
-
-  // Fetch available ICUs
+  // Fetch available ICUs from the database
   const icus = await ICU.find({ status: "Available" })
     .populate("hospital", "name address location")
     .exec();
 
-  // Log the fetched ICUs to check if data is retrieved
-  console.log("Fetched ICUs from database:", icus);
-
-  // If no ICUs are found, log and return empty array
   if (icus.length === 0) {
     console.log("No available ICUs found.");
     return [];
   }
 
-  // Filter nearby ICUs based on distance
-  const nearbyICUs = icus.filter((icu) => {
-    if (!icu.hospital || !icu) {
-      // Skip if the ICU doesn't have a hospital
-      console.log("Skipping ICU due to missing hospital:", icu._id);
-      return false;
-    }
-
-    console.log("Inspecting ICU:", icu.hospital.name);
-
-    // Check if the location is available
-    if (!icu.hospital.location || !icu.hospital.location.coordinates) {
-      console.log(
-        "Skipping ICU due to missing coordinates:",
-        icu.hospital.name
-      );
-      return false;
-    }
-
-    const [hospitalLng, hospitalLat] = icu.hospital.location.coordinates;
-
-    // Ensure coordinates are valid
-    if (isNaN(hospitalLng) || isNaN(hospitalLat)) {
-      console.log("Invalid coordinates for ICU:", icu.hospital.name);
-      return false;
-    }
-
-    const R = 6371; // Radius of Earth in kilometers
-    const dLat = ((hospitalLat - latitude) * Math.PI) / 180;
-    const dLng = ((hospitalLng - longitude) * Math.PI) / 180;
+  // Helper function to calculate distance between two coordinates
+  const calculateDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
 
     const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos((latitude * Math.PI) / 180) *
-        Math.cos((hospitalLat * Math.PI) / 180) *
-        Math.sin(dLng / 2) *
-        Math.sin(dLng / 2);
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLng / 2) ** 2;
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in kilometers
+    return R * c; // Distance in kilometers
+  };
 
-    // Log each ICU's distance calculation for debugging
-    console.log(`ICU: ${icu.hospital.name}, Distance: ${distance} km`);
+  // Filter and sort ICUs based on distance
+  const nearbyICUs = icus
+    .map((icu) => {
+      if (
+        icu.hospital?.location?.coordinates &&
+        icu.hospital.location.coordinates.length === 2
+      ) {
+        const [hospitalLng, hospitalLat] = icu.hospital.location.coordinates;
+        const distance = calculateDistance(latitude, longitude, hospitalLat, hospitalLng);
+        return { ...icu.toObject(), distance };
+      }
+      return null;
+    })
+    .filter(Boolean) // Remove invalid entries
+    .filter((icu) => icu.distance ) 
+    .sort((a, b) => a.distance - b.distance); // Sort by closest distance
 
-    // Only include ICUs within 10 km radius
-    return distance;
-  });
-
-  // Log the filtered nearby ICUs
   console.log("Nearby ICUs:", nearbyICUs);
-
   return nearbyICUs;
 };
-
 // Existing route handler
 export const getAvailableICUs = async (req, res) => {
   const { userLocation } = req.query;
-  console.log("Received userLocation:", userLocation); // Log the location to check if it matches the expected format
+  //console.log("Received userLocation:", userLocation); // Log the location to check if it matches the expected format
   if (!userLocation) {
     return res.status(400).json({ message: "User location is required." });
   }
   const [lng, lat] = userLocation.split(",").map(Number);
-  console.log("this is the lng:", lng);
-  console.log("this is the lat:", lat);
+  //console.log("this is the lng:", lng);
+  //console.log("this is the lat:", lat);
   if (isNaN(lng) || isNaN(lat)) {
     return res.status(400).json({ message: "Invalid location format." });
   }
@@ -127,6 +102,7 @@ export const reserveICU = async (req, res) => {
       fee: icu.fees,
       category: "ICU",
       description: `Reserved by user ID: ${userId} at hospital ${icu.hospital.name}, address: ${icu.hospital.address}`,
+      reservedBy: userId,
     };
 
     const newService = new Service(serviceDetails);

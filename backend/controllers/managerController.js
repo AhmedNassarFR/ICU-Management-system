@@ -5,6 +5,7 @@ import User from "../models/userModel.js";
 import VacationRequest from "../models/vacationRequestModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import { io } from "../index.js";
+import Service from "../models/serviceModel.js";
 export const assignBackupManager = async (req, res, next) => {
     try {
         const { hospitalId, backupManagerId } = req.body;
@@ -370,26 +371,37 @@ export const viewVacationRequests = async (req, res, next) => {
 };
 
 
+
+
+
 export const calculateFees = async (req, res, next) => {
     try {
-        const { serviceId } = req.params;
+        const { userId } = req.params;
 
-        const service = await Service.findById(serviceId);
-        if (!service) {
-            return next(new ErrorHandler("Service not found", 404));
+        // Find all services reserved by the user
+        const services = await Service.find({ reservedBy: userId });
+        if (!services || services.length === 0) {
+            return next(new ErrorHandler("No services found for this user", 404));
         }
 
-        const fees = service.fee;
+        // Calculate the total fees
+        const totalFees = services.reduce((total, service) => total + service.fee, 0);
 
         res.status(200).json({
             success: true,
             message: "Fees calculated successfully",
-            data: { fees },
+            data: { totalFees },
         });
     } catch (error) {
         next(new ErrorHandler(`Error while calculating fees: ${error.message}`, 500));
     }
 };
+
+
+
+
+
+
 
 
 export const viewAllEmployees = async (req, res) => {
@@ -419,3 +431,26 @@ export const viewAllEmployees = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
   };
+
+
+
+
+// Function to view ICU details by ID
+export const viewICUById = async (req, res, next) => {
+    try {
+        const { icuId } = req.params;
+
+        // Find the ICU room by ID
+        const icuRoom = await ICU.findById(icuId).populate('hospital reservedBy');
+        if (!icuRoom) {
+            return next(new ErrorHandler("ICU room not found", 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            data: icuRoom,
+        });
+    } catch (error) {
+        next(new ErrorHandler(`Error while fetching ICU room: ${error.message}`, 500));
+    }
+};

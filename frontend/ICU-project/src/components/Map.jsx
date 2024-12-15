@@ -4,12 +4,13 @@ import "leaflet/dist/leaflet.css";
 
 
 // eslint-disable-next-line react/prop-types
-function Map({ icus }) {
+function Map({ icus, latitude, longitude}) {
   if (!icus) return <p>Loading...</p>;
   return (
     <div className={styles.container}>
       <MapContainer
-        center={[29.986433, 31.305176]}
+        center={[latitude,longitude]} 
+        
         zoom={15}
         className={styles.map}
       >
@@ -21,8 +22,8 @@ function Map({ icus }) {
           <Marker
             key={icu._id}
             position={[
-              icu.hospital.location.coordinates[1],
               icu.hospital.location.coordinates[0],
+              icu.hospital.location.coordinates[1],
             ]}
           >
             <Popup>
