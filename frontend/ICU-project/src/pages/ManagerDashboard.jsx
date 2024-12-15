@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import ICUMgmt from "./ICUMgmt";
-import EmployeeMgmt from "./EmployeeMgmt";
+import EmployeeManagement from "./EmployeeMgmt";
 import VacationRequests from "./VacationRequests";
 import "./ManagerDashboard.module.css";
 import { useParams } from "react-router-dom";
+// import EmployeeManagement from "./EmployeeMgmt";
 
 function ManagerDashboard() {
-  const {id : managerId} = useParams()
+  const { id: managerId } = useParams();
   const [activeTab, setActiveTab] = useState("icu");
 
   return (
@@ -36,7 +37,9 @@ function ManagerDashboard() {
       </header>
       <main className="dashboard-content">
         {activeTab === "icu" && <ICUMgmt />}
-        {activeTab === "employees" && <EmployeeMgmt managerId={managerId} />}
+        {activeTab === "employees" && managerId && (
+          <EmployeeManagement managerId={managerId} />
+        )}
         {activeTab === "vacations" && <VacationRequests />}
       </main>
     </div>

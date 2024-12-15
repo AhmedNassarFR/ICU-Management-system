@@ -10,7 +10,7 @@ import Doctor from "./pages/Doctor";
 //import Manager from "./pages/Manager";
 import UserHomeScreen from "./pages/UserHomeScreen";
 import AddHospital from "./pages/adminPages/AddHospital";
-// import ManagerDashboard from "./pages/ManagerDashboard";
+import ManagerDashboard from "./pages/ManagerDashboard";
 import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
 import PatientHomePage from "./pages/PatientHomePage";
 import UpdateMedicalDetails from "./pages/UpdateMedicalDetails";
@@ -56,14 +56,14 @@ function App() {
             </PrivateRoute>
           }
         />
-        {/* <Route
+        <Route
           path="/Manager/:id"
           element={
             <PrivateRoute requiredRole="Manager">
               <ManagerDashboard />
             </PrivateRoute>
           }
-        /> */}
+        />
         {/* <Route
           path="/Addhospital"
           element={
