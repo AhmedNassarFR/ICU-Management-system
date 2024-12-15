@@ -1,4 +1,6 @@
-/* EmployeeManagement.module.css */
+/* EmployeeMgmt.module.css */
+
+/* General Layout and Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -16,50 +18,71 @@
   letter-spacing: -0.05rem;
 }
 
-.response {
-  background-color: #e8f4f8;
-  border-left: 4px solid #3498db;
-  padding: 0.75rem;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
+/* Employee Grid (Horizontal layout) */
+.employeeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
 }
 
-.table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.employeeCard {
+  background-color: #fff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  overflow: hidden;
-}
-
-.table thead {
-  background-color: #2c3e50;
-  color: white;
-}
-
-.table th, .table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #ecf0f1;
-}
-
-.table tr:hover {
-  background-color: #f1f4f7;
-  transition: background-color 0.3s ease;
-}
-
-.removeButton, 
-.assignButton, 
-.trackButton {
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  width: 280px; /* Set a fixed width for the employee cards */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.employeeCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.employeeCardSelected {
+  background-color: #eaf7ff;
+  border-color: #3498db;
+}
+
+.employeeCard .card-header {
+  margin-bottom: 1rem;
+}
+
+.employeeCard .card-header h2 {
+  font-size: 1.4rem;
+  color: #2c3e50;
   font-weight: 600;
-  transition: all 0.3s ease;
+}
+
+.employeeCard .card-content p {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin: 0.5rem 0;
+}
+
+/* Action Buttons */
+.employeeActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.actionButton {
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
 }
 
 .removeButton {
@@ -67,9 +90,17 @@
   color: white;
 }
 
+.removeButton:hover {
+  background-color: #c0392b;
+}
+
 .assignButton {
   background-color: #3498db;
   color: white;
+}
+
+.assignButton:hover {
+  background-color: #2980b9;
 }
 
 .trackButton {
@@ -77,33 +108,26 @@
   color: white;
 }
 
-.removeButton:hover {
-  background-color: #c0392b;
-}
-
-.assignButton:hover {
-  background-color: #2980b9;
-}
-
 .trackButton:hover {
   background-color: #27ae60;
 }
 
+/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modal > div {
-  background-color: white;
+.modalContent {
+  background-color: #fff;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -111,6 +135,28 @@
   max-width: 500px;
 }
 
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modalHeader h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+}
+
+.modalClose {
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Form Styles inside Modal */
 .form {
   display: flex;
   flex-direction: column;
@@ -122,6 +168,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  outline-color: #3498db;
 }
 
 .form button {
@@ -145,21 +192,4 @@
 
 .form button:hover {
   opacity: 0.9;
-}
-
-.employee-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.employee-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 5px;
-}
-
-.employee-card.selected {
-  background-color: #f0f8ff; /* Light blue when selected */
 }

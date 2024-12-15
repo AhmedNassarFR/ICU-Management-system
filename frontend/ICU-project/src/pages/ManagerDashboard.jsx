@@ -1,9 +1,9 @@
+import { useParams } from "react-router-dom";
 import DashboardCard from "../components/DashBoardCard";
 import styles from "./ManagerDashboard.module.css";
 
 function ManagerDashboard() {
   const { id: managerId } = useParams();
-  const [activeTab, setActiveTab] = useState("icu");
 
   return (
     <>
@@ -23,7 +23,7 @@ function ManagerDashboard() {
           title={"Manage Employees"}
           icon={"👨‍⚕️"}
           color={styles.colorLightred}
-          route="/ViewHospital"
+          route={`/ManageEmployees/${managerId}`}
         />
         <DashboardCard
           title={"Vecation Requests"}

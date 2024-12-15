@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-function TrackEmployeeTasks() {
+function TrackEmployeeTasks({ employeeId, onClose }) {
   const [useCaseName, setUseCaseName] = useState("");
   const [tasks, setTasks] = useState([]);
 
@@ -8,10 +8,10 @@ function TrackEmployeeTasks() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `http://localhost:3030/manager/track-employee-tasks?${useCaseName}`
+        `http://localhost:3030/manager/track-employee-tasks?employeeId=${employeeId}&useCaseName=${useCaseName}`
       );
       const data = await res.json();
-      setTasks(data.data || []);
+      setTasks(data.data || []); // Set tasks based on response
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
@@ -44,6 +44,7 @@ function TrackEmployeeTasks() {
           ))
         )}
       </div>
+      <button onClick={onClose}>Close</button>
     </div>
   );
 }

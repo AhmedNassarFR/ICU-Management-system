@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-function AssignTask() {
+function AssignTask({ employeeId, onClose }) {
   const [formData, setFormData] = useState({
     name: "",
-    employeeId: "",
+    employeeId: employeeId,
     deadLine: "",
     priority: "",
     status: "",
@@ -27,9 +27,9 @@ function AssignTask() {
         }
       );
       const data = await res.json();
-      setResponse(data);
+      setResponse(data); // Set the response data after submitting the form
     } catch (error) {
-      setResponse({ success: false, message: error.message });
+      setResponse({ success: false, message: error.message }); // Handle errors
     }
   };
 
@@ -41,7 +41,7 @@ function AssignTask() {
           <div key={key}>
             <label>{key}: </label>
             <input
-              type={key === "deadLine" ? "date" : "text"} // Set input type to date for deadLine
+              type={key === "deadLine" ? "date" : "text"}
               name={key}
               value={formData[key]}
               onChange={handleChange}
@@ -51,7 +51,8 @@ function AssignTask() {
         ))}
         <button type="submit">Assign</button>
       </form>
-      {response && <p>{response.message}</p>}
+      {response && <p>{response.message}</p>} {/* Display response message */}
+      <button onClick={onClose}>Close</button>
     </div>
   );
 }

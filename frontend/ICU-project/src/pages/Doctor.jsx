@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import styles from "./DoctorDashboard.module.css";
+import styles from "./Doctor.module.css";
 
 const DoctorDashboard = () => {
   const { id: doctorId } = useParams();

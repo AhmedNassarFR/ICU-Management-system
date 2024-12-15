@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./UserHomeScreen.module.css";
 import Icus from "../components/Icus";
@@ -7,7 +7,6 @@ import Map from "../components/Map";
 
 function UserHomeScreen() {
   const { id: userId } = useParams();
-  const navigate = useNavigate();
   const [specialization, setSpecialization] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(true);
   const [icus, setICUs] = useState([]);
