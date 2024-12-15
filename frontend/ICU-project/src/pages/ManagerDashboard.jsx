@@ -3,7 +3,7 @@ import DashboardCard from "../components/DashBoardCard";
 import styles from "./ManagerDashboard.module.css";
 
 function ManagerDashboard() {
-  const { id: managerId } = useParams();
+  const { id } = useParams();
 
   return (
     <>
@@ -17,13 +17,13 @@ function ManagerDashboard() {
           title={"Manage ICUs"}
           icon={"🏨"}
           color={styles.colorLightgreen}
-          route="/Addhospital"
+          route={`/Addicu/${id}`}
         />
         <DashboardCard
           title={"Manage Employees"}
           icon={"👨‍⚕️"}
           color={styles.colorLightred}
-          route={`/ManageEmployees/${managerId}`}
+          route={`/ManageEmployees/${id}`}
         />
         <DashboardCard
           title={"Vecation Requests"}

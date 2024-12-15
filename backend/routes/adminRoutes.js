@@ -15,6 +15,7 @@ import {
   searchManagerWithHospitals,
   searchHospitalWithFeedbacks,
   viewHospitalsRating,
+  viewAnManager,
 } from "../controllers/adminController.js";
 
 router.post("/add-hospital", addHospital);
@@ -28,10 +29,8 @@ router.post("/create-admin-account", createAdminAccount);
 router.get("/view-all-admins", viewAllAdmins);
 router.get("/view-all-managers", viewAllManagers);
 router.get("/search-manager-with-hospitals", searchManagerWithHospitals);
-router.get(
-  "/search-hospital-with-feedbacks/:hospitalId",
-  searchHospitalWithFeedbacks
-);
+router.get("/search-hospital-with-feedbacks/:hospitalId",searchHospitalWithFeedbacks);
+router.get("/view-an-managers/:id", viewAnManager);
 router.get("/view-hospitals-rating", viewHospitalsRating);
 
 export default router;

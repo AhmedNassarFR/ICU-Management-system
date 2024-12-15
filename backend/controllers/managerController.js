@@ -6,7 +6,7 @@ import Service from "../models/serviceModel.js";
 import VacationRequest from "../models/vacationRequestModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import { io } from "../index.js";
-import Service from "../models/serviceModel.js";
+
 export const assignBackupManager = async (req, res, next) => {
   try {
     const { hospitalId, backupManagerId } = req.body;
@@ -37,31 +37,34 @@ export const assignBackupManager = async (req, res, next) => {
 
 export const registerICU = async (req, res, next) => {
   try {
-    const { hospitalId, specialization, status } = req.body;
+    const { hospitalId, specialization, status, fees, isReserved, reservedBy } = req.body;
 
+    // Ensure the hospital exists
     const hospital = await Hospital.findById(hospitalId);
     if (!hospital) {
       return next(new ErrorHandler("Hospital not found", 404));
     }
 
-    if (!specialization || !status) {
-      return next(
-        new ErrorHandler("Specialization and status are required", 400)
-      );
+    if (!specialization || !status || !fees) {
+      return next(new ErrorHandler("Specialization, status, and fees are required", 400));
     }
 
     const icuData = {
       hospital: hospitalId,
       specialization,
       status,
+      fees,
+      isReserved,
+      reservedBy
     };
-    const newICU = new ICU(icuData);
 
+    const newICU = new ICU(icuData);
     await newICU.save();
 
     const updatedICUs = await ICU.find({ status: "Available" })
       .populate("hospital", "name address")
       .exec();
+
     io.emit("icuUpdated", updatedICUs);
 
     res.status(201).json({
@@ -75,6 +78,7 @@ export const registerICU = async (req, res, next) => {
     );
   }
 };
+
 
 export const deleteICU = async (req, res, next) => {
   try {

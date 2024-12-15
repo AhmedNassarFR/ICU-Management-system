@@ -109,7 +109,7 @@ const userSchema = new mongoose.Schema(
         patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // List of assigned patients
 
         // Specific fields for Admins
-        managedHospitals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
+        hospitalId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hospital" }],
 
         // Fields for Receptionists
         assignedHospital: { type: mongoose.Schema.Types.ObjectId, ref: "Hospital" },
