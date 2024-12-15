@@ -6,7 +6,6 @@ import Service from "../models/serviceModel.js";
 import VacationRequest from "../models/vacationRequestModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import { io } from "../index.js";
-import Service from "../models/serviceModel.js";
 export const assignBackupManager = async (req, res, next) => {
   try {
     const { hospitalId, backupManagerId } = req.body;

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from "./Icus.module.css";
-import socket from "../socket.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -18,7 +17,7 @@ function Icus({ userId, specialization, icus }) {
       navigate(`/UpdateDetails/${userId}/${icuId}`);
     } catch (err) {
       console.error("Error reserving ICU:", err);
-      alert("Failed to reserve ICU. Please try again.");
+      setError("Failed to reserve ICU. Please try again later.");
     }
   };
 
@@ -26,33 +25,43 @@ function Icus({ userId, specialization, icus }) {
     (icu) => icu.specialization === specialization
   );
 
-  if (filteredICUs.length === 0) {
-    return (
-      <p>
-        No ICUs available for the specialization &quot;{specialization}&quot;
-        near your location.
-      </p>
-    );
-  }
-
   return (
-    <ul className={styles.icuList}>
-      {filteredICUs.map((icu) => (
-        <li key={icu._id} className={styles.icuItem}>
-          <h3>{icu.hospital ? icu.hospital.name : "Not assigned"}</h3>
-          <p>Address: {icu.hospital.address}</p>
-          <p>Specialization: {icu.specialization}</p>
-          <p>Fees: ${icu.fees}</p>
-          <button
-            onClick={() => handleReserveICU(icu._id)}
-            className={styles.reserveButton}
-            disabled={icu.status === "Occupied"}
-          >
-            {icu.status === "Occupied" ? "Reserved" : "Reserve"}
-          </button>
-        </li>
-      ))}
-    </ul>
+    <div className={styles.container}>
+      {error && <div className={styles.error}>{error}</div>}
+      {filteredICUs.length === 0 ? (
+        <p className={styles.noIcus}>
+          No ICUs available for the specialization &quot;{specialization}&quot;
+          near your location.
+        </p>
+      ) : (
+        <ul className={styles.icuList}>
+          {filteredICUs.map(
+            ({ _id, hospital, specialization, fees, status }) => (
+              <li key={_id} className={styles.icuItem}>
+                <h3 className={styles.hospitalName}>
+                  {hospital?.name || "Not assigned"}
+                </h3>
+                <p className={styles.address}>
+                  Address: {hospital?.address || "N/A"}
+                </p>
+                <p className={styles.specialization}>
+                  Specialization: {specialization}
+                </p>
+                <p className={styles.fees}>Fees: ${fees}</p>
+                <button
+                  onClick={() => handleReserveICU(_id)}
+                  className={styles.reserveButton}
+                  disabled={status === "Occupied"}
+                  aria-disabled={status === "Occupied"}
+                >
+                  {status === "Occupied" ? "Reserved" : "Reserve"}
+                </button>
+              </li>
+            )
+          )}
+        </ul>
+      )}
+    </div>
   );
 }
 

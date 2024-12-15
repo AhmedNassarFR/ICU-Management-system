@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import socket from "../socket"; // Import the existing socket instance as the default export
 import styles from "./UserHomeScreen.module.css";
 import Icus from "../components/Icus";
 import Map from "../components/Map";
@@ -12,8 +13,8 @@ function UserHomeScreen() {
   const [icus, setICUs] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [latitude,setLatitude] = useState("")
-  const [longitude,setLongitude] = useState("")
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
   const specializationOptions = [
     "Medical ICU",
@@ -43,7 +44,6 @@ function UserHomeScreen() {
             setLatitude(latitude);
             setLongitude(longitude);
 
-
             try {
               setLoading(true);
               const response = await axios.get(
@@ -54,6 +54,7 @@ function UserHomeScreen() {
                   },
                 }
               );
+              console.log("Fetched ICUs:", response.data.icus);
               setICUs(response.data.icus || []);
             } catch (err) {
               console.error("Error fetching ICUs:", err);
@@ -80,6 +81,22 @@ function UserHomeScreen() {
     };
 
     fetchLocationAndICUs();
+
+    // Set up Socket.io listeners
+    socket.on("icuUpdated", (data) => {
+      if (data) {
+        console.log("Received updated ICUs from socket:", data);
+        setICUs(data);
+      } else {
+        console.error("Received invalid ICU data from socket:", data);
+        setError("Error updating ICUs. Please try again.");
+      }
+    });
+
+    // Cleanup listener on component unmount
+    return () => {
+      socket.off("icuUpdated");
+    };
   }, []);
 
   const handleSpecializationSubmit = (e) => {

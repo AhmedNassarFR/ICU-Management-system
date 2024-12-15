@@ -41,13 +41,18 @@ export const fetchAvailableICUs = async (longitude, latitude) => {
         icu.hospital.location.coordinates.length === 2
       ) {
         const [hospitalLng, hospitalLat] = icu.hospital.location.coordinates;
-        const distance = calculateDistance(latitude, longitude, hospitalLat, hospitalLng);
+        const distance = calculateDistance(
+          latitude,
+          longitude,
+          hospitalLat,
+          hospitalLng
+        );
         return { ...icu.toObject(), distance };
       }
       return null;
     })
     .filter(Boolean) // Remove invalid entries
-    .filter((icu) => icu.distance ) 
+    .filter((icu) => icu.distance)
     .sort((a, b) => a.distance - b.distance); // Sort by closest distance
 
   console.log("Nearby ICUs:", nearbyICUs);
