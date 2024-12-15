@@ -1,4 +1,5 @@
-.admin-page-container {
+/* Container for the admin page */
+.adminPageContainer {
   display: flex;
   flex-wrap: wrap; /* Allow wrapping on smaller screens */
   justify-content: space-between; /* Distribute space between cards */
@@ -7,7 +8,8 @@
   font-family: Arial, sans-serif;
 }
 
-.dashboard-card {
+/* Individual dashboard cards */
+.dashboardCard {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -19,30 +21,41 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.dashboard-card:hover {
+.dashboardCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
-.dashboard-card h3 {
+/* Card text */
+.dashboardCard h3 {
   font-size: 1.2rem;
   color: #333;
   margin-bottom: 10px;
 }
 
-.dashboard-card .icon {
+/* Icon styles */
+.icon {
   font-size: 2.5rem;
   margin-bottom: 15px;
 }
 
-.color-lightgreen {
+/* Card color variations */
+.colorLightgreen {
   background-color: #a8e6cf;
 }
 
-.color-lightred {
+.colorLightred {
   background-color: #ff8b94;
 }
 
-.color-lightpurple {
+.colorLightpurple {
   background-color: #d4a5ff;
+}
+
+.colorLightyellow {
+  background-color: #fdfd96;
+}
+
+.colorLightorange {
+  background-color: #ffd3b6;
 }

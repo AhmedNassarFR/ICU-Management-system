@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import socket from "../../socket"; // Ensure the correct path
-import "./ViewAllHospital.css";
+import styles from "./ViewAllHospital.module.css";
 
 function ViewAllHospital() {
   const [hospitals, setHospitals] = useState([]);
@@ -27,7 +27,6 @@ function ViewAllHospital() {
     fetchHospitals();
 
     socket.on("hospitalAdded", (newHospital) => {
-      console.log("New hospital added:", newHospital);
       setHospitals((prevHospitals) => [...prevHospitals, newHospital]);
     });
 
@@ -38,7 +37,6 @@ function ViewAllHospital() {
 
   const handleDelete = async (hospitalId) => {
     try {
-      console.log(hospitalId);
       await axios.delete(
         `http://localhost:3030/admin/delete-hospital/${hospitalId}`
       );
@@ -81,10 +79,10 @@ function ViewAllHospital() {
             : hospital
         )
       );
-      alert("Hospital Unblocked successfully!");
+      alert("Hospital unblocked successfully!");
     } catch (err) {
-      console.error("Error Unblocking hospital:", err);
-      alert("Failed to Unblock hospital. Please try again.");
+      console.error("Error unblocking hospital:", err);
+      alert("Failed to unblock hospital. Please try again.");
     }
   };
 
@@ -93,21 +91,21 @@ function ViewAllHospital() {
   }
 
   if (error) {
-    return <p className="error">{error}</p>;
+    return <p className={styles.error}>{error}</p>;
   }
 
   return (
-    <div className="view-all-hospitals">
+    <div className={styles.viewAllHospitals}>
       <h1>All Hospitals</h1>
       {hospitals.length === 0 ? (
         <p>No hospitals available at the moment.</p>
       ) : (
-        <div className="hospital-list">
+        <div className={styles.hospitalList}>
           {hospitals.map((hospital) => (
             <div
               key={hospital._id}
-              className={`hospital-card ${
-                hospital.status === "Active" ? "" : "hospital-card-blocked"
+              className={`${styles.hospitalCard} ${
+                hospital.status === "Active" ? "" : styles.hospitalCardBlocked
               }`}
             >
               <h2>{hospital.name}</h2>
@@ -123,23 +121,23 @@ function ViewAllHospital() {
               <p>
                 <strong>Status:</strong> {hospital.status}
               </p>
-              <div className="hospital-actions">
+              <div className={styles.hospitalActions}>
                 <button
-                  className="action-button delete-button"
+                  className={`${styles.actionButton} ${styles.deleteButton}`}
                   onClick={() => handleDelete(hospital._id)}
                 >
                   🗑️ Delete
                 </button>
                 {hospital.status === "Active" ? (
                   <button
-                    className="action-button block-button"
+                    className={`${styles.actionButton} ${styles.blockButton}`}
                     onClick={() => handleBlock(hospital._id)}
                   >
                     ⛔️ Block
                   </button>
                 ) : (
                   <button
-                    className="action-button unblock-button"
+                    className={`${styles.actionButton} ${styles.unblockButton}`}
                     onClick={() => handleUnblock(hospital._id)}
                   >
                     ✅ Unblock

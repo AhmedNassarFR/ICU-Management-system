@@ -9,11 +9,7 @@ function DashboardCard({ title, icon, color, route }) {
   }
 
   return (
-    <div
-      className={styles.card}
-      style={{ background: color }}
-      onClick={handleNavigation}
-    >
+    <div className={`${styles.card} ${color}`} onClick={handleNavigation}>
       <div className={styles.content}>
         <span className={styles.title}>{title}</span>
         <span className={styles.icon}>{icon}</span>

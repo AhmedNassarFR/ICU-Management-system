@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./PatientHomePage.module.css"; // Importing the CSS module
 
 function PatientHomePage() {
   const { userId, icuId } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   // const userId = location.state?.userId;
   const [patientDetails, setPatientDetails] = useState(null);

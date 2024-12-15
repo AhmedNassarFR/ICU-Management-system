@@ -1,45 +1,35 @@
-import React, { useState } from "react";
-import ICUMgmt from "./ICUMgmt";
-import EmployeeMgmt from "./EmployeeMgmt";
-import VacationRequests from "./VacationRequests";
-import "./ManagerDashboard.module.css";
-import { useParams } from "react-router-dom";
+import DashboardCard from "../components/DashBoardCard";
+import styles from "./ManagerDashboard.module.css";
 
 function ManagerDashboard() {
-  const {id : managerId} = useParams()
-  const [activeTab, setActiveTab] = useState("icu");
-
   return (
-    <div className="manager-dashboard">
-      <header className="dashboard-header">
-        <h1>Manager Dashboard</h1>
-        <nav className="tabs">
-          <button
-            className={activeTab === "icu" ? "active" : ""}
-            onClick={() => setActiveTab("icu")}
-          >
-            ICU Management
-          </button>
-          <button
-            className={activeTab === "employees" ? "active" : ""}
-            onClick={() => setActiveTab("employees")}
-          >
-            Employee Management
-          </button>
-          <button
-            className={activeTab === "vacations" ? "active" : ""}
-            onClick={() => setActiveTab("vacations")}
-          >
-            Vacation Requests
-          </button>
-        </nav>
-      </header>
-      <main className="dashboard-content">
-        {activeTab === "icu" && <ICUMgmt />}
-        {activeTab === "employees" && <EmployeeMgmt managerId={managerId} />}
-        {activeTab === "vacations" && <VacationRequests />}
-      </main>
-    </div>
+    <>
+      <div>
+        <h1 style={{ fontSize: 30 }}>
+          Welcome MR. Manager, what do you want to do today!
+        </h1>
+      </div>
+      <div className={styles.adminPageContainer}>
+        <DashboardCard
+          title={"Manage ICUs"}
+          icon={"🏨"}
+          color={styles.colorLightgreen}
+          route="/Addhospital"
+        />
+        <DashboardCard
+          title={"Manage Employees"}
+          icon={"👨‍⚕️"}
+          color={styles.colorLightred}
+          route="/ViewHospital"
+        />
+        <DashboardCard
+          title={"Vecation Requests"}
+          icon={"🌴"}
+          color={styles.colorLightpurple}
+          route="/"
+        />
+      </div>
+    </>
   );
 }
 

@@ -1,13 +1,12 @@
 // src/pages/UserHomeScreen.jsx
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // Import useNavigate
+import { useParams } from "react-router-dom"; // Import useNavigate
 import styles from "./UserHomeScreen.module.css";
 import Icus from "../components/Icus";
 import Map from "../components/Map";
 
 function UserHomeScreen() {
   const { id: userId } = useParams();
-  const navigate = useNavigate(); // Initialize useNavigate hook
   const [specialization, setSpecialization] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(true);
 

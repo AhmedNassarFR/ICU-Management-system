@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import "./Doctor.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import styles from "./DoctorDashboard.module.css";
 
 const DoctorDashboard = () => {
   const { id: doctorId } = useParams();
@@ -13,7 +13,6 @@ const DoctorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [newMedicineSchedule, setNewMedicineSchedule] = useState("");
 
-  // Fetch patients data from API
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -28,7 +27,7 @@ const DoctorDashboard = () => {
 
         setPatients(response.data.patients);
       } catch (error) {
-        setError("Unable to fetch patients. Please try again later.");
+        setError("Unable to fetch patients. Please try again later.", error);
       } finally {
         setLoading(false);
       }
@@ -37,14 +36,12 @@ const DoctorDashboard = () => {
     fetchPatients();
   }, [doctorId]);
 
-  // Filter patients based on search term
   const filteredPatients = patients.filter((patient) =>
     `${patient.firstName} ${patient.lastName}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
 
-  // Handle medicine schedule update
   const handleUpdateMedicineSchedule = async () => {
     const patientId = selectedPatient?.id || selectedPatient?._id;
 
@@ -64,7 +61,7 @@ const DoctorDashboard = () => {
           ...prev,
           medicineSchedule: newMedicineSchedule,
         }));
-        setNewMedicineSchedule(""); // Clear input
+        setNewMedicineSchedule("");
         alert("Medicine schedule updated successfully.");
       } else {
         throw new Error("Failed to update medicine schedule.");
@@ -75,17 +72,13 @@ const DoctorDashboard = () => {
     }
   };
 
-  // Render patient card
   const renderPatientCard = (patient) => (
     <div
-      key={patient.id || patient._id} // Handle cases where the field might be `_id`
-      className={`patient-card ${
-        selectedPatient?.id === patient.id ? "selected" : ""
+      key={patient.id || patient._id}
+      className={`${styles.patientCard} ${
+        selectedPatient?.id === patient.id ? styles.selected : ""
       }`}
-      onClick={() => {
-        console.log("Selected patient:", patient); // Debug log
-        setSelectedPatient(patient);
-      }}
+      onClick={() => setSelectedPatient(patient)}
     >
       <div className="patient-card-header">
         <h3>
@@ -95,34 +88,33 @@ const DoctorDashboard = () => {
     </div>
   );
 
-  // Render patient details
   const renderPatientDetails = () => {
     if (!selectedPatient) return null;
 
     return (
-      <div className="patient-details">
-        <div className="patient-details-header">
-          <div className="patient-header-info">
+      <div className={styles.patientDetails}>
+        <div className={styles.patientDetailsHeader}>
+          <div className={styles.patientHeaderInfo}>
             <h2>
               {selectedPatient.firstName} {selectedPatient.lastName}
             </h2>
-            <span className="patient-header-condition">
+            <span className={styles.patientHeaderCondition}>
               {selectedPatient.currentCondition}
             </span>
           </div>
           <button
-            className="close-btn"
+            className={styles.closeBtn}
             onClick={() => setSelectedPatient(null)}
           >
             ×
           </button>
         </div>
 
-        <div className="patient-details-tabs">
+        <div className={styles.patientDetailsTabs}>
           {["overview", "history", "medicine"].map((tab) => (
             <button
               key={tab}
-              className={activeTab === tab ? "active" : ""}
+              className={activeTab === tab ? styles.active : ""}
               onClick={() => setActiveTab(tab)}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -130,11 +122,11 @@ const DoctorDashboard = () => {
           ))}
         </div>
 
-        <div className="patient-details-content">
+        <div className={styles.patientDetailsContent}>
           {activeTab === "overview" && (
-            <div className="overview-tab">
-              <div className="overview-grid">
-                <div className="overview-item">
+            <div className={styles.overviewTab}>
+              <div className={styles.overviewGrid}>
+                <div className={styles.overviewItem}>
                   <h4>Personal Information</h4>
                   <p>
                     <strong>Gender:</strong> {selectedPatient.gender}
@@ -144,7 +136,7 @@ const DoctorDashboard = () => {
                     {selectedPatient.admissionDate}
                   </p>
                 </div>
-                <div className="overview-item">
+                <div className={styles.overviewItem}>
                   <h4>Current Condition</h4>
                   <p>{selectedPatient.currentCondition}</p>
                 </div>
@@ -153,7 +145,7 @@ const DoctorDashboard = () => {
           )}
 
           {activeTab === "history" && (
-            <div className="history-tab">
+            <div className={styles.historyTab}>
               <h3>Medical History</h3>
               <p>
                 {selectedPatient.medicalHistory ||
@@ -163,19 +155,19 @@ const DoctorDashboard = () => {
           )}
 
           {activeTab === "medicine" && (
-            <div className="medicine-tab">
+            <div className={styles.medicineTab}>
               <h3>Medicine Schedule</h3>
               <pre>
                 {selectedPatient.medicineSchedule || "No schedule available."}
               </pre>
               <textarea
-                className="medicine-input"
+                className={styles.medicineInput}
                 placeholder="Update medicine schedule"
                 value={newMedicineSchedule}
                 onChange={(e) => setNewMedicineSchedule(e.target.value)}
               ></textarea>
               <button
-                className="update-medicine-btn"
+                className={styles.updateMedicineBtn}
                 onClick={handleUpdateMedicineSchedule}
               >
                 Update Schedule
@@ -188,54 +180,54 @@ const DoctorDashboard = () => {
   };
 
   return (
-    <div className="doctor-dashboard">
-      <header className="dashboard-header">
+    <div className={styles.doctorDashboard}>
+      <header className={styles.dashboardHeader}>
         <h1>Doctor Dashboard</h1>
-        <div className="header-actions">
-          <div className="search-wrapper">
+        <div className={styles.headerActions}>
+          <div className={styles.searchWrapper}>
             <i className="search-icon">🔍</i>
             <input
               type="search"
               placeholder="Search patients..."
-              className="search-input"
+              className={styles.searchInput}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="notification-btn">
+          <button className={styles.notificationBtn}>
             <span className="notification-badge">2</span>
           </button>
-          <div className="profile-section">
-            <span className="profile-name">Dr. Sarah Thompson</span>
+          <div className={styles.profileSection}>
+            <span className={styles.profileName}>Dr. Sarah Thompson</span>
           </div>
         </div>
       </header>
 
-      <div className="dashboard-content">
-        <div className="patients-list">
-          <div className="patients-list-header">
+      <div className={styles.dashboardContent}>
+        <div className={styles.patientsList}>
+          <div className={styles.patientsListHeader}>
             <h2>My Patients</h2>
-            <span className="patient-count">
+            <span className={styles.patientCount}>
               {filteredPatients.length} Total
             </span>
           </div>
 
           {loading ? (
-            <div className="loading">Loading patients...</div>
+            <div className={styles.loading}>Loading patients...</div>
           ) : error ? (
-            <div className="error">{error}</div>
+            <div className={styles.error}>{error}</div>
           ) : filteredPatients.length > 0 ? (
             filteredPatients.map(renderPatientCard)
           ) : (
-            <div className="no-patients">No patients found</div>
+            <div className={styles.noPatients}>No patients found</div>
           )}
         </div>
 
-        <div className="patient-details-section">
+        <div className={styles.patientDetailsSection}>
           {selectedPatient ? (
             renderPatientDetails()
           ) : (
-            <div className="no-patient-selected">
+            <div className={styles.noPatientSelected}>
               <h3>Select a Patient</h3>
               <p>Click on a patient card to view detailed information</p>
             </div>

@@ -91,11 +91,6 @@ function Icus({ userId, specialization }) {
       // Use the navigate function to redirect
       navigate(`/UpdateDetails/${userId}/${icuId}`);
 
-      // Trigger the parent popup handler
-      // if (onReserveICU) {
-      //   onReserveICU();
-      // }
-
       // Update the ICUs list with the new reserved ICU
       setICUs((prevICUs) =>
         prevICUs.map((icu) =>
