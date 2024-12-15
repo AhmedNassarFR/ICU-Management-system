@@ -374,6 +374,36 @@ export const viewAllManagers = async (req, res, next) => {
     next(new ErrorHandler(error.message, 500));
   }
 };
+export const viewAnManager = async (req, res, next) => {
+  try {
+    const id = req.params.id; // Get 'id' from URL params
+
+    // Ensure that the 'id' is a valid MongoDB ObjectId (if you're using MongoDB)
+    if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Manager ID format.",
+      });
+    }
+
+    const manager = await User.findById(id).select("-userPass");
+
+    if (!manager) {
+      return res.status(404).json({
+        success: false,
+        message: "Manager not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Manager retrieved successfully",
+      data: manager,
+    });
+  } catch (error) {
+    next(new ErrorHandler(error.message, 500));
+  }
+};
 
 export const searchManagerWithHospitals = async (req, res, next) => {
   try {

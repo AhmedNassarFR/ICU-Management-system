@@ -15,6 +15,7 @@ import ViewAllHospital from "./pages/adminPages/ViewAllHospital";
 import PatientHomePage from "./pages/PatientHomePage";
 import UpdateMedicalDetails from "./pages/UpdateMedicalDetails";
 import EmployeeManagement from "./pages/EmployeeMgmt";
+import Addicu from "./pages/managerPages/Addicu";
 //import ManagerDashboard from "./pages/Manager";
 
 function App() {
@@ -28,8 +29,9 @@ function App() {
         <Route path="/Home" element={<UserHomeScreen />} />
         <Route path="/Addhospital" element={<AddHospital />} />
         <Route path="/ViewHospital" element={<ViewAllHospital />} />
+        <Route path="/Addicu/:id" element={<Addicu />} />
         <Route
-          path="/ManageEmployees/:managerId"
+          path="/ManageEmployees/:id"
           element={<EmployeeManagement />}
         />
         <Route

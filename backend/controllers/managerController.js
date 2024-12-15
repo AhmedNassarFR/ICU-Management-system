@@ -36,16 +36,18 @@ export const assignBackupManager = async (req, res, next) => {
 
 export const registerICU = async (req, res, next) => {
   try {
-    const { hospitalId, specialization, status } = req.body;
+    const { hospitalId, specialization, status, fees, isReserved, reservedBy } =
+      req.body;
 
+    // Ensure the hospital exists
     const hospital = await Hospital.findById(hospitalId);
     if (!hospital) {
       return next(new ErrorHandler("Hospital not found", 404));
     }
 
-    if (!specialization || !status) {
+    if (!specialization || !status || !fees) {
       return next(
-        new ErrorHandler("Specialization and status are required", 400)
+        new ErrorHandler("Specialization, status, and fees are required", 400)
       );
     }
 
@@ -53,14 +55,18 @@ export const registerICU = async (req, res, next) => {
       hospital: hospitalId,
       specialization,
       status,
+      fees,
+      isReserved,
+      reservedBy,
     };
-    const newICU = new ICU(icuData);
 
+    const newICU = new ICU(icuData);
     await newICU.save();
 
     const updatedICUs = await ICU.find({ status: "Available" })
       .populate("hospital", "name address")
       .exec();
+
     io.emit("icuUpdated", updatedICUs);
 
     res.status(201).json({
