@@ -3,6 +3,9 @@ import User from '../models/userModel.js';
 import ErrorHandler from '../utils/errorHandler.js';
 import { jsontoken } from '../utils/token.js'; 
 import jwt from 'jsonwebtoken';
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
 
 export const createUser = async (req, res, next) => {
@@ -246,5 +249,42 @@ export const showUserDetails = async (req, res, next) => {
     } catch (error) {
       console.error("Error fetching user details:", error);
       next(new ErrorHandler("Server error", 500));
+    }
+  };
+  const transporter = nodemailer.createTransport({
+    service:"gmail",
+    port: 465,
+    logger: true,
+    debug: true,
+    secureConnection: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS, 
+    },
+    tls:{
+      rejectUnauthorized:true
+    }
+  });
+export const sendemail = async (req, res, next) => {
+    const { email, name } = req.body;
+  
+    if (!email || !name) {
+      return res.status(400).json({ error: "Missing email or name" });
+    }
+  
+    const mailOptions = {
+      from: `OpenJavaScript <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Welcome to Our Service!",
+      text: `Hello ${name},\n\nThank you for registering! We're excited to have you onboard.\n\nBest regards,\nYour Team`,
+      html: `<p>Hello ${name},</p><p>Thank you for registering! We're excited to have you onboard.</p><p>Best regards,<br>Your Team</p>`
+    };    
+  
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: "Email sent successfully!" });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({ error: "Failed to send email" });
     }
   };
