@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./PatientHomePage.module.css"; // Importing the CSS module
 import axios from "axios";
 
 function PatientHomePage() {
   const { userId, icuId } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const [patientDetails, setPatientDetails] = useState(null);
   const [doctorDetails, setDoctorDetails] = useState(null); // To store assigned doctor's details

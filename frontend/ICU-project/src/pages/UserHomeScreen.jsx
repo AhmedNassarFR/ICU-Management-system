@@ -68,7 +68,8 @@ function UserHomeScreen() {
             const errorMessages = {
               [err.PERMISSION_DENIED]:
                 "Location access was denied. Please enable location permissions.",
-              [err.POSITION_UNAVAILABLE]: "Location information is unavailable.",
+              [err.POSITION_UNAVAILABLE]:
+                "Location information is unavailable.",
               [err.TIMEOUT]: "The request to get your location timed out.",
             };
             setError(errorMessages[err.code] || "An unknown error occurred.");
@@ -127,7 +128,11 @@ function UserHomeScreen() {
           ) : (
             <>
               <div className={styles.icus}>
-                <Icus userId={userId} specialization={specialization} icus={icus} />
+                <Icus
+                  userId={userId}
+                  specialization={specialization}
+                  icus={icus}
+                />
               </div>
               <div className={styles.map}>
                 <Map icus={icus} latitude={latitude} longitude={longitude} />

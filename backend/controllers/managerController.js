@@ -182,16 +182,18 @@ export const addEmployee = async (req, res, next) => {
     }
   };
 
-export const removeEmployee = async (req, res, next) => {
+  export const removeEmployee = async (req, res, next) => {
     try {
-        const { userName } = req.params;
+        const { id } = req.params; // Extract employee ID from URL params
 
-        const employee = await User.findOne({ userName });
+        // Correct query to find employee by _id
+        const employee = await User.findById(id);
+        console.log("Received ID:", id);
         if (!employee) {
             return next(new ErrorHandler("Employee not found", 404));
         }
 
-        await employee.remove();
+        await employee.remove(); // Remove the employee
 
         res.status(200).json({
             success: true,
@@ -201,6 +203,7 @@ export const removeEmployee = async (req, res, next) => {
         next(new ErrorHandler(error.message, 500));
     }
 };
+
 
 export const trackEmployeeTasks = async (req, res, next) => {
     try {
@@ -416,7 +419,7 @@ export const viewAllEmployees = async (req, res) => {
       }
   
       // Fetch the assigned employees
-      const assignedEmployees = await User.find({ assignedManager: managerId }, "userName firstName lastName department role"); 
+      const assignedEmployees = await User.find({ assignedManager: managerId }, "userName firstName lastName department role email"); 
   
       if (!assignedEmployees || assignedEmployees.length === 0) {
         return res.status(404).json({ message: "No employees assigned to this manager." });
