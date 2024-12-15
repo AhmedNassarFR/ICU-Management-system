@@ -12,6 +12,8 @@ function UserHomeScreen() {
   const [icus, setICUs] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [latitude,setLatitude] = useState("")
+  const [longitude,setLongitude] = useState("")
 
   const specializationOptions = [
     "Medical ICU",
@@ -38,6 +40,9 @@ function UserHomeScreen() {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
+            setLatitude(latitude);
+            setLongitude(longitude);
+
 
             try {
               setLoading(true);
@@ -129,7 +134,7 @@ function UserHomeScreen() {
                 />
               </div>
               <div className={styles.map}>
-                <Map icus={icus} />
+                <Map icus={icus} latitude={latitude} longitude={longitude} />
               </div>
             </>
           )}

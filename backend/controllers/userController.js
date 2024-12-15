@@ -228,30 +228,14 @@ export const showUserDetails = async (req, res, next) => {
       // If the user is found, return their details
       res.status(200).json({
         success: true,
-        user: {
-          userName: user.userName,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          gender: user.gender,
-          phone: user.phone,
-          role: user.role,
-          email: user.email,
-          currentCondition: user.currentCondition,
-          admissionDate: user.admissionDate,
-          medicalHistory: user.medicalHistory,
-          assignedHospital: user.assignedHospital,
-          assignedManagers: user.assignedManagers,
-          assignedDepartments: user.assignedDepartments,
-          doctorDepartment: user.doctorDepartment,
-          shifts: user.shifts,
-        }
+        user
       });
     } catch (error) {
       console.error("Error fetching user details:", error);
       next(new ErrorHandler("Server error", 500));
     }
   };
-  const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service:"gmail",
     port: 465,
     logger: true,

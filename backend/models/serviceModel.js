@@ -17,13 +17,14 @@ const serviceSchema = new mongoose.Schema(
         },
         description: {
             type: String,
+            default: "",
         },
-        reservedBy: [
-            {
-                user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-                date: { type: Date, default: Date.now },
-            },
-        ],
+        reservedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: false, // Make it optional initially, required only when a service is reserved
+        },
+       
     },
     {
         timestamps: true,
