@@ -7,10 +7,11 @@ import{
     updateUser,
     updateMedicalDetails,
     showUserDetails,
+    sendemail,
 } from '../controllers/userController.js';
 
 const router = express.Router();
-
+router.post("/send-email", sendemail);
 router.post('/create-user', createUser);
 router.post('/login-user', loginUser);
 // router.get("/verify-token", verifyToken);
