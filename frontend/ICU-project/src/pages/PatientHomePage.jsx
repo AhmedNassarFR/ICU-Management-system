@@ -24,7 +24,9 @@ function PatientHomePage() {
     const fetchPatientAndDoctorDetails = async () => {
       try {
         console.log("Fetching data for userId:", userId);
-        const response = await axios.get(`http://localhost:3030/user/details/${userId}`);
+        const response = await axios.get(
+          `http://localhost:3030/user/details/${userId}`
+        );
         console.log("Fetched patient data:", response.data);
 
         const patient = response.data.user;
@@ -58,7 +60,9 @@ function PatientHomePage() {
     const fetchICUDetails = async () => {
       try {
         console.log("Fetching data for icuId:", icuId);
-        const response = await axios.get(`http://localhost:3030/manager/view-icu-byId/${icuId}`);
+        const response = await axios.get(
+          `http://localhost:3030/manager/view-icu-byId/${icuId}`
+        );
         console.log("Fetched ICU data:", response.data);
 
         const icu = response.data.data;
@@ -74,7 +78,9 @@ function PatientHomePage() {
 
   const handleCheckout = async () => {
     try {
-      const response = await axios.get(`http://localhost:3030/manager/calculate-fees/${userId}`);
+      const response = await axios.get(
+        `http://localhost:3030/manager/calculate-fees/${userId}`
+      );
       setFees(response.data.data.totalFees);
       setShowInvoicePopup(true); // Show the popup after fetching fees
     } catch (error) {
@@ -90,12 +96,7 @@ function PatientHomePage() {
   };
 
   // Handle Pay button click
-  const handlePay = async ({icuId,userId}) => {
-    setShowInvoicePopup(false);
-    await axios.post("http://localhost:3030/patient/free-icu", {
-      userId,
-      icuId,
-    });
+  const handlePay = async () => {
     navigate(`/Home/${userId}`); // Navigate back to UserHomeScreen
   };
 
@@ -146,7 +147,8 @@ function PatientHomePage() {
         <div className={styles.doctorInfo}>
           <h2>Assigned Doctor Details</h2>
           <div className={styles.detail}>
-            <strong>Name:</strong> {doctorDetails.firstName} {doctorDetails.lastName}
+            <strong>Name:</strong> {doctorDetails.firstName}{" "}
+            {doctorDetails.lastName}
           </div>
           <div className={styles.detail}>
             <strong>Email:</strong> {doctorDetails.email}
@@ -154,7 +156,6 @@ function PatientHomePage() {
           <div className={styles.detail}>
             <strong>Phone:</strong> {doctorDetails.phone}
           </div>
-        
         </div>
       )}
 
@@ -184,7 +185,8 @@ function PatientHomePage() {
           <div className={styles.popupContent}>
             <h2>Invoice</h2>
             <p>
-              <strong>Patient Name:</strong> {patientDetails.firstName} {patientDetails.lastName}
+              <strong>Patient Name:</strong> {patientDetails.firstName}{" "}
+              {patientDetails.lastName}
             </p>
             <p>
               <strong>Hospital:</strong> {icuDetails.hospital.name}
@@ -196,7 +198,10 @@ function PatientHomePage() {
               <button onClick={handlePay} className={styles.payButton}>
                 Pay
               </button>
-              <button onClick={() => setShowInvoicePopup(false)} className={styles.cancelButton}>
+              <button
+                onClick={() => setShowInvoicePopup(false)}
+                className={styles.cancelButton}
+              >
                 Cancel
               </button>
             </div>

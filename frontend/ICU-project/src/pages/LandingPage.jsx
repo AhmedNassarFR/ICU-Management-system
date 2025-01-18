@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./LandingPage.module.css";
+import logo from "../assets/react.svg";
 
 const LandingPage = () => {
   return (
@@ -8,11 +9,7 @@ const LandingPage = () => {
       <nav className={styles.navbar}>
         <div className={styles.navContainer}>
           <div className={styles.logoContainer}>
-            {/* <img
-              src="/api/placeholder/50/50"
-              alt="ICU Project Logo"
-              className={styles.logo}
-            /> */}
+            <img src={logo} alt="ICU Project Logo" className={styles.logo} />
             <span className={styles.logoText}>ICU Project</span>
           </div>
           <ul className={styles.navLinks}>
